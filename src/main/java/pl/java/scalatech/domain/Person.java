@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import javax.money.MonetaryAmount;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,9 +11,9 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
-import lombok.Data;
-
 import org.springframework.format.annotation.DateTimeFormat;
+
+import lombok.Data;
 
 @Entity
 @Data
@@ -26,8 +25,8 @@ public class Person implements Serializable{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private final String firstname;
-    private final String email;
+    private  String firstname;
+    private  String email;
     
     private LocalDate modify;
 
