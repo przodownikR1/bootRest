@@ -1,0 +1,89 @@
+buildscript {
+	ext {
+		springBootVersion = '1.2.6.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+		classpath 'io.spring.gradle:dependency-management-plugin:0.5.3.RELEASE'
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'spring-boot'
+apply plugin: 'io.spring.dependency-management'
+
+jar {
+	baseName = 'bootRest'
+	version = '0.1.0-SNAPSHOT'
+}
+
+repositories {
+	mavenCentral()
+}
+
+
+ext {
+    springDataVersion = 'Fowler-RELEASE'
+    springVersion = '4.2.1.RELEASE'
+     hibernateVersion = "5.0.2.Final"
+     javaxValidationVersion = "1.1.0.Final"
+     hibernateValidatorVersion = "5.0.3.Final"
+     lombokVersion = "1.16.4"
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencyManagement {
+	imports {
+		mavenBom 'org.springframework:spring-framework-bom:4.2.1.RELEASE'
+                mavenBom "org.springframework.data:spring-data-releasetrain:${springDataVersion}"
+	}
+}
+
+dependencies {
+	compile 'org.springframework.boot:spring-boot-starter-web'
+	
+	compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    compile 'org.springframework.boot:spring-boot-starter-logging'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.data:spring-data-rest-webmvc'
+    compile 'org.springframework:spring-core'
+    compile 'org.springframework:spring-beans'
+    compile 'org.springframework:spring-context'
+    compile 'org.springframework:spring-orm'
+    compile 'org.springframework:spring-tx'
+    compile 'org.springframework:spring-aop'
+    compile 'org.projectlombok:lombok:1.16.6'
+   
+    compile 'javax.validation:validation-api:1.1.0.Final'
+    compile 'org.hibernate:hibernate-validator:5.2.2.Final'
+    compile 'org.hibernate:hibernate-core:5.0.2.Final'
+    compile 'org.hibernate:hibernate-entitymanager:5.0.2.Final'
+    compile 'javax.money:money-api:1.0'
+    compile 'org.javamoney:moneta:1.0'
+   
+    
+    compile 'com.h2database:h2'
+	compile 'com.google.guava:guava:18.0'
+	compile 'org.webjars:bootstrap:3.3.5'
+	compile 'org.webjars:jquery:2.1.4'
+	compile 'org.webjars:jquery-ui:1.11.4'
+	compile 'org.webjars:jquery-ui-themes:1.11.4'
+	compile ("org.webjars.bower:jquery.bootgrid:1.2.0") {
+		exclude group: 'org.webjars.bower'
+	}
+
+   
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.assertj:assertj-core:3.2.0'
+    testCompile 'com.jayway.awaitility:awaitility-java8:1.6.1'
+    testCompile 'com.jayway.awaitility:awaitility:1.6.5'
+    testCompile 'org.springframework:spring-test'
+
+	testCompile 'org.springframework.boot:spring-boot-starter-test'
+	testCompile 'org.assertj:assertj-core:3.2.0'
+}
