@@ -1,13 +1,14 @@
-package pl.java.scalatech.service.user;
+package pl.java.scalatech.service.user.impl;
 
-import java.util.Optional;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.hibernate.type.descriptor.sql.NVarcharTypeDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.base.Preconditions;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import pl.java.scalatech.domain.User;
 import pl.java.scalatech.exception.UserNotFoundException;
 import pl.java.scalatech.repository.UserRepository;
+import pl.java.scalatech.service.user.UserService;
 
 @Service
 @Transactional(readOnly=true)
@@ -43,6 +45,12 @@ public class UserServiceImpl implements UserService{
     @Override
     public Page<User> findAllUser(Pageable pageable) {
         return userRepository.findAll(pageable);
+    }
+
+    @Override
+    public User findOne(Long userId) {
+        return checkNotNull(userRepository.findOne(userId));
+        
     }
     
     
