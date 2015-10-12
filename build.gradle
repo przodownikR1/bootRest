@@ -46,7 +46,11 @@ dependencyManagement {
 
 dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-web'
-    /*compile 'org.springframework.hateoas:spring-hateoas:0.19.0.RELEASE'*/
+    compile 'org.springframework.hateoas:spring-hateoas:0.18.0.RELEASE' //19 problem  Failed to instantiate [com.fasterxml.jackson.databind.ObjectMapper]
+    //n: Error creating bean with name 'halObjectMapper' defined in class path resource [org/springframework/boot/autoconfigure/data/rest/SpringBootRepositoryRestMvcConfiguration.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.fasterxml.jackson.databind.ObjectMapper]:
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.6.2'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.2'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.6.2'
 	compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
     compile 'org.springframework.boot:spring-boot-starter-logging'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
