@@ -1,17 +1,38 @@
 package pl.java.scalatech.wiremock;
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.assertj.core.api.Assertions;
+import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
+
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+@RunWith(MockitoJUnitRunner.class)
 public class FirstWireMockTest {
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(8089); // No-args constructor defaults to port 8080
-   
     
+    @Rule
+    public TemporaryFolder temp = new TemporaryFolder();
+    
+    @Rule
+    static public WireMockRule wireMockRule = new WireMockRule(8089); // No-args constructor defaults to port 8080
+   
+    @AfterClass
+    public static void stopWireMock() {
+        wireMockRule.shutdownServer();
+    }
     @Test
     public void configure_static_client() {
         WireMock.configureFor(8080);
@@ -26,7 +47,7 @@ public class FirstWireMockTest {
     
     @Test
     public void shouldIdentifyCepAsValid(){
-        stubFor(get(urlEqualTo("/user/2"))
+        stubFor(get(urlEqualTo("/customer/2"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
@@ -34,6 +55,18 @@ public class FirstWireMockTest {
                                 "\"user\": \"przodownik\"}\"")));
         
        
+    }
+    
+    @Test
+    public void exampleTest() {
+        stubFor(get(urlEqualTo("/my/resource"))
+                .withHeader("Accept", equalTo("text/xml"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/xml")
+                        .withBody("<response>noodles burger cakes strudles</response>")));
+
+        // can't use jersey 2 client...
     }
     
   /*  @Test

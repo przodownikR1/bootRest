@@ -63,6 +63,8 @@ dependencies {
     compile 'org.springframework:spring-aop'
     compile 'org.projectlombok:lombok:1.16.6'
    
+    testCompile 'org.mockito:mockito-all:1.10.19'
+    
     compile 'javax.validation:validation-api:1.1.0.Final'
     compile 'org.hibernate:hibernate-validator:5.2.2.Final'
     compile 'org.hibernate:hibernate-core:5.0.2.Final'
@@ -83,10 +85,10 @@ dependencies {
     compile 'com.github.tomakehurst:wiremock:1.57'
     compile "org.apache.httpcomponents:httpclient:4.5"
     compile "org.apache.httpcomponents:fluent-hc:4.3.2"
+     
     
     
-    
-    testCompile("com.jayway.jsonpath:json-path")
+    testCompile 'com.jayway.jsonpath:json-path'
     testCompile 'junit:junit'
     testCompile 'org.assertj:assertj-core:3.2.0'
     testCompile 'com.jayway.awaitility:awaitility-java8:1.6.1'
