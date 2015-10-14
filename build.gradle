@@ -32,6 +32,11 @@ ext {
      javaxValidationVersion = "1.1.0.Final"
      hibernateValidatorVersion = "5.0.3.Final"
      lombokVersion = "1.16.4"
+     
+     cucumberVersion = "1.2.2"
+     apacheHttpVersion = "4.5"
+     gatlingVersion = "2.1.4"
+     
 }
 
 sourceCompatibility = 1.8
@@ -63,7 +68,7 @@ dependencies {
     compile 'org.springframework:spring-aop'
     compile 'org.projectlombok:lombok:1.16.6'
    
-    testCompile 'org.mockito:mockito-all:1.10.19'
+   
     
     compile 'javax.validation:validation-api:1.1.0.Final'
     compile 'org.hibernate:hibernate-validator:5.2.2.Final'
@@ -83,9 +88,13 @@ dependencies {
 		exclude group: 'org.webjars.bower'
 	}
     compile 'com.github.tomakehurst:wiremock:1.57'
-    compile "org.apache.httpcomponents:httpclient:4.5"
-    compile "org.apache.httpcomponents:fluent-hc:4.3.2"
-     
+    /*compile "org.apache.httpcomponents:httpclient:4.5"
+    compile "org.apache.httpcomponents:fluent-hc:4.3.2"*/
+    testCompile 'org.mockito:mockito-all:1.10.19'
+    testCompile 'org.apache.httpcomponents:httpclient:4.5'
+    testCompile 'org.apache.httpcomponents:fluent-hc:4.5'
+    testCompile 'io.gatling:gatling-app:2.1.4'
+    testCompile 'io.gatling.highcharts:gatling-charts-highcharts:2.1.4'
     
     
     testCompile 'com.jayway.jsonpath:json-path'
@@ -94,6 +103,9 @@ dependencies {
     testCompile 'com.jayway.awaitility:awaitility-java8:1.6.1'
     testCompile 'com.jayway.awaitility:awaitility:1.6.5'
     testCompile 'org.springframework:spring-test'
+    testCompile 'info.cukes:cucumber-junit:1.2.2'
+    testCompile 'info.cukes:cucumber-spring:1.2.2'
+    
 
 	testCompile 'org.springframework.boot:spring-boot-starter-test'
 	testCompile 'org.assertj:assertj-core:3.2.0'
