@@ -15,7 +15,7 @@ import pl.java.scalatech.repository.UserRepository;
 @Slf4j
 public class BootRest {
 
-    @Bean
+    @Bean 
     CommandLineRunner init(UserRepository userRepository) {
         return (evt) ->
                 Lists.newArrayList("jhoeller","dsyer","pwebb","ogierke","rwinch","mfisher","mpollack","jlong")

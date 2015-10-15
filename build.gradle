@@ -14,6 +14,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'groovy'
 
 jar {
 	baseName = 'bootRest'
@@ -41,6 +42,20 @@ ext {
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+sourceSets {
+    intTest
+    main {
+        java { srcDir 'src/main/java' }
+        groovy { srcDir 'src/main/groovy' }
+        resources { srcDir 'src/main/resources' }
+    }
+    test {
+        java { srcDir 'src/test/java' }
+        groovy { srcDir 'src/test/groovy' }
+        resources { srcDir 'src/test/resources' }
+    }
+}
 
 dependencyManagement {
 	imports {
@@ -88,6 +103,13 @@ dependencies {
 		exclude group: 'org.webjars.bower'
 	}
     compile 'com.github.tomakehurst:wiremock:1.57'
+    
+    compile 'org.codehaus.groovy:groovy-all:2.4.5'
+    compile 'com.fasterxml.jackson.core:jackson-databind'
+    compile 'net.sf.json-lib:json-lib:2.4'
+
+    
+    
     /*compile "org.apache.httpcomponents:httpclient:4.5"
     compile "org.apache.httpcomponents:fluent-hc:4.3.2"*/
     testCompile 'org.mockito:mockito-all:1.10.19'
@@ -109,4 +131,13 @@ dependencies {
 
 	testCompile 'org.springframework.boot:spring-boot-starter-test'
 	testCompile 'org.assertj:assertj-core:3.2.0'
+    
+    
+    
+  
+
+    testCompile("org.spockframework:spock-core:1.0-groovy-2.4")
+    testCompile("org.codehaus.groovy.modules.http-builder:http-builder:0.7+")
+    testCompile("net.sf.json-lib:json-lib:2.4+")
+    
 }
