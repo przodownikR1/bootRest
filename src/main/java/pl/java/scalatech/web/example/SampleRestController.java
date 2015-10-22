@@ -12,13 +12,15 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin
 public class SampleRestController {
 
+
+
     @RequestMapping(value="/restSample",method=RequestMethod.GET)
-    @CrossOrigin(origins = "http://spring.example.com:8080", maxAge = 3600)
+    @CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
     public Payload exampleEndpoint() {
-        log.info("+++ restSample");  
+        log.info("+++ restSample");
         return new Payload("test");
     }
-    
-    
-   
+
+
+
 }

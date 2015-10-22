@@ -17,6 +17,9 @@
 		</encoder>
 	</appender>
 
+    <logger name="pl.java.riscosoftware" level="info" />
+    <logger name="org.springframework" level="info" />
+    <logger name="org.springframework.data" level="info" />
 	<root level="INFO">
 	    <appender-ref ref="console"/>
 	</root>
