@@ -1,12 +1,8 @@
 package pl.java.scalatech.domain;
 
-import static javax.persistence.GenerationType.AUTO;
-
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,6 +12,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=true)
 public class Item extends Audit {
    
+    private static final long serialVersionUID = -2051502774891291777L;
     private String name;
     private BigDecimal price;
     

@@ -19,24 +19,20 @@ import pl.java.scalatech.repository.UserRepository;
 @Slf4j
 public class BootRest {
 
-    @Bean 
+    @Bean
     CommandLineRunner init(UserRepository userRepository, SkillRepository skillRepository, ProjectRepository projectRepository) {
-        return (evt) ->
-                Lists.newArrayList("przodownik","kowalski","nowak","plank","tyson","holyfield","jones","obama")
-                        .forEach(a -> {
-                            User user = userRepository.save(User.builder().firstname(a).login("_"+a).email(a+"@tlen.pl").login(a).build());
-                            log.info("{}",user);
-                            Lists.newArrayList("java","scala","groovy","gradle","maven","spring","jpa").
-                            forEach(s-> skillRepository.save(Skill.builder().name(s).build()));           
-                            
-                            Lists.newArrayList("socialwarehouse","ogw","connector","eo","cash","eb").
-                            forEach(p-> projectRepository.save(Project.builder().name(p).build()));
-                        });
-                            
-                            
-                        
+        return (evt) -> Lists.newArrayList("przodownik", "kowalski", "nowak", "plank", "tyson", "holyfield", "jones", "obama").forEach(a -> {
+            User user = userRepository.save(User.builder().firstname(a).login("_" + a).email(a + "@tlen.pl").login(a).build());
+            log.info("{}", user);
+            Lists.newArrayList("java", "scala", "groovy", "gradle", "maven", "spring", "jpa")
+                    .forEach(s -> skillRepository.save(Skill.builder().name(s).build()));
+
+            Lists.newArrayList("socialwarehouse", "ogw", "connector", "eo", "cash", "eb")
+                    .forEach(p -> projectRepository.save(Project.builder().name(p).build()));
+        });
+
     }
-    
+
     public static void main(String[] args) {
         SpringApplication.run(BootRest.class, args);
     }

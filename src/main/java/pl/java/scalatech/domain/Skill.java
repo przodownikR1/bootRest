@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Skill extends AbstractEntity{
 
+    private static final long serialVersionUID = -8875942188331089852L;
     @Column(name="skillName",nullable=false)
     private String name;
     @Column(name="skillDesc")

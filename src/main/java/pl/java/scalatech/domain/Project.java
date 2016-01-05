@@ -19,6 +19,8 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper=true)
 @Builder
 public class Project extends AbstractEntity{
+    
+    private static final long serialVersionUID = 8490634203238895620L;
     @Column(name="projectName",nullable=false)
     private String name;
     @Column(name="projectDesc")

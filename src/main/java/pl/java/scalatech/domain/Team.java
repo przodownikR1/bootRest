@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 @Table(name="teams")
 public class Team extends AbstractEntity{
 
+    private static final long serialVersionUID = -7954597941468761979L;
     @Column(name="teamName",nullable=false)
     private String name;
     @Column(name="teamDesc")

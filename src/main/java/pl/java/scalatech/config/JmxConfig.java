@@ -18,16 +18,11 @@ import org.springframework.jmx.export.MBeanExporter;
 
 import com.google.common.collect.ImmutableMap;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Configuration
 @EnableMBeanExport
-@Slf4j
 public class JmxConfig {
 
-    @Autowired
-    private EntityManagerFactory entityManagerFactory;
-
+   
     @Bean
     @DependsOn("statisticsService")
     @Profile("dev")
