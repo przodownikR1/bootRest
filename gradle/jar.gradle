@@ -1,0 +1,47 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets {
+    intTest
+    generated.java.srcDirs=['src/main/generated']
+    main {
+        java { srcDir 'src/main/java' }
+        groovy { srcDir 'src/main/groovy' }
+        resources { srcDir 'src/main/resources' }
+    }
+    test {
+        java { srcDir 'src/test/java' }
+        groovy { srcDir 'src/test/groovy' }
+        resources { srcDir 'src/test/resources' }
+    }
+}
+
+/*compilerArgs =
+ [
+   "-Xlint:-options", // intentionally disabled
+   "-Xlint:-rawtypes",
+   "-Xlint:-unchecked",
+   "-Xlint:serial",
+   "-Xlint:varargs",
+   "-Xlint:cast",
+   "-Xlint:classfile",
+   "-Xlint:dep-ann",
+   "-Xlint:divzero",
+   "-Xlint:empty",
+   "-Xlint:finally",
+   "-Xlint:overrides",
+   "-Xlint:path",
+   "-Xlint:processing",
+   "-Xlint:static",
+   "-Xlint:try",
+   "-Xlint:fallthrough",
+   "-Xlint:deprecation"
+ ]*/
+
+jar {
+ baseName = 'bootRest'
+ version = '0.1.0-SNAPSHOT'
+ 
+}
