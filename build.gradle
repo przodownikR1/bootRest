@@ -23,6 +23,7 @@ apply from : 'gradle/git.gradle'
 apply from : 'gradle/jpagen.gradle'
 apply from : 'gradle/props.gradle'
 apply from : 'gradle/depencencies.gradle'
+apply from : 'gradle/sonar.gradle'
 
 sourceSets {
     intTest
