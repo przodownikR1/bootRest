@@ -11,6 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -30,7 +31,7 @@ includeFilters= {@ComponentScan.Filter(type=FilterType.ANNOTATION,value= {Contro
     DispatcherServletAutoConfiguration.class,
     HttpMessageConvertersAutoConfiguration.class,
     ServerPropertiesAutoConfiguration.class,EmbeddedServletContainerAutoConfiguration.class})
-
+@Profile("test")
 public class JpaWebConfig {
 
 }

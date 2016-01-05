@@ -83,3 +83,5 @@ gc.log
 /file_from_fd_store.png
 git.properties
 gc.log*
+app.log*
+in-out.log*

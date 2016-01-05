@@ -19,22 +19,22 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import pl.java.scalatech.domain.User;
-import pl.java.scalatech.service.user.UserService;
+import pl.java.scalatech.repository.UserRepository;
 
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired) )
 public class UserController {
     @NonNull
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     @RequestMapping(method = GET, value = "/users", produces = APPLICATION_JSON_VALUE)
     public List<User> getUsers() {
-        return null;
+        return userRepository.findAll();
     }
 
     @RequestMapping(method = GET, value = "/users/{userId}", produces = APPLICATION_JSON_VALUE)
     public User getUser(@PathVariable("authorId") Long userId) {
-        return userService.findOne(userId);
+        return userRepository.findOne(userId);
     }
 
     @RequestMapping(method = POST, value = "/users", consumes = APPLICATION_JSON_VALUE)

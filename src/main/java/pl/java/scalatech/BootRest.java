@@ -18,9 +18,9 @@ public class BootRest {
     @Bean 
     CommandLineRunner init(UserRepository userRepository) {
         return (evt) ->
-                Lists.newArrayList("jhoeller","dsyer","pwebb","ogierke","rwinch","mfisher","mpollack","jlong")
+                Lists.newArrayList("przodownik","kowalski","nowak","plank","tyson","holyfield","jones","obama")
                         .forEach(a -> {
-                            User user = userRepository.save(User.builder().email("przodownik@tlen.pl").login(a).build());
+                            User user = userRepository.save(User.builder().firstname(a).login("_"+a).email(a+"@tlen.pl").login(a).build());
                             log.info("{}",user);
                         });
     }

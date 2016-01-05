@@ -11,7 +11,7 @@ import pl.java.scalatech.domain.Customer;
 public class ConsumerService {
 
 
-        @RequestMapping(method=RequestMethod.GET)
+        @RequestMapping(value="check",method=RequestMethod.GET)
         public String checkAvailability(){
             return "Up and running!";
         }

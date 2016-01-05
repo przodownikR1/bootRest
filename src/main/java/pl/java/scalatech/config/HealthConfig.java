@@ -19,7 +19,7 @@ public class HealthConfig {
             if(new Random().nextBoolean()){
                 return Health.up().status("ok").build();
             }
-            return Health.down().status("problem").withDetail("my", "przoodwnik").build();
+            return Health.down().status("problem").withDetail("my", "przodownik").build();
         };
         
     }
