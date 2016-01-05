@@ -157,6 +157,8 @@ dependencies {
     compile("org.springframework:spring-jms:4.1.7.RELEASE")
     compile("org.apache.activemq:activemq-broker:5.11.1")
     
+    jpametamodel ("org.hibernate:hibernate-jpamodelgen:5.0.6.Final")
+    
     testCompile 'org.mockito:mockito-all:1.10.19'
    
     testCompile 'io.gatling:gatling-app:2.1.4'
@@ -224,4 +226,19 @@ afterEvaluate {
     }
     
     
+    task generateMetaModel(type: JavaCompile, group: 'build', description: 'metamodel generate') {
+    
+        source = sourceSets.main.java
+        classpath = configurations.compile + configurations.jpametamodel
+        options.compilerArgs = ["-proc:only"]
+        destinationDir = sourceSets.generated.java.srcDirs.iterator().next()
+    
+        doFirst {
+            logger.warn("Prepare dictionary structures  " +sourceSets.generated.java.srcDirs)
+            //delete(sourceSets.generated.java.srcDirs)
+            //sourceSets.generated.java.srcDirs.mkdirs()
+        }
+    }
+    compileJava.dependsOn generateMetaModel
+    compileJava.source sourceSets.generated.java, sourceSets.main.java
     
