@@ -1,6 +1,0 @@
-2015-10-30 15:37:12 logFileName=s2  [main] INFO  pl.java.scalatech.log.LogTest - +++  slawek2 
-2015-10-30 15:38:10 logFileName=s2  [main] INFO  pl.java.scalatech.log.LogTest - +++  slawek2 
-2015-10-30 15:41:58 logFileName=s2  [main] INFO  pl.java.scalatech.log.LogTest - +++  slawek2 
-2015-10-30 15:42:01 logFileName=s2  [main] INFO  pl.java.scalatech.log.LogTest - +++  slawek2 
-2016-01-05 11:04:21 logFileName=s2  [Test worker] INFO  pl.java.scalatech.log.LogTest - +++  slawek2 
-2016-01-05 11:05:12 logFileName=s2  [Test worker] INFO  pl.java.scalatech.log.LogTest - +++  slawek2 
