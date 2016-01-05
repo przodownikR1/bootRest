@@ -10,8 +10,9 @@ buildscript {
             url "https://plugins.gradle.org/m2/"
           }
     }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
+    dependencies { 
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath 'io.spring.gradle:dependency-management-plugin:0.5.3.RELEASE'
         classpath "org.sonarqube.gradle:gradle-sonarqube-plugin:1.1"
         classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.7")
     }
@@ -107,9 +108,17 @@ configurations {
 dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-web'
     compile('org.springframework.boot:spring-boot-starter-actuator')
-    compile('org.springframework.boot:spring-boot-devtools')
-    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.session:spring-session:1.0.2.RELEASE'
+    compile 'redis.clients:jedis:2.1.0'
+    //compile 'org.springframework.boot:spring-boot-starter-data-rest'
+    //compile('org.springframework.data:spring-data-rest-hal-browser')
     
+    compile('org.springframework.boot:spring-boot-starter-logging')
+ 
+    compile('org.springframework.boot:spring-boot-devtools')
+    compile('org.springframework.boot:spring-boot-starter-cache')
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
    // compile('org.springframework.data:spring-data-rest-hal-browser')
   //  compile('org.springframework.data:spring-data-rest-webmvc:2.4.1.RELEASE')
    // compile("org.springframework.boot:spring-boot-starter-data-rest")
@@ -121,8 +130,8 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.6.2'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.2'
     compile 'com.fasterxml.jackson.core:jackson-core:2.6.2'
-	compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    compile 'org.springframework.boot:spring-boot-starter-logging'
+
+
   
    
     compile 'org.springframework:spring-core'
@@ -190,6 +199,7 @@ dependencies {
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
     testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7+'
     testCompile 'net.sf.json-lib:json-lib:2.4:jdk15'
+    testCompile('org.springframework.restdocs:spring-restdocs-mockmvc:1.0.0.RELEASE')
     
 }
 test {
