@@ -181,7 +181,10 @@ dependencies {
     testCompile 'net.sf.json-lib:json-lib:2.4:jdk15'
     
 }
-
+test {
+    systemProperties 'property': 'value'
+    testLogging.showStandardStreams = true
+}
 
 configurations {
     all*.exclude group: "commons-logging", module: "commons-logging"
@@ -205,9 +208,12 @@ configurations.all {
 afterEvaluate {
     configure(allProcessResourcesTasks()) {
     filter(ReplaceTokens,
-    tokens: [baseName: project.jar.baseName,
+    tokens: [
+    baseName: project.jar.baseName,
     version: project.jar.version,
-    gradleVersion: project.gradle.gradleVersion]
+    gradleVersion: project.gradle.gradleVersion,
+    username: System.properties['user.name'],
+    buildDate: new Date().format("yyyy-MM-dd HH:mm")]
     )
     }
     }
@@ -216,3 +222,6 @@ afterEvaluate {
     tasks[it]
     }
     }
+    
+    
+    
