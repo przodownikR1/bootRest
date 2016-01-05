@@ -17,23 +17,17 @@ buildscript {
         classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.7")
     }
 }
-
 apply plugin: 'java'
 apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'groovy'
-
 apply plugin: 'com.gorylenko.gradle-git-properties'
 apply plugin: 'org.sonarqube'
 
-
 sonarqube {
     properties {
-       property "sonar.projectKey", "bootRest"
-       property "sonar.projectName", "bootRest"
-
-        
-
+        property "sonar.projectKey", "bootRest"
+        property "sonar.projectName", "bootRest"
         property "sonar.host.url", "http://localhost:9000"
         property "sonar.jdbc.url", "jdbc:mysql://localhost:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true"
         property "sonar.jdbc.driverClassName", "com.mysql.jdbc.Driver"
@@ -45,27 +39,21 @@ sonarqube {
 gitProperties {
     gitPropertiesDir = new File("${project.rootDir}/src/main/resources")
 }
-
-
-
 jar {
 	baseName = 'bootRest'
 	version = '0.1.0-SNAPSHOT'
 }
-
 repositories {
 	mavenCentral()
 }
 
-
 ext {
     springDataVersion = 'Fowler-RELEASE'
-    springVersion = '4.2.3.RELEASE'
+    springVersion = '4.2.4.RELEASE'
      hibernateVersion = "5.0.2.Final"
      javaxValidationVersion = "1.1.0.Final"
      hibernateValidatorVersion = "5.0.3.Final"
-     lombokVersion = "1.16.4"
-     
+     lombokVersion = "1.16.4"     
      cucumberVersion = "1.2.2"
      apacheHttpVersion = "4.5"
      gatlingVersion = "2.1.4"
@@ -74,9 +62,6 @@ ext {
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-
-
-
 
 sourceSets {
     intTest
@@ -95,7 +80,7 @@ sourceSets {
 
 dependencyManagement {
 	imports {
-		mavenBom 'org.springframework:spring-framework-bom:4.2.3.RELEASE'
+		mavenBom 'org.springframework:spring-framework-bom:4.2.4.RELEASE'
         mavenBom "org.springframework.data:spring-data-releasetrain:${springDataVersion}"
 	}
 }
@@ -106,34 +91,31 @@ configurations {
 }
 
 dependencies {
-	compile 'org.springframework.boot:spring-boot-starter-web'
-    compile('org.springframework.boot:spring-boot-starter-actuator')
-    compile 'org.springframework.session:spring-session:1.0.2.RELEASE'
-    compile 'redis.clients:jedis:2.1.0'
-    //compile 'org.springframework.boot:spring-boot-starter-data-rest'
-    //compile('org.springframework.data:spring-data-rest-hal-browser')
     
-    compile('org.springframework.boot:spring-boot-starter-logging')
- 
-    compile('org.springframework.boot:spring-boot-devtools')
+   compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-actuator-docs')
+    compile('org.springframework.boot:spring-boot-starter-aop')
     compile('org.springframework.boot:spring-boot-starter-cache')
-    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+   // compile('org.springframework.boot:spring-boot-starter-data-rest')
    // compile('org.springframework.data:spring-data-rest-hal-browser')
-  //  compile('org.springframework.data:spring-data-rest-webmvc:2.4.1.RELEASE')
-   // compile("org.springframework.boot:spring-boot-starter-data-rest")
+    compile('org.springframework.boot:spring-boot-devtools')
+    compile('org.springframework.boot:spring-boot-starter-hateoas')
+    compile('org.projectlombok:lombok:1.16.6')
+    //compile('org.springframework.boot:spring-boot-starter-redis')
+    compile('org.springframework.retry:spring-retry')
+   // compile('org.springframework.boot:spring-boot-starter-security')
+    compile('org.springframework.session:spring-session')
+    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+    compile('org.springframework.boot:spring-boot-starter-validation')
+    compile('org.springframework.boot:spring-boot-starter-web')
     
-    compile 'org.springframework.hateoas:spring-hateoas:0.19.0.RELEASE' //19 problem  Failed to instantiate [com.fasterxml.jackson.databind.ObjectMapper]
-    //n: Error creating bean with name 'halObjectMapper' defined in class path resource [org/springframework/boot/autoconfigure/data/rest/SpringBootRepositoryRestMvcConfiguration.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.fasterxml.jackson.databind.ObjectMapper]:
-    //compile 'org.springframework.data:spring-data-rest-webmvc'
+    compile 'redis.clients:jedis:2.1.0'
     
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.6.2'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.2'
     compile 'com.fasterxml.jackson.core:jackson-core:2.6.2'
-
-
-  
-   
+    
     compile 'org.springframework:spring-core'
     compile 'org.springframework:spring-beans'
     compile 'org.springframework:spring-context'
@@ -143,7 +125,6 @@ dependencies {
     compile 'org.projectlombok:lombok:1.16.6'
     compile 'com.google.guava:guava:18.0'
    
-    
     compile 'javax.validation:validation-api:1.1.0.Final'
     compile 'org.hibernate:hibernate-validator:5.2.2.Final'
     compile 'org.hibernate:hibernate-core:5.0.2.Final'
@@ -153,7 +134,6 @@ dependencies {
    
     compile 'org.lazyluke:log4jdbc-remix:0.2.7'
     compile 'com.h2database:h2'
-	compile 'com.google.guava:guava:18.0'
 	compile 'org.webjars:bootstrap:3.3.5'
 	compile 'org.webjars:jquery:2.1.4'
 	compile 'org.webjars:jquery-ui:1.11.4'
@@ -165,21 +145,17 @@ dependencies {
     
     compile 'org.codehaus.groovy:groovy-all:2.4.5'
     compile 'com.fasterxml.jackson.core:jackson-databind'
-
-
-    
     compile 'org.apache.httpcomponents:httpclient:4.5'
     compile 'org.apache.httpcomponents:fluent-hc:4.5'
-    
     
     compile("org.apache.activemq:activemq-client")
     compile("org.apache.xbean:xbean-spring:4.2") {
         exclude module: "org.springframework:spring"
     }
-    compile("org.springframework:spring-jms:4.1.7.RELEASE")
+    compile("org.springframework:spring-jms:4.2.4.RELEASE")
     compile("org.apache.activemq:activemq-broker:5.11.1")
     
-    jpametamodel ('org.hibernate:hibernate-jpamodelgen:5.0.6.Final')
+  //  jpametamodel ('org.hibernate:hibernate-jpamodelgen:5.0.6.Final')
     
     testCompile 'org.mockito:mockito-all:1.10.19'  
     testCompile 'com.jayway.jsonpath:json-path'
@@ -187,7 +163,7 @@ dependencies {
     testCompile 'org.assertj:assertj-core:3.2.0'
     testCompile 'com.jayway.awaitility:awaitility-java8:1.6.1'
     testCompile 'com.jayway.awaitility:awaitility:1.6.5'
-    testCompile 'org.springframework:spring-test'
+ 
     
  //   testCompile 'info.cukes:cucumber-junit:1.2.2'
  //   testCompile 'info.cukes:cucumber-spring:1.2.2'
@@ -214,7 +190,7 @@ configurations {
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
         if (details.requested.group == 'org.springframework') {
-            details.useVersion '4.2.3.RELEASE'
+            details.useVersion '4.2.4.RELEASE'
         }
        if (details.requested.group == 'org.springframework.security') {
             details.useVersion '4.0.3.RELEASE'
