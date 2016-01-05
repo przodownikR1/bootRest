@@ -74,8 +74,12 @@ ext {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+
+
+
 sourceSets {
     intTest
+    generated.java.srcDirs=['src/main/generated']
     main {
         java { srcDir 'src/main/java' }
         groovy { srcDir 'src/main/groovy' }
@@ -93,6 +97,11 @@ dependencyManagement {
 		mavenBom 'org.springframework:spring-framework-bom:4.2.3.RELEASE'
         mavenBom "org.springframework.data:spring-data-releasetrain:${springDataVersion}"
 	}
+}
+
+configurations {
+    providedRuntime
+    jpametamodel
 }
 
 dependencies {
@@ -157,7 +166,7 @@ dependencies {
     compile("org.springframework:spring-jms:4.1.7.RELEASE")
     compile("org.apache.activemq:activemq-broker:5.11.1")
     
-    jpametamodel ("org.hibernate:hibernate-jpamodelgen:5.0.6.Final")
+    jpametamodel ('org.hibernate:hibernate-jpamodelgen:5.0.6.Final')
     
     testCompile 'org.mockito:mockito-all:1.10.19'
    
@@ -207,6 +216,22 @@ configurations.all {
 
 }
 
+task generateMetaModel(type: JavaCompile, group: 'build', description: 'metamodel generate') {
+    
+        source = sourceSets.main.java
+        classpath = configurations.compile + configurations.jpametamodel
+        options.compilerArgs = ["-proc:only"]
+        destinationDir = sourceSets.generated.java.srcDirs.iterator().next()
+    
+        doFirst {
+            logger.warn("Prepare dictionary structures  " +sourceSets.generated.java.srcDirs)
+            //delete(sourceSets.generated.java.srcDirs)
+            //sourceSets.generated.java.srcDirs.mkdirs()
+        }
+    }
+    compileJava.dependsOn generateMetaModel
+    compileJava.source sourceSets.generated.java, sourceSets.main.java
+
 afterEvaluate {
     configure(allProcessResourcesTasks()) {
     filter(ReplaceTokens,
@@ -224,21 +249,3 @@ afterEvaluate {
     tasks[it]
     }
     }
-    
-    
-    task generateMetaModel(type: JavaCompile, group: 'build', description: 'metamodel generate') {
-    
-        source = sourceSets.main.java
-        classpath = configurations.compile + configurations.jpametamodel
-        options.compilerArgs = ["-proc:only"]
-        destinationDir = sourceSets.generated.java.srcDirs.iterator().next()
-    
-        doFirst {
-            logger.warn("Prepare dictionary structures  " +sourceSets.generated.java.srcDirs)
-            //delete(sourceSets.generated.java.srcDirs)
-            //sourceSets.generated.java.srcDirs.mkdirs()
-        }
-    }
-    compileJava.dependsOn generateMetaModel
-    compileJava.source sourceSets.generated.java, sourceSets.main.java
-    
