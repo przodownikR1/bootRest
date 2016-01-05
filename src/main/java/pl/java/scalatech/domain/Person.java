@@ -1,29 +1,24 @@
 package pl.java.scalatech.domain;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
-public class Person implements Serializable{
+@EqualsAndHashCode(callSuper=true)
+public class Person extends AbstractEntity{
 
     private static final long serialVersionUID = 5279859664147821207L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
     private  String firstname;
     private  String email;

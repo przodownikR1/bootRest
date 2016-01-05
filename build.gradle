@@ -109,7 +109,11 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-devtools')
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    //compile 'org.springframework.data:spring-data-commons:1.7.2.RELEASE'
+    
+   // compile('org.springframework.data:spring-data-rest-hal-browser')
+  //  compile('org.springframework.data:spring-data-rest-webmvc:2.4.1.RELEASE')
+   // compile("org.springframework.boot:spring-boot-starter-data-rest")
+    
     compile 'org.springframework.hateoas:spring-hateoas:0.19.0.RELEASE' //19 problem  Failed to instantiate [com.fasterxml.jackson.databind.ObjectMapper]
     //n: Error creating bean with name 'halObjectMapper' defined in class path resource [org/springframework/boot/autoconfigure/data/rest/SpringBootRepositoryRestMvcConfiguration.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.fasterxml.jackson.databind.ObjectMapper]:
     //compile 'org.springframework.data:spring-data-rest-webmvc'
@@ -138,7 +142,7 @@ dependencies {
     compile 'javax.money:money-api:1.0'
     compile 'org.javamoney:moneta:1.0'
    
-    
+    compile 'org.lazyluke:log4jdbc-remix:0.2.7'
     compile 'com.h2database:h2'
 	compile 'com.google.guava:guava:18.0'
 	compile 'org.webjars:bootstrap:3.3.5'
@@ -148,7 +152,7 @@ dependencies {
 	compile ("org.webjars.bower:jquery.bootgrid:1.2.0") {
 		exclude group: 'org.webjars.bower'
 	}
-    compile 'com.github.tomakehurst:wiremock:1.57'
+    //compile 'com.github.tomakehurst:wiremock:1.57'
     
     compile 'org.codehaus.groovy:groovy-all:2.4.5'
     compile 'com.fasterxml.jackson.core:jackson-databind'
@@ -168,25 +172,21 @@ dependencies {
     
     jpametamodel ('org.hibernate:hibernate-jpamodelgen:5.0.6.Final')
     
-    testCompile 'org.mockito:mockito-all:1.10.19'
-   
-    testCompile 'io.gatling:gatling-app:2.1.4'
-    testCompile 'io.gatling.highcharts:gatling-charts-highcharts:2.1.4'
-    
-    
+    testCompile 'org.mockito:mockito-all:1.10.19'  
     testCompile 'com.jayway.jsonpath:json-path'
     testCompile 'junit:junit'
     testCompile 'org.assertj:assertj-core:3.2.0'
     testCompile 'com.jayway.awaitility:awaitility-java8:1.6.1'
     testCompile 'com.jayway.awaitility:awaitility:1.6.5'
     testCompile 'org.springframework:spring-test'
-    testCompile 'info.cukes:cucumber-junit:1.2.2'
-    testCompile 'info.cukes:cucumber-spring:1.2.2'
     
+ //   testCompile 'info.cukes:cucumber-junit:1.2.2'
+ //   testCompile 'info.cukes:cucumber-spring:1.2.2'
+    //    testCompile 'io.gatling:gatling-app:2.1.4'
+    //    testCompile 'io.gatling.highcharts:gatling-charts-highcharts:2.1.4'
 
 	testCompile 'org.springframework.boot:spring-boot-starter-test'
-	testCompile 'org.assertj:assertj-core:3.2.0'
-    
+   
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
     testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7+'
     testCompile 'net.sf.json-lib:json-lib:2.4:jdk15'

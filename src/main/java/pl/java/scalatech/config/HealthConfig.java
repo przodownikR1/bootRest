@@ -24,10 +24,6 @@ public class HealthConfig {
         
     }
     
-    @Bean
-    @ExportMetricWriter
-    MetricWriter jmxMetric(MBeanExporter exporter){
-        return new JmxMetricWriter(exporter);
-    }
+    
     
 }

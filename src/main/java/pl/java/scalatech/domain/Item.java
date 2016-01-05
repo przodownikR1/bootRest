@@ -9,13 +9,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper=true)
 public class Item extends Audit {
-    @Id
-    @GeneratedValue(strategy=AUTO)
-    private Long id;
+   
     private String name;
     private BigDecimal price;
     

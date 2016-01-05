@@ -1,6 +1,5 @@
 package pl.java.scalatech.domain;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.persistence.EntityListeners;
@@ -21,7 +20,8 @@ import lombok.EqualsAndHashCode;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @Data
-public abstract class Audit implements Serializable{
+@EqualsAndHashCode(callSuper=true)
+public abstract class Audit extends AbstractEntity{
     private static final long serialVersionUID = 2663518387056045900L;
 
     @CreatedDate

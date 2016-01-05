@@ -11,7 +11,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.repository.support.DomainClassConverter;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.CommonsRequestLoggingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -25,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @Slf4j
 @ComponentScan(basePackages = { "pl.java.scalatech.converters", "pl.java.scalatech.web.interceptor" })
+//@EnableSpringDataWebSupport
 public class WebConfig extends WebMvcConfigurationSupport {
 
     @Autowired
@@ -97,6 +100,15 @@ public class WebConfig extends WebMvcConfigurationSupport {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(new HiddenHttpMethodFilter());
         return registrationBean;
+    }
+    
+    @Bean
+    public CommonsRequestLoggingFilter requestLoggingFilter() {
+        CommonsRequestLoggingFilter crlf = new CommonsRequestLoggingFilter();
+        crlf.setIncludeClientInfo(true);
+        crlf.setIncludeQueryString(true);
+        crlf.setIncludePayload(true);
+        return crlf;
     }
 
 }

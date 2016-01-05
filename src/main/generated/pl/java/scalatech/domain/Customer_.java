@@ -6,10 +6,9 @@ import javax.persistence.metamodel.StaticMetamodel;
 
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(Customer.class)
-public abstract class Customer_ {
+public abstract class Customer_ extends pl.java.scalatech.domain.AbstractEntity_ {
 
 	public static volatile SingularAttribute<Customer, String> name;
-	public static volatile SingularAttribute<Customer, Long> id;
 
 }
 
