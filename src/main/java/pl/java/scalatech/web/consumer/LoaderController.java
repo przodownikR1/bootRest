@@ -13,29 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pl.java.scalatech.web.example;
+package pl.java.scalatech.web.consumer;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.extern.slf4j.Slf4j;
-
 @RestController
-@Slf4j
-@CrossOrigin
-public class SampleRestController {
-
-
-
-    @RequestMapping(value="/restSample",method=RequestMethod.GET)
-    @CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
-    public Payload exampleEndpoint() {
-        log.info("+++ restSample");
-        return new Payload("test");
+public class LoaderController {
+    @RequestMapping("/loaded")
+    public String test(){
+        System.err.println("test2s");
+        return "pl";
     }
-
-
-
+    @RequestMapping("/loaded2")
+    public String test2 (){
+        sdasdasdasdasdf();
+        sadasd();
+        return "dupa";
+    }
+    
+    @RequestMapping("/loaded3")
+    public String test4 (){
+        sdasdasdasdasdf();
+        sadasd();
+        return "plsseseeeeesd";
+    }
+    
+    private void sadasd() {
+           System.err.println("+++++++####+++++++");
+        
+    }
+    public void sdasdasdasdasdf(){
+        System.err.println("cvcvsdsdssssssssss +++++++++ slsssawekdfdf");
+    }
 }
