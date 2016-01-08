@@ -41,8 +41,8 @@ task buildReleaseBuild  {
 task tagRelease {
     def grgit=Grgit.open(project.file('.'))
     grgit.tag.add {
-      name = '1.0.0'
-      message = "Release of 1"
+      name = '1'
+      message = "Release of e"
     }
   }
 
