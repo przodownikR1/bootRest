@@ -7,11 +7,64 @@ buildscript {
     }
     dependencies {
         classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.7")
+     //   classpath "gradle.plugin.com.selesse:gradle-git-changelog:0.2.0"
+     //   classpath "gradle.plugin.org.dvaske.gradle:git-build-info:0.2"
+     //   classpath "gradle.plugin.de.timroes.gradle:git-version:0.3.0"
+        classpath 'org.ajoberstar:gradle-git:1.3.2'
     }
 }
-
+//apply plugin: "de.timroes.git-version"
+//apply plugin: "com.selesse.git.changelog"
 apply plugin: 'com.gorylenko.gradle-git-properties'
+//apply plugin: 'org.ajoberstar.release-opinion'
+//apply plugin: "org.dvaske.gradle.git-build-info"
 
 gitProperties {
     gitPropertiesDir = new File("${project.rootDir}/src/main/resources")
 }
+
+import org.ajoberstar.grgit.*
+
+task buildReleaseBuild  {
+    
+    onlyIf{
+        return new File(projectDir, '.git').exists()
+    }
+    
+    def grgit=Grgit.open(project.file('.'))
+    def id =  grgit.head().abbreviatedId
+    def name = grgit.branch.getCurrent().name
+    def workDir = new File(".").absolutePath
+    println "${name} - ${id}  - ${workDir}"
+}
+
+task tagRelease {
+    def grgit=Grgit.open(project.file('.'))
+    grgit.tag.add {
+      name = '1.0.0'
+      message = "Release of 1"
+    }
+  }
+
+/*release  {
+    
+      releaseTasks = ['build']
+      
+      generateTagMessage = { version -> // default is "Release of ${version}"
+        StringBuilder builder = new StringBuilder()
+        builder.append('Release of ')
+        builder.append(version)
+        builder.append('\n\n')
+        grgit.log {
+          range "v${version.nearest.normal.toString()}^{commit}", 'HEAD'
+        }.inject(builder) { bldr, commit ->
+          bldr.append('- ')
+          bldr.append(commit.shortMessage)
+          bldr.append('\n')
+        }
+        builder.toString()
+      }
+    
+      
+    }
+*/
