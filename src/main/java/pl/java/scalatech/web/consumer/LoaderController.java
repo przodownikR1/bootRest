@@ -29,7 +29,7 @@ public class LoaderController {
     public String test2 (){
         sdasdasdasdasdf();
         sadasd();
-        return "dupa";
+        return "dupaff";
     }
     
     @RequestMapping("/loaded3")

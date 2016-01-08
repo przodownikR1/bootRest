@@ -18,40 +18,49 @@ buildscript {
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
         classpath 'net.saliman:gradle-cobertura-plugin:2.2.8'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0'
-        classpath 'org.springframework:springloaded:1.2.5.RELEASE'
+       // classpath 'org.springframework:springloaded:1.2.5.RELEASE'
     }
 }
 apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'groovy'
-apply from : 'gradle/jar.gradle'
-//apply from : 'gradle/git.gradle'
-//apply from : 'gradle/jpagen.gradle'
-//apply from : 'gradle/props.gradle'
-apply from : 'gradle/depencencies.gradle'
-//apply from : 'gradle/sonar.gradle'
-//apply from : 'gradle/quality.gradle'
-//apply from : 'gradle/coverage.gradle'
-
-/*configurations { springLoaded }
+apply from :  'gradle/jar.gradle'
+apply from : 'gradle/git.gradle'
+apply from : 'gradle/jpagen.gradle'
+apply from : 'gradle/props.gradle'
+apply from :   'gradle/depencencies.gradle'
+apply from : 'gradle/sonar.gradle'
+apply from : 'gradle/quality.gradle'
+apply from : 'gradle/coverage.gradle'
 
 
+configurations { springLoaded }
 
 dependencies {
     springLoaded 'org.springframework:springloaded:1.2.5.RELEASE'
 }
+
+task('hello') 
+{
+    description = 'Simple my gradle test'
+    println "hello"
+    println "using build file '$buildFile.name' in '$buildFile.parentFile.name'."
+}
+
+hello.onlyIf { !project.hasProperty('skipHello') }
+
+task copyAgent(type: Copy) {
+    println  'ok : ' + configurations.springLoaded 
+    from configurations.springLoaded
+    into "$buildDir/springLoaded"
+}
+
 bootRun {
-    def springLoadedFile = configurations.springLoaded.find
-    println 'A message which is logged at QUIET level   ' + springLoadedFile
-  
-    
-     { it.name == "springloaded-1.2.5.RELEASE.jar" }
-     jvmArgs "-javaagent:$springLoadedFile", "-noverify"
-     
-     if (project.hasProperty('jvmArgs')) {
-         jvmArgs project.jvmArgs.split('\\s+')
-     }
- }*/
+   jvmArgs = ["-javaagent:${new File("$buildDir/springLoaded/springloaded-1.2.5.RELEASE.jar").absolutePath}", '-noverify']
+ }
+
+bootRun.dependsOn copyAgent
+
 sourceSets {
     intTest
     generated.java.srcDirs=['src/main/generated']
@@ -68,17 +77,8 @@ sourceSets {
 }
 
 
-
-
-
 test {
     if (gradle.startParameter.taskNames.find { ['integTest', 'release'].contains(it) })
       systemProperty 'integTest', 'true'
-      maxHeapSize = '1024m'
-      
+      maxHeapSize = '1024m'      
 }
-
-
-
-
-
