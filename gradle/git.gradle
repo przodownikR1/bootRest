@@ -72,9 +72,17 @@ task replaceVersion << {
         }
 }
 
+task gitPrepareDev << {
+    def grgit = org.ajoberstar.grgit.Grgit.open(project.projectDir)
+    grgit.checkout(branch: 'dev')
+    grgit.fetch()
+    grgit.merge(head: 'origin/HEAD', mode: org.ajoberstar.grgit.operation.MergeOp.Mode.ONLY_FF)
+    tasks.replaceVersion.execute();
+}
+
 task gitPrepareRelease << {
     def grgit = org.ajoberstar.grgit.Grgit.open(project.projectDir)
-    grgit.checkout(branch: "test-release", createBranch: true)
+    grgit.checkout(branch: "dev", createBranch: true)
     tasks.replaceVersion.execute();
 }
 

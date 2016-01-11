@@ -1,0 +1,120 @@
+class GitInfo{
+    String changeLog;
+    String bugfix;
+    
+    GitInfo(String changeLog, String bugfix){
+        this.changeLog = changeLog;
+        this.bugfix = bugfix;
+    }
+    @Override
+    String toString() {
+        "changeLog :   $changeLog , bugfix:   $bugfix"
+    }
+}
+
+class ProjectVersion {
+    Integer major
+    Integer minor
+    Integer bugfix
+    Boolean release
+    GitInfo gitInfo;
+
+    ProjectVersion(Integer major, Integer minor, Integer bugfix) {
+        this.major = major
+        this.minor = minor
+        this.bugfix = bugfix
+        this.release = Boolean.FALSE
+    }
+    ProjectVersion(Integer major, Integer minor, Integer bugfix, GitInfo gitInfo) {
+        this.major = major
+        this.minor = minor
+        this.bugfix = bugfix
+        this.release = Boolean.FALSE
+        this.gitInfo = gitInfo;
+    }
+    
+    ProjectVersion(Integer major, Integer minor, Integer bugfix, Boolean release) {
+        this(major, minor, bugfix)
+        this.release = release
+    }
+    
+    ProjectVersion(Integer major, Integer minor, Integer bugfix, Boolean release, GitInfo gitInfo) {
+        this(major, minor, bugfix, gitInfo)
+        this.release = release
+    }
+    
+    @Override
+    String toString() {
+        "$major.$minor.$bugfix${release ? '' : '-SNAPSHOT'}  -> $gitInfo"
+    }
+}
+
+ProjectVersion getVersionInfo(){
+    Properties props = new Properties()
+    File propsFile = new File('version.properties')
+    props.load(propsFile.newDataInputStream())
+    Integer rand = new Random().next(4)
+    props.setProperty('changelog', rand.toString())
+    props.setProperty('bugfix','null pointer exception ....')
+    props.store(propsFile.newWriter(), null)
+    props.load(propsFile.newDataInputStream())
+    def tempVersion = props.getProperty("version").split("\\.")
+    return new ProjectVersion(
+        Integer.parseInt(tempVersion[0]),
+        Integer.parseInt(tempVersion[1]),
+        Integer.parseInt(tempVersion[2]),
+        new GitInfo(props.getProperty('changelog'),props.getProperty('bugfix')))
+  }
+
+ProjectVersion getIncreaseVersion() {
+    version = getVersionInfo();
+    
+    def verDefinition = 'bugfix'//"$verDef"
+    switch(verDefinition){
+        case 'major': ++version.major
+            break
+        case 'minor': ++version.minor
+            break
+        case 'bugfix': ++version.bugfix
+            break
+        case 'release': 
+            version.release = true
+            break
+        default: throw new GradleException("Invalid version type '$verDef. Allowed types: ['Major', 'Minor', 'Bugfix', 'Release']")
+    }
+    return version
+}
+task incrementVersion(){
+    println getIncreaseVersion()
+}
+
+task printVersion(){
+    println "**** "+ getVersionInfo()
+    println "**** increase "+ getIncreaseVersion()
+    
+}
+
+project.ext.changelog =
+{ version, grgit, filter, title ->
+   StringBuilder builder = new StringBuilder()
+   grgit.log {
+      range "${version.nearest.normal.toString()}^{commit}", 'HEAD'
+      }.inject(builder)
+      { bldr, commit ->
+         if (commit.shortMessage.contains(filter))
+         {
+            builder.append(commit.getDate().format('yyyy-MM-dd') + ' | ')
+            builder.append(commit.getAbbreviatedId(7) + ' | ')
+            builder.append('@' + commit.author.name + ' | ')
+            builder.append(commit.shortMessage + '\n')
+         }
+      }
+      if (builder.length() != 0)
+      {
+         builder.insert(0, " --------- | ------- | -------- | ------\n")
+         builder.insert(0, "   Date    | Commit  |  Author  | Change\n")
+         builder.insert(0, "## **$title**\n")
+         builder.append('\n')
+      }
+      return builder.toString()
+}
