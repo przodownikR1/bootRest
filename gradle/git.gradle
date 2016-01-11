@@ -36,16 +36,16 @@ task buildRelease(group: 'versioning',  description: 'build releases')  {
     def id =  git.head().abbreviatedId
     def name = git.branch.getCurrent().name
     def workDir = new File(".").absolutePath    
-    println "my version  buildReleaseBuild  -> $version"
-    println "${name} - ${id}  - ${workDir}"
+  //  println "my version  buildReleaseBuild  -> $version"
+  //  println "${name} - ${id}  - ${workDir}"
 }
 
-task gitPull(group: 'versioning',  description: 'pull'){ 
+task gitPull(group: 'versioning',  description: 'pull from remote branch'){ 
    //git.checkout(branch: 'dev')
    git.pull()
 }
 import java.text.SimpleDateFormat
-task commit(group: 'versioning',  description: 'commit',dependsOn: gitPull) << {
+task commit(group: 'versioning',  description: 'Commits to local branch.',dependsOn: gitPull) << {
     def clean=git.status().isClean()
     if (!clean) {
         git.add(patterns: ['.'])
@@ -55,10 +55,22 @@ task commit(group: 'versioning',  description: 'commit',dependsOn: gitPull) << {
     }
 }
 
-task push(group: 'versioning',  description: 'push',dependsOn: commit)<<{
+task push(group: 'versioning',  description: 'Pushe to remote branch.',dependsOn: commit)<<{
     System.setProperty("org.ajoberstar.grgit.auth.username","przodownikR1")
     System.setProperty("org.ajoberstar.grgit.auth.password","******")
     git.push()
+}
+
+task gitStatus(group: 'versioning',  description: 'git status') << {
+    
+    def status = git.status()
+    logger.quiet ""+status 
+    if(status.unstaged.added || status.unstaged.modified || status.unstaged.removed ||
+        status.staged.added || status.staged.modified || status.staged.removed) {
+       logger.warn '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> '
+       logger.warn 'committing changes'  
+       logger.warn '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> '
+    }
 }
 
 def gitRevision() {
@@ -108,9 +120,9 @@ task gitPrepareRelease(group: 'versioning',  description: 'git -> preparate rele
 task tagRelease(group: 'versioning',  description: 'tagRelease -> create tag on release',dependsOn: printVersion) {
     def tags = git.tag.list()
     //println tags
-    println  gitRevision() + "  " + tags.size()
+   // println  gitRevision() + "  " + tags.size()
     tags.each { Tag t ->
-       println "&& $t"
+  //     println "&& $t"
     }
     
     def userName = System.properties['user.name']
