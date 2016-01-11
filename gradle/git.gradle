@@ -29,7 +29,7 @@ ext {
     git = org.ajoberstar.grgit.Grgit.open(file('.'))
 }
 
-task buildRelease()  {    
+task buildRelease(group: 'versioning',  description: 'build releases')  {    
     onlyIf{
         return new File(projectDir, '.git').exists()
     }
@@ -54,13 +54,13 @@ def gitRevision() {
         return "(unknown revision)";
     }
 }
-task gitDev(dependsOn: [clean, build])  {
+/*task gitDev(dependsOn: [clean, build])  {
     git.add(patterns: ['.'], update: true)
     git.commit(message: 'Next development version [ci skip]')
     git.push()
-}
+}*/
 
-task replaceVersion << {
+task replaceVersion(group: 'versioning',  description: 'git -> replaceVersion') << {
     ant.replaceregexp(
         match: /(version = ')[^']*(')/,
         replace: "\\1${masterVersion}\\2",
@@ -72,7 +72,7 @@ task replaceVersion << {
         }
 }
 
-task gitPrepareDev << {
+task gitPrepareDev(group: 'versioning',  description: 'git -> preparate dev') << {
     def grgit = org.ajoberstar.grgit.Grgit.open(project.projectDir)
     grgit.checkout(branch: 'dev')
     grgit.fetch()
@@ -80,13 +80,13 @@ task gitPrepareDev << {
     tasks.replaceVersion.execute();
 }
 
-task gitPrepareRelease << {
+task gitPrepareRelease(group: 'versioning',  description: 'git -> preparate release') << {
     def grgit = org.ajoberstar.grgit.Grgit.open(project.projectDir)
     grgit.checkout(branch: "dev", createBranch: true)
     tasks.replaceVersion.execute();
 }
 
-task tagRelease(dependsOn: incrementVersion) {
+task tagRelease(group: 'versioning',  description: 'tagRelease -> create tag on release',dependsOn: printVersion) {
     def tags = git.tag.list()
     
     //println tags

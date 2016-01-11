@@ -16,7 +16,7 @@ configurations {
     providedRuntime
     jpametamodel
 }
-task generateMetaModel(type: JavaCompile, group: 'build', description: 'metamodel generate') {
+task generateMetaModel(type: JavaCompile, group: 'jpa', description: 'metamodel generate') {
     
         source = sourceSets.main.java
         classpath = configurations.compile + configurations.jpametamodel

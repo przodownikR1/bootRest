@@ -109,10 +109,16 @@ dependencies {
     compile("org.apache.activemq:activemq-broker:5+")
     
   //  jpametamodel ('org.hibernate:hibernate-jpamodelgen:5.0.6.Final')
-    
+    testCompile('org.springframework.boot:spring-boot-starter-test'){
+        exclude module: 'hamcrest-core'
+        exclude module: 'hamcrest-library'
+        exclude module: 'mockito-core'
+    }
     testCompile 'org.mockito:mockito-all:1+'
     testCompile 'com.jayway.jsonpath:json-path'
-    testCompile 'junit:junit'
+    testCompile('junit:junit:4.12') {
+            exclude module: 'hamcrest-core'
+        }
     testCompile 'org.assertj:assertj-core:3+'
     testCompile 'com.jayway.awaitility:awaitility-java8:1.6.1'
     testCompile 'com.jayway.awaitility:awaitility:1.6+'

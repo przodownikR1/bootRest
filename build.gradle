@@ -32,20 +32,20 @@ apply from : 'gradle/jar.gradle'
 apply from : 'gradle/increase.gradle'
 apply from : 'gradle/git.gradle'
 //apply from : 'gradle/jpagen.gradle'
-//apply from : 'gradle/props.gradle'
+apply from : 'gradle/props.gradle'
 apply from : 'gradle/depencencies.gradle'
-//apply from : 'gradle/sonar.gradle'
+apply from : 'gradle/sonar.gradle'
 //apply from : 'gradle/quality.gradle'
 //apply from : 'gradle/coverage.gradle'
 
 
-/*processResources {
+processResources {
     filesMatching('application.properties') {
         filter org.apache.tools.ant.filters.ReplaceTokens, tokens: [
             'info.app.version': project.property('version') + '-' + git.head().abbreviatedId
         ]
     }
-}*/
+}
 
 test {
     if (gradle.startParameter.taskNames.find { ['integTest', 'release'].contains(it) })
