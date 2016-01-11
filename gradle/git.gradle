@@ -25,46 +25,52 @@ gitProperties {
 
 import org.ajoberstar.grgit.*
 
-task buildReleaseBuild  {
-    
+ext {
+    git = org.ajoberstar.grgit.Grgit.open(file('.'))
+}
+
+task buildRelease()  {    
     onlyIf{
         return new File(projectDir, '.git').exists()
     }
-    
-    def grgit=Grgit.open(project.file('.'))
-    def id =  grgit.head().abbreviatedId
-    def name = grgit.branch.getCurrent().name
-    def workDir = new File(".").absolutePath
+    def id =  git.head().abbreviatedId
+    def name = git.branch.getCurrent().name
+    def workDir = new File(".").absolutePath    
+    println "my version  buildReleaseBuild  -> $version"
     println "${name} - ${id}  - ${workDir}"
 }
 
-task tagRelease {
-    def grgit=Grgit.open(project.file('.'))
-    grgit.tag.add {
-      name = '1'
-      message = "Release of e"
-    }
-  }
-
-/*release  {
-    
-      releaseTasks = ['build']
-      
-      generateTagMessage = { version -> // default is "Release of ${version}"
-        StringBuilder builder = new StringBuilder()
-        builder.append('Release of ')
-        builder.append(version)
-        builder.append('\n\n')
-        grgit.log {
-          range "v${version.nearest.normal.toString()}^{commit}", 'HEAD'
-        }.inject(builder) { bldr, commit ->
-          bldr.append('- ')
-          bldr.append(commit.shortMessage)
-          bldr.append('\n')
+def gitRevision() {
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-list', 'HEAD', '-n', '1'
+            standardOutput = stdout
         }
-        builder.toString()
-      }
-    
-      
+        def commitRevision = stdout.toString().trim()
+        return commitRevision
     }
-*/
+    catch (ignored) {
+        return "(unknown revision)";
+    }
+}
+task gitDev(dependsOn: [clean, build])  {
+    git.add(patterns: ['.'], update: true)
+    git.commit(message: 'Next development version [ci skip]')
+    git.push()
+}
+
+
+task tagRelease(dependsOn: incrementVersion) {
+    def tags = git.tag.list()
+    
+    //println tags
+    println  gitRevision() + "  " + tags.size()
+    tags.each { Tag t ->
+       println "&& $t"
+    }
+    
+    def userName = System.properties['user.name']
+    //git.tag.add(name: 1231235, annotate: true, message: "RELEASE 1231235 - by $userName")
+    //git.push(tags: true)
+  }
