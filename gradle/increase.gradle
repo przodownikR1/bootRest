@@ -87,11 +87,11 @@ ProjectVersion getIncreaseVersion(String verDefinition) {
 task incrementVersion(){
     def console = System.console()
     if (console) {
-       verDefinition = console.readLine('> Please enter git-gradle operation type [major,minor,bugfix]: ')
+      def verDefinition = console.readLine('> Please enter git-gradle operation type [major,minor,bugfix]: ')
        println "++++++++++++++++++++++++++++++++  " + verDefinition
     }
 
-    println getIncreaseVersion("major")
+   // println getIncreaseVersion("major")
 }
 
 task printVersion(){
