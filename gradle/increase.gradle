@@ -66,10 +66,10 @@ ProjectVersion getVersionInfo(){
         new GitInfo(props.getProperty('changelog'),props.getProperty('bugfix')))
   }
 
-ProjectVersion getIncreaseVersion() {
+ProjectVersion getIncreaseVersion(String verDefinition) {
     version = getVersionInfo();
     
-    def verDefinition = 'bugfix'//"$verDef"
+     
     switch(verDefinition){
         case 'major': ++version.major
             break
@@ -85,12 +85,18 @@ ProjectVersion getIncreaseVersion() {
     return version
 }
 task incrementVersion(){
-    println getIncreaseVersion()
+    def console = System.console()
+    if (console) {
+       verDefinition = console.readLine('> Please enter git-gradle operation type [major,minor,bugfix]: ')
+       println "++++++++++++++++++++++++++++++++  " + verDefinition
+    }
+
+    println getIncreaseVersion("major")
 }
 
 task printVersion(){
     println "**** "+ getVersionInfo()
-    println "**** increase "+ getIncreaseVersion()
+    println "**** increase "+ getIncreaseVersion("major")
     
 }
 
