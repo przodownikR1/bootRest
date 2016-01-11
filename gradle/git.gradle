@@ -60,6 +60,18 @@ task gitDev(dependsOn: [clean, build])  {
     git.push()
 }
 
+task replaceVersion << {
+    ant.replaceregexp(
+        match: /(version = ')[^']*(')/,
+        replace: "\\1${masterVersion}\\2",
+        encoding: encoding,
+        flags: 'g') {
+            fileset(dir: project.projectDir) {
+                include(name: 'build.gradle')
+            }
+        }
+}
+
 task gitPrepareRelease << {
     def grgit = org.ajoberstar.grgit.Grgit.open(project.projectDir)
     grgit.checkout(branch: "test-release", createBranch: true)
