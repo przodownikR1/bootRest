@@ -40,6 +40,27 @@ task buildRelease(group: 'versioning',  description: 'build releases')  {
     println "${name} - ${id}  - ${workDir}"
 }
 
+task gitPull(group: 'versioning',  description: 'pull'){ 
+   //git.checkout(branch: 'dev')
+   git.pull()
+}
+import java.text.SimpleDateFormat
+task commit(group: 'versioning',  description: 'commit',dependsOn: gitPull) << {
+    def clean=git.status().isClean()
+    if (!clean) {
+        git.add(patterns: ['.'])
+        git.commit(message: "release - ${new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(new Date())}", all: true)
+    }else{
+        println("Clean, commit skipped.")
+    }
+}
+
+task push(group: 'versioning',  description: 'push',dependsOn: commit)<<{
+    System.setProperty("org.ajoberstar.grgit.auth.username","przodownikR1")
+    System.setProperty("org.ajoberstar.grgit.auth.password","******")
+    git.push()
+}
+
 def gitRevision() {
     try {
         def stdout = new ByteArrayOutputStream()
@@ -73,22 +94,19 @@ task replaceVersion(group: 'versioning',  description: 'git -> replaceVersion') 
 }
 
 task gitPrepareDev(group: 'versioning',  description: 'git -> preparate dev') << {
-    def grgit = org.ajoberstar.grgit.Grgit.open(project.projectDir)
-    grgit.checkout(branch: 'dev')
-    grgit.fetch()
-    grgit.merge(head: 'origin/HEAD', mode: org.ajoberstar.grgit.operation.MergeOp.Mode.ONLY_FF)
+    git.checkout(branch: 'dev')
+    git.fetch()
+    git.merge(head: 'origin/HEAD', mode: org.ajoberstar.grgit.operation.MergeOp.Mode.ONLY_FF)
     tasks.replaceVersion.execute();
 }
 
 task gitPrepareRelease(group: 'versioning',  description: 'git -> preparate release') << {
-    def grgit = org.ajoberstar.grgit.Grgit.open(project.projectDir)
-    grgit.checkout(branch: "dev", createBranch: true)
+    git.checkout(branch: "dev", createBranch: true)
     tasks.replaceVersion.execute();
 }
 
 task tagRelease(group: 'versioning',  description: 'tagRelease -> create tag on release',dependsOn: printVersion) {
     def tags = git.tag.list()
-    
     //println tags
     println  gitRevision() + "  " + tags.size()
     tags.each { Tag t ->
