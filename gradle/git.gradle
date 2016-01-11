@@ -60,6 +60,11 @@ task gitDev(dependsOn: [clean, build])  {
     git.push()
 }
 
+task gitPrepareRelease << {
+    def grgit = org.ajoberstar.grgit.Grgit.open(project.projectDir)
+    grgit.checkout(branch: "test-release", createBranch: true)
+    tasks.replaceVersion.execute();
+}
 
 task tagRelease(dependsOn: incrementVersion) {
     def tags = git.tag.list()
