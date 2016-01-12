@@ -173,13 +173,51 @@ task getVersion()<<{
 
 task generateChangelog(group: 'versioning',  description: 'generate git changelog') << {
     def changelog = ""
+    def tags = git.tag.list()
     def commits = git.log {
          range(file("${project.rootDir}/src/main/resources/last-release-commit.txt").text, "HEAD")
     }
+  
+    def changelogFile = new File("${project.rootDir}/src/main/resources/changelog.txt")
+    changelogFile.append("Changes in version : ")
+    changelogFile.append("[")
+    changelogFile.append(tags.first().fullName.replaceAll('refs/tags/','') ? tags.first().fullName.replaceAll('refs/tags/','') : " empty ")
+    changelogFile.append("]")
+    changelogFile.append(" - message -> ")
+    changelogFile.append("[")
+    changelogFile.append(tags.first().shortMessage?tags.first().shortMessage  : " empty ")
+    changelogFile.append("]")
+    changelogFile.append("  - date -> :  (")
+    changelogFile.append(commits.first().getDate() ? commits.first().getDate() : "not")
+    changelogFile.append(")")
+    changelogFile.append("\n");
+     
     commits.each {
-        changelog = "- " + it.fullMessage +  "  " + it.commit.getDate()  + "\n" + changelog
+        if(it.fullMessage.startsWith("*"){
+            changelogFile.append("fixed ")
+        }
+        if(it.fullMessage.startsWith("+"){
+            changelogFile.append("added ")
+        }
+        if(it.fullMessage.startsWith("-"){
+            changelogFile.append("removed ")
+        }
+        if(it.fullMessage.startsWith("#"){
+            changelogFile.append("modification ")
+        }
+        if(it.fullMessage.startsWith("@"){
+            changelogFile.append("upgrade ")
+        }
+        if(it.fullMessage.startsWith("%"){
+            changelogFile.append("deprecated ")
+        }
+        if(it.fullMessage.startsWith("&"){
+            changelogFile.append("improve ")
+        }
+        changelogFile.append(it.fullMessage + "  date ->  " + it.getDate());
+        changelogFile.append("\n");     
     }
-    file("${project.rootDir}/src/main/resources/changelog.txt").text = changelog
+    changelogFile.append("\n\n\n\n")
     file("${project.rootDir}/src/main/resources/last-release-commit.txt").text = commits.first().id
 }
 
