@@ -171,25 +171,24 @@ task getVersion()<<{
     println "getVesion code  " + getVersionCode
 }
 
-task(generateChangelog) << {
+task generateChangelog(group: 'versioning',  description: 'generate git changelog') << {
     def changelog = ""
     def commits = git.log {
-         range(file("last-release-commit.txt").text, "HEAD")
+         range(file("${project.rootDir}/src/main/resources/last-release-commit.txt").text, "HEAD")
     }
     commits.each {
-        changelog = "- " + it.fullMessage + "\n" + changelog
+        changelog = "- " + it.fullMessage +  "  " + it.commit.getDate()  + "\n" + changelog
     }
-    file("changelog.txt").text = changelog
-    file("last-release-commit.txt").text = commits.first().id
+    file("${project.rootDir}/src/main/resources/changelog.txt").text = changelog
+    file("${project.rootDir}/src/main/resources/last-release-commit.txt").text = commits.first().id
 }
 
 
 task tagRelease(group: 'versioning',  description: 'tagRelease -> create tag on release',dependsOn: printVersion) {
     def tags = git.tag.list()
-    File f = file("last-release-commit.txt")
+    File f = file("${project.rootDir}/src/main/resources/last-release-commit.txt")
     f.write(tags[0].commit.id)
-      
-    
+     
     tags.each { Tag t ->
        println "id: $t.commit.id " + " fullMessage :  "  + t.commit.fullMessage + " time :  " + t.commit.time + "  date :  " + t.commit.getDate()
        println "tag : " +  t.fullMessage + " fullName :   "+t.fullName + "  tagger  : " + t.tagger.name 
