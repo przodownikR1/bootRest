@@ -50,3 +50,47 @@ changelog generate
 
 
 
+Changes in version : [1.7] - message -> [my version 1.7]  - date -> :  (Tue Jan 12 13:12:08 CET 2016)
+
+
+
+
+Changes in version : [1.7] - message -> [my version 1.7]  - date -> :  (Tue Jan 12 13:12:08 CET 2016)
+# a little change git.gradle logic -> formatting changelog.txt file
+Changes in version : [1.7] - message -> [my version 1.7]  - date -> :  (Tue Jan 12 13:12:08 CET 2016)
+# a little change git.gradle logic -> formatting changelog.txt file
+Changes in version : [1.7] - message -> [my version 1.7]  - date -> :  (Tue Jan 12 13:12:08 CET 2016)
+# a little change git.gradle logic -> formatting changelog.txt file
+Changes in version : [1.7] - message -> [my version 1.7]  - date -> :  (Tue Jan 12 13:12:08 CET 2016)
+# a little change git.gradle logic -> formatting changelog.txt file
+Tue Jan 12 13:12:08 CET 2016
+change location file : release-commit and changelog
+Tue Jan 12 12:07:48 CET 2016
+changelog generate
+Tue Jan 12 11:58:22 CET 2016
+
+
+
+
+Changes in version : [1.7] - message -> [my version 1.7]  - date -> :  (Tue Jan 12 13:12:08 CET 2016)
+# a little change git.gradle logic -> formatting changelog.txt file
+Tue Jan 12 13:12:08 CET 2016
+change location file : release-commit and changelog
+Tue Jan 12 12:07:48 CET 2016
+changelog generate
+Tue Jan 12 11:58:22 CET 2016
+
+
+
+
+Changes in version : [1.7] - message -> [my version 1.7]  - date -> :  (Tue Jan 12 13:12:08 CET 2016)
+# a little change git.gradle logic -> formatting changelog.txt file
+Tue Jan 12 13:12:08 CET 2016
+change location file : release-commit and changelog
+Tue Jan 12 12:07:48 CET 2016
+changelog generate
+Tue Jan 12 11:58:22 CET 2016
+
+
+
+

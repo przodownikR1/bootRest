@@ -193,29 +193,41 @@ task generateChangelog(group: 'versioning',  description: 'generate git changelo
     changelogFile.append("\n");
      
     commits.each {
-        if(it.fullMessage.startsWith("*"){
+        def message = it.fullMessage
+        def time = it.getDate()
+      /*if(message.startsWith("*"){
             changelogFile.append("fixed ")
+            changelogFile.append(message.replaceAll('*',''))
         }
-        if(it.fullMessage.startsWith("+"){
+        if(message.startsWith("+"){
             changelogFile.append("added ")
+            changelogFile.append(message.replaceAll('+',''))
         }
-        if(it.fullMessage.startsWith("-"){
+        if(message.startsWith("-"){
             changelogFile.append("removed ")
+            changelogFile.append(message.replaceAll('-',''))
         }
-        if(it.fullMessage.startsWith("#"){
+        if(message.startsWith("#"){
             changelogFile.append("modification ")
+            changelogFile.append(message.replaceAll('#',''))
         }
-        if(it.fullMessage.startsWith("@"){
+        if(message.startsWith("@"){
             changelogFile.append("upgrade ")
+            changelogFile.append(message.replaceAll('@',''))
         }
-        if(it.fullMessage.startsWith("%"){
+        if(message.startsWith("%"){
             changelogFile.append("deprecated ")
+            changelogFile.append(message.replaceAll('%',''))
         }
-        if(it.fullMessage.startsWith("&"){
+        if(message.startsWith("&"){
             changelogFile.append("improve ")
-        }
-        changelogFile.append(it.fullMessage + "  date ->  " + it.getDate());
-        changelogFile.append("\n");     
+            changelogFile.append(message.replaceAll('&',''))
+        }*/
+        changelogFile.append(message)
+
+        changelogFile.append(time)
+        changelogFile.append("\n");
+           
     }
     changelogFile.append("\n\n\n\n")
     file("${project.rootDir}/src/main/resources/last-release-commit.txt").text = commits.first().id
