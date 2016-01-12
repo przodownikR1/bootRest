@@ -15,19 +15,26 @@
  */
 package pl.java.scalatech.web.example;
 
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.java.scalatech.domain.Role;
+import pl.java.scalatech.repository.RoleRepository;
 
 @RestController
 @Slf4j
 @CrossOrigin
 public class SampleRestController {
 
-
+     @Autowired
+     private RoleRepository roleRepository;
 
     @RequestMapping(value="/restSample",method=RequestMethod.GET)
     @CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
@@ -36,6 +43,22 @@ public class SampleRestController {
         return new Payload("test");
     }
 
+    @RequestMapping(value="/addRole",method=RequestMethod.GET)
+    public Role createRole() {
+        log.info("+++ createRole");
+        roleRepository.save(Role.builder().name("ADMIN").build());
+        return roleRepository.findAll().stream().findFirst().get();
 
+    }
+
+    @RequestMapping(value="/updateRole/{id}",method=RequestMethod.GET)
+    public Role updateRole(@PathVariable Long id) {
+        log.info("+++ createRole");
+        Role loaded = roleRepository.findOne(id);
+        loaded.setDesc(""+new Date().toString());
+        return loaded;
+
+
+    }
 
 }

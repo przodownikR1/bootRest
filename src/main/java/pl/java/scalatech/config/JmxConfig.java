@@ -20,7 +20,6 @@ import javax.persistence.EntityManagerFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.jpa.HibernateEntityManagerFactory;
 import org.hibernate.stat.Statistics;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.ExportMetricWriter;
 import org.springframework.boot.actuate.metrics.jmx.JmxMetricWriter;
 import org.springframework.boot.actuate.metrics.writer.MetricWriter;
@@ -37,7 +36,7 @@ import com.google.common.collect.ImmutableMap;
 @EnableMBeanExport
 public class JmxConfig {
 
-   
+
     @Bean
     @DependsOn("statisticsService")
     @Profile("dev")
@@ -46,21 +45,21 @@ public class JmxConfig {
         exporter.setBeans(ImmutableMap.of("Hibernate:application=Statistics", (Object) statistics));
         return exporter;
     }
-    
+
     @Bean
     @ExportMetricWriter
     @Profile("dev")
     MetricWriter jmxMetric(Statistics statistics){
         return new JmxMetricWriter(jmxService(statistics));
     }
-    
+
     @Bean
     @ExportMetricWriter
     @Profile("prod")
     MetricWriter jmxMetric(MBeanExporter exporter){
         return new JmxMetricWriter(exporter);
     }
-    
+
 
     @Bean
     @DependsOn("entityManagerFactory")

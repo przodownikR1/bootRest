@@ -15,22 +15,31 @@
  */
 package pl.java.scalatech.audit;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import pl.java.scalatech.domain.Person;
-import pl.java.scalatech.repository.PersonRepository;
+import lombok.extern.slf4j.Slf4j;
+import pl.java.scalatech.domain.User;
+import pl.java.scalatech.repository.UserRepository;
 
 @Component
-public class SpringSecurityAuditorAware implements AuditorAware<Person> {
+@Slf4j
+public class SpringSecurityAuditorAware implements AuditorAware<String> {
 
-    @Autowired private PersonRepository personRepository;
-    
+    @Autowired private UserRepository userRepository;
+
     @Override
-    public Person getCurrentAuditor() {
-        Person user = personRepository.findAll().get(0);  
-        return user;
+    public String getCurrentAuditor() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("++++ {}",authentication.getPrincipal());
+        User user = userRepository.findAll().get(0);
+        log.info("+++++++++++++++++  :  {}",user);
+        return "user " +new Date().toString();
     }
 
 }

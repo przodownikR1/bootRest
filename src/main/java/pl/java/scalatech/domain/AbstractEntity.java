@@ -17,18 +17,26 @@ package pl.java.scalatech.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
+
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.Getter;
 
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractEntity implements Serializable{
     private static final long serialVersionUID = 1764429777262538648L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
     protected Long id;
+
+    @Version
+    private Long version;
 }

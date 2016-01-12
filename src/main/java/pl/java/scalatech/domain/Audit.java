@@ -17,10 +17,8 @@ package pl.java.scalatech.domain;
 
 import java.time.LocalDate;
 
+import javax.persistence.Convert;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
 import org.springframework.data.annotation.CreatedBy;
@@ -40,19 +38,21 @@ public abstract class Audit extends AbstractEntity{
     private static final long serialVersionUID = 2663518387056045900L;
 
     @CreatedDate
+    @Convert(converter=LocalDateAttributeConverter.class)
     private LocalDate createdDate = LocalDate.now();
 
     @LastModifiedDate
+    @Convert(converter=LocalDateAttributeConverter.class)
     private LocalDate lastModifiedDate = LocalDate.now();
 
     @CreatedBy
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    private Person createdBy;
+    //@OneToOne(fetch = FetchType.LAZY)
+    //@JoinColumn
+    private String createdBy;
 
     @LastModifiedBy
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    private Person lastModifiedBy;
+   // @OneToOne(fetch = FetchType.LAZY)
+    //@JoinColumn
+    private String lastModifiedBy;
 
 }

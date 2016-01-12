@@ -19,6 +19,9 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -36,8 +39,9 @@ public class Team extends AbstractEntity{
     private String name;
     @Column(name="teamDesc")
     private String desc;
-    
-    @ManyToMany
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "Team_users", joinColumns = { @JoinColumn(name = "teamId") }, inverseJoinColumns = { @JoinColumn(name = "userId") })
     List<User> users;
-    
+
 }

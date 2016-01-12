@@ -28,17 +28,14 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'groovy'
 apply from : 'gradle/jar.gradle'
 
-apply from : 'gradle/git.gradle'
+///apply from : 'gradle/git.gradle'
 //apply from : 'gradle/jpagen.gradle'
-apply from : 'gradle/props.gradle'
+//apply from : 'gradle/props.gradle'
 apply from : 'gradle/depencencies.gradle'
-apply from : 'gradle/sonar.gradle'
+//apply from : 'gradle/sonar.gradle'
 //apply from : 'gradle/quality.gradle'
 //apply from : 'gradle/coverage.gradle'
 apply from : 'gradle/changelog.gradle'
-
-
-
 
 processResources {
     filesMatching('application.properties') {

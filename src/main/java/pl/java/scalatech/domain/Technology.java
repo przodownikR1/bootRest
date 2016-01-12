@@ -17,7 +17,6 @@ package pl.java.scalatech.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -34,7 +33,6 @@ public class Technology extends AbstractEntity{
     private String name;
     @Column(name="skillDesc")
     private String desc;
-    @Enumerated
-    private KnownleageLevel knownleageLevel;
-    
+
+
 }
