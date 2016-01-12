@@ -1,0 +1,148 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+          }
+    }
+    dependencies {
+        classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.7")
+        classpath 'org.ajoberstar:gradle-git:1.3.2'
+    }
+}
+
+apply plugin: 'com.gorylenko.gradle-git-properties'
+apply from : 'gradle/increase.gradle'
+
+gitProperties {
+    gitPropertiesDir = new File("${project.rootDir}/src/main/resources")
+}
+
+import org.ajoberstar.grgit.*
+
+ext {
+    git = org.ajoberstar.grgit.Grgit.open(file('.'))
+}
+
+task gitPull(group: 'versioning',  description: 'pull from remote branch'){
+    //git.checkout(branch: 'dev')
+    git.pull()
+}
+
+task commit(group: 'versioning',  description: 'Commits to local branch.',dependsOn: gitPull) << {
+    def clean=git.status().isClean()
+    if (!clean) {
+        git.add(patterns: ['.'])
+        git.commit(message: "release - ${new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(new Date())}", all: true)
+    }else{
+        println("Clean, commit skipped.")
+    }
+}
+
+
+task releaseCanditate(group: 'versioning',  description: 'prepare to create new merge request', dependsOn:[commit]){
+    onlyIf{
+        return new File(projectDir, '.git').exists()
+    }
+    def id =  git.head().abbreviatedId
+    def name = git.branch.getCurrent().name
+    def workDir = new File(".").absolutePath
+    
+    println  'prepare to merge request....'   
+}
+
+
+
+task tagRelease(group: 'versioning',  description: 'tagRelease -> create tag on release',dependsOn: printVersion) {
+    def tags = git.tag.list()
+    println '+++++++++++++++++ tagRelease'
+    tags.each { Tag t ->
+       println "id: $t.commit.id " + " fullMessage :  "  + t.commit.fullMessage + " time :  " + t.commit.time + "  date :  " + t.commit.getDate()
+       println "tag : " +  t.fullMessage + " fullName :   "+t.fullName + "  tagger  : " + t.tagger.name
+       
+    }
+   
+}
+
+task markTask(group: 'versioning',  description: ' markTask -> mark current commit into last-release-commit.txt',dependsOn: printVersion){
+    def tags = git.tag.list()
+    File f = file("${project.rootDir}/src/main/resources/last-release-commit.txt")
+    f.write(tags[0].commit.id)
+    println '+++++++++++++++++ markTask'
+}
+
+task createNewTag(group: 'versioning',  description: ' createNewTag -> create ',dependsOn:markTask){
+    
+    def userName = System.properties['user.name']
+    def lastCommit = git.tag.list().first().fullName.replaceAll('refs/tags/','');
+    
+    
+    println '+++++++++++++++++ createNewTag'
+    //git.tag.add(name: 12312, annotate: true, message: "RELEASE 1231255 - by $userName")
+    //git.push(tags: true)
+}
+
+import java.text.SimpleDateFormat
+task generateChangelog(group: 'versioning',  description: 'generate git changelog') << {
+    println '+++++++++++++++++ generateChangeLog'
+    def changelog = ""
+    def tags = git.tag.list()
+    def commits = git.log {
+         range(file("${project.rootDir}/src/main/resources/last-release-commit.txt").text, "HEAD")
+    }
+  
+    def changelogFile = new File("${project.rootDir}/src/main/resources/changelog.txt")
+    changelogFile.append("Changes in version : ")
+    changelogFile.append("[")
+    changelogFile.append(tags.first().fullName.replaceAll('refs/tags/','') ? tags.first().fullName.replaceAll('refs/tags/','') : " empty ")
+    changelogFile.append("]")
+    changelogFile.append(" - message -> ")
+    changelogFile.append("[")
+    changelogFile.append(tags.first().shortMessage?tags.first().shortMessage  : " empty ")
+    changelogFile.append("]")
+    changelogFile.append("  - date -> :  (")
+    changelogFile.append(commits.first().getDate() ? commits.first().getDate() : "not")
+    changelogFile.append(")")
+    changelogFile.append("\n");
+     
+    commits.each {
+        def message = it.fullMessage
+        def time = it.getDate()
+      /*if(message.startsWith("*"){
+            changelogFile.append("fixed ")
+            changelogFile.append(message.replaceAll('*',''))
+        }
+        if(message.startsWith("+"){
+            changelogFile.append("added ")
+            changelogFile.append(message.replaceAll('+',''))
+        }
+        if(message.startsWith("-"){
+            changelogFile.append("removed ")
+            changelogFile.append(message.replaceAll('-',''))
+        }
+        if(message.startsWith("#"){
+            changelogFile.append("modification ")
+            changelogFile.append(message.replaceAll('#',''))
+        }
+        if(message.startsWith("@"){
+            changelogFile.append("upgrade ")
+            changelogFile.append(message.replaceAll('@',''))
+        }
+        if(message.startsWith("%"){
+            changelogFile.append("deprecated ")
+            changelogFile.append(message.replaceAll('%',''))
+        }
+        if(message.startsWith("&"){
+            changelogFile.append("improve ")
+            changelogFile.append(message.replaceAll('&',''))
+        }*/
+        changelogFile.append(message)
+        def formatDate = new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(time)
+        changelogFile.append(formatDate)
+        changelogFile.append("\n");
+           
+    }
+    changelogFile.append("\n\n\n\n")
+    file("${project.rootDir}/src/main/resources/last-release-commit.txt").text = commits.first().id
+}

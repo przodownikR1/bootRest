@@ -93,7 +93,7 @@ ProjectVersion getIncreaseVersion(String verDefinition) {
     return version
 }
 
-task printVersion(group: 'versioning', description: 'Prints the current project version') << {
+task printVersion(group: 'versioningIncrease', description: 'Prints the current project version') << {
     logger.quiet "Version:  "+getVersionInfo()
     logger.quiet "Increase version " + getIncreaseVersion("major")
 }

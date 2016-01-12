@@ -7,18 +7,10 @@ buildscript {
           }
     }
     dependencies {
-        classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.7")
-     //   classpath "gradle.plugin.de.timroes.gradle:git-version:0.3.0"
         classpath 'org.ajoberstar:gradle-git:1.3.2'
     }
 }
-//apply plugin: "de.timroes.git-version"
-apply plugin: 'com.gorylenko.gradle-git-properties'
-//apply plugin: 'org.ajoberstar.release-opinion'
 
-gitProperties {
-    gitPropertiesDir = new File("${project.rootDir}/src/main/resources")
-}
 
 import org.ajoberstar.grgit.*
 
@@ -26,33 +18,9 @@ ext {
     git = org.ajoberstar.grgit.Grgit.open(file('.'))
 }
 
-task buildRelease(group: 'versioning',  description: 'build releases')  {    
-    onlyIf{
-        return new File(projectDir, '.git').exists()
-    }
-    def id =  git.head().abbreviatedId
-    def name = git.branch.getCurrent().name
-    def workDir = new File(".").absolutePath    
-  //  println "my version  buildReleaseBuild  -> $version"
-  //  println "${name} - ${id}  - ${workDir}"
-}
 
-task gitPull(group: 'versioning',  description: 'pull from remote branch'){ 
-   //git.checkout(branch: 'dev')
-   git.pull()
-}
-import java.text.SimpleDateFormat
-task commit(group: 'versioning',  description: 'Commits to local branch.',dependsOn: gitPull) << {
-    def clean=git.status().isClean()
-    if (!clean) {
-        git.add(patterns: ['.'])
-        git.commit(message: "release - ${new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(new Date())}", all: true)
-    }else{
-        println("Clean, commit skipped.")
-    }
-}
 
-task push(group: 'versioning',  description: 'Pushe to remote branch.',dependsOn: commit)<<{
+task push(group: 'versioning',  description: 'Push to remote branch.')<<{
     System.setProperty("org.ajoberstar.grgit.auth.username","przodownikR1")
     System.setProperty("org.ajoberstar.grgit.auth.password","******")
     git.push()
@@ -84,11 +52,6 @@ def gitRevision() {
         return "(unknown revision)";
     }
 }
-/*task gitDev(dependsOn: [clean, build])  {
-    git.add(patterns: ['.'], update: true)
-    git.commit(message: 'Next development version [ci skip]')
-    git.push()
-}*/
 
 task replaceVersion(group: 'versioning',  description: 'git -> replaceVersion') << {
     ant.replaceregexp(
@@ -107,36 +70,6 @@ task gitPrepareDev(group: 'versioning',  description: 'git -> preparate dev') <<
     git.fetch()
     git.merge(head: 'origin/HEAD', mode: org.ajoberstar.grgit.operation.MergeOp.Mode.ONLY_FF)
     tasks.replaceVersion.execute();
-}
-
-task gitPrepareRelease(group: 'versioning',  description: 'git -> preparate release') << {
-    git.checkout(branch: "dev", createBranch: true)
-    tasks.replaceVersion.execute();
-}
-
-def readTags() {
-    def tags = []
-    def proc = "git tag -l".execute()
-    proc.in.eachLine { line -> tags += line}
-    tags.sort {}
-    Collections.reverse( tags )
-    tags
-}
-
-def readTagMessage(String tag) {
-    def message = []
-    def proc = "git cat-file tag $tag".execute()
-    def startCollection = false
-    proc.in.eachLine { line ->
-        if (line.isEmpty()) {
-            startCollection = true
-        }
-        if (startCollection) {
-            message += line
-        }
-    }
-    proc.err.eachLine { line -> println line }
-    message
 }
 
 def getVersionCode = { ->
@@ -171,80 +104,5 @@ task getVersion()<<{
     println "getVesion code  " + getVersionCode
 }
 
-task generateChangelog(group: 'versioning',  description: 'generate git changelog') << {
-    def changelog = ""
-    def tags = git.tag.list()
-    def commits = git.log {
-         range(file("${project.rootDir}/src/main/resources/last-release-commit.txt").text, "HEAD")
-    }
-  
-    def changelogFile = new File("${project.rootDir}/src/main/resources/changelog.txt")
-    changelogFile.append("Changes in version : ")
-    changelogFile.append("[")
-    changelogFile.append(tags.first().fullName.replaceAll('refs/tags/','') ? tags.first().fullName.replaceAll('refs/tags/','') : " empty ")
-    changelogFile.append("]")
-    changelogFile.append(" - message -> ")
-    changelogFile.append("[")
-    changelogFile.append(tags.first().shortMessage?tags.first().shortMessage  : " empty ")
-    changelogFile.append("]")
-    changelogFile.append("  - date -> :  (")
-    changelogFile.append(commits.first().getDate() ? commits.first().getDate() : "not")
-    changelogFile.append(")")
-    changelogFile.append("\n");
-     
-    commits.each {
-        def message = it.fullMessage
-        def time = it.getDate()
-      /*if(message.startsWith("*"){
-            changelogFile.append("fixed ")
-            changelogFile.append(message.replaceAll('*',''))
-        }
-        if(message.startsWith("+"){
-            changelogFile.append("added ")
-            changelogFile.append(message.replaceAll('+',''))
-        }
-        if(message.startsWith("-"){
-            changelogFile.append("removed ")
-            changelogFile.append(message.replaceAll('-',''))
-        }
-        if(message.startsWith("#"){
-            changelogFile.append("modification ")
-            changelogFile.append(message.replaceAll('#',''))
-        }
-        if(message.startsWith("@"){
-            changelogFile.append("upgrade ")
-            changelogFile.append(message.replaceAll('@',''))
-        }
-        if(message.startsWith("%"){
-            changelogFile.append("deprecated ")
-            changelogFile.append(message.replaceAll('%',''))
-        }
-        if(message.startsWith("&"){
-            changelogFile.append("improve ")
-            changelogFile.append(message.replaceAll('&',''))
-        }*/
-        changelogFile.append(message)
-
-        changelogFile.append(time)
-        changelogFile.append("\n");
-           
-    }
-    changelogFile.append("\n\n\n\n")
-    file("${project.rootDir}/src/main/resources/last-release-commit.txt").text = commits.first().id
-}
 
 
-task tagRelease(group: 'versioning',  description: 'tagRelease -> create tag on release',dependsOn: printVersion) {
-    def tags = git.tag.list()
-    File f = file("${project.rootDir}/src/main/resources/last-release-commit.txt")
-    f.write(tags[0].commit.id)
-     
-    tags.each { Tag t ->
-       println "id: $t.commit.id " + " fullMessage :  "  + t.commit.fullMessage + " time :  " + t.commit.time + "  date :  " + t.commit.getDate()
-       println "tag : " +  t.fullMessage + " fullName :   "+t.fullName + "  tagger  : " + t.tagger.name 
-    }
-    
-    def userName = System.properties['user.name']
-    //git.tag.add(name: 1231235, annotate: true, message: "RELEASE 1231235 - by $userName")
-    //git.push(tags: true)
-  }
