@@ -1,4 +1,12 @@
-ext.propsFile = file('version.properties')
+
+import org.ajoberstar.grgit.*
+
+ext {
+    isReleaseVersion = !project.version.endsWith("SNAPSHOT")
+    git = org.ajoberstar.grgit.Grgit.open(file('.'))
+    propsFile = file('version.properties')
+}
+
 
 class GitInfo{
     String changeLog;
@@ -51,28 +59,32 @@ class ProjectVersion {
     }
 }
 
-ProjectVersion getVersionInfo(){
-    logger.info 'Reading the version file.'
-    if (!propsFile.exists()) {
-        throw new GradleException("Required version file does not exit: $propsFile.canonicalPath")
-    }
-    Properties props = new Properties()
-    props.load(propsFile.newDataInputStream())
-    def rand = new Random().next(4)
-    props.setProperty('changelog', rand.toString())
-    props.setProperty('bugfix','null pointer exception ....')
-    props.store(propsFile.newWriter(), null)
-    props.load(propsFile.newDataInputStream())
-    def tempVersion = props.getProperty("version").split("\\.")
+ProjectVersion getVersionInfo(String tag,String changelog,String bugfix){
+    def tempVersion = tag.split("\\.")
+    
+    
+    println "----------------------------------------0" + tempVersion[0]
+    println "----------------------------------------1" + tempVersion[1]
+    println "----------------------------------------2" + tempVersion[2]
+    
     return new ProjectVersion(
         Integer.parseInt(tempVersion[0]),
         Integer.parseInt(tempVersion[1]),
         Integer.parseInt(tempVersion[2]),
-        new GitInfo(props.getProperty('changelog'),props.getProperty('bugfix')))
+        new GitInfo(changelog,bugfix))
   }
 
+def lastReleaseVersionByTag(){
+    return  git.tag.list().first().fullName.replaceAll('refs/tags/','')
+}
+
+task lastReleaseVersionByTag(group: 'versioning',  description: 'get last release from tags'){
+    println lastReleaseVersionByTag()
+}
+
+
 ProjectVersion getIncreaseVersion(String verDefinition) {
-    version = getVersionInfo()
+    version = getVersionInfo(lastReleaseVersionByTag(),"slsslslls","sdfsdfsdf")
     switch(verDefinition){
         case 'major': 
              ++version.major
@@ -94,6 +106,6 @@ ProjectVersion getIncreaseVersion(String verDefinition) {
 }
 
 task printVersion(group: 'versioningIncrease', description: 'Prints the current project version') << {
-    logger.quiet "Version:  "+getVersionInfo()
+    logger.quiet "Version:  "+getVersionInfo("1.5.3","some changelog", "1.2 bugfix")
     logger.quiet "Increase version " + getIncreaseVersion("major")
 }

@@ -15,6 +15,8 @@ buildscript {
 apply plugin: 'com.gorylenko.gradle-git-properties'
 apply from : 'gradle/increase.gradle'
 
+
+
 gitProperties {
     gitPropertiesDir = new File("${project.rootDir}/src/main/resources")
 }
@@ -22,7 +24,34 @@ gitProperties {
 import org.ajoberstar.grgit.*
 
 ext {
+    isReleaseVersion = !project.version.endsWith("SNAPSHOT")
     git = org.ajoberstar.grgit.Grgit.open(file('.'))
+}
+
+task push(group: 'versioning',  description: 'Push to remote branch.')<<{
+    System.setProperty("org.ajoberstar.grgit.auth.username","przodownikR1")
+    System.setProperty("org.ajoberstar.grgit.auth.password","******")
+    git.push()
+}
+
+task gitPrepareDev(group: 'versioning',  description: 'git -> preparate dev') << {
+    git.checkout(branch: 'dev')
+    git.fetch()
+    git.merge(head: 'origin/HEAD', mode: org.ajoberstar.grgit.operation.MergeOp.Mode.ONLY_FF)
+    tasks.replaceVersion.execute();
+}
+
+
+task gitStatus(group: 'versioning',  description: 'git status') << {
+    
+    def status = git.status()
+    logger.quiet ""+status
+    if(status.unstaged.added || status.unstaged.modified || status.unstaged.removed ||
+        status.staged.added || status.staged.modified || status.staged.removed) {
+       logger.warn '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> '
+       logger.warn 'committing changes'
+       logger.warn '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> '
+    }
 }
 
 task gitPull(group: 'versioning',  description: 'pull from remote branch'){
@@ -59,7 +88,7 @@ task tagRelease(group: 'versioning',  description: 'tagRelease -> create tag on 
     println '+++++++++++++++++ tagRelease'
     tags.each { Tag t ->
        println "id: $t.commit.id " + " fullMessage :  "  + t.commit.fullMessage + " time :  " + t.commit.time + "  date :  " + t.commit.getDate()
-       println "tag : " +  t.fullMessage + " fullName :   "+t.fullName + "  tagger  : " + t.tagger.name
+     //  println "tag : " +  t.fullMessage + " fullName :   "+t.fullName + "  tagger  : " + t.tagger.name
        
     }
    
@@ -72,10 +101,14 @@ task markTask(group: 'versioning',  description: ' markTask -> mark current comm
     println '+++++++++++++++++ markTask'
 }
 
-task createNewTag(group: 'versioning',  description: ' createNewTag -> create ',dependsOn:markTask){
+def lastReleaseVersionByTag(){
+    return  git.tag.list().first().fullName.replaceAll('refs/tags/','')
+}
+
+task createNewTag(group: 'versioning',  description: ' createNewTag -> create '/*,dependsOn:markTask*/){
     
     def userName = System.properties['user.name']
-    def lastCommit = git.tag.list().first().fullName.replaceAll('refs/tags/','');
+    def lastCommit = lastReleaseVersionByTag()
     
     
     println '+++++++++++++++++ createNewTag'
