@@ -17,9 +17,13 @@ package pl.java.scalatech.domain;
 
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Convert;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToOne;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -46,13 +50,13 @@ public abstract class Audit extends AbstractEntity{
     private LocalDate lastModifiedDate = LocalDate.now();
 
     @CreatedBy
-    //@OneToOne(fetch = FetchType.LAZY)
-    //@JoinColumn
-    private String createdBy;
+    @OneToOne(cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn
+    private User createdBy;
 
     @LastModifiedBy
-   // @OneToOne(fetch = FetchType.LAZY)
-    //@JoinColumn
-    private String lastModifiedBy;
+    @OneToOne(cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn
+    private User lastModifiedBy;
 
 }

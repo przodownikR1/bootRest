@@ -15,31 +15,55 @@
  */
 package pl.java.scalatech.audit;
 
-import java.util.Date;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pl.java.scalatech.domain.User;
 import pl.java.scalatech.repository.UserRepository;
 
-@Component
+
 @Slf4j
-public class SpringSecurityAuditorAware implements AuditorAware<String> {
-
-    @Autowired private UserRepository userRepository;
-
+@NoArgsConstructor
+public class SpringSecurityAuditorAware implements AuditorAware<User> {
+    private final static String ANONYMOUS = "anonymous";
+    @Autowired
+    private  UserRepository userRepository;
+    
+    
+    @Autowired
+    public SpringSecurityAuditorAware(UserRepository userRepository) {
+        this.userRepository = userRepository;
+        Optional<User> user = userRepository.findByLogin(ANONYMOUS);
+        User loaded =  user.orElseGet(()->User.builder().login(ANONYMOUS).enabled(true).build());
+        userRepository.save(loaded);
+        log.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++  {}",userRepository.findAll().stream().findFirst().get());
+    } 
+    
+    
     @Override
-    public String getCurrentAuditor() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("++++ {}",authentication.getPrincipal());
-        User user = userRepository.findAll().get(0);
-        log.info("+++++++++++++++++  :  {}",user);
-        return "user " +new Date().toString();
+    public User getCurrentAuditor() {
+        //TODOO !!!!!!!!!!!!!!!!! WTF    
+        Optional<User> user = userRepository.findByLogin(ANONYMOUS);
+        User loaded =  user.orElseGet(()->User.builder().login(ANONYMOUS).enabled(true).build());
+        userRepository.save(loaded);
+    
+        
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String login = ANONYMOUS;
+         if(auth != null){
+             login = auth.getName();
+         }
+        log.info("+++++++++++++++++++  login from security context : {}",login);
+        user = userRepository.findByLogin(login);
+        loaded =  user.orElseThrow(()-> new IllegalArgumentException("user not exists"));
+        log.info("+++++++++++++++++  {}",loaded);
+        return loaded;
     }
 
 }

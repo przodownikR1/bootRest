@@ -42,7 +42,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper=true)
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class User extends Audit{
+public class User extends AbstractEntity{
 
     private static final long serialVersionUID = -8920961125119379475L;
     private  String firstname;

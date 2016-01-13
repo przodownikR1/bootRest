@@ -17,6 +17,7 @@ package pl.java.scalatech.config;
 
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -26,8 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.log4jdbc.tools.Log4JdbcCustomFormatter;
 import net.sf.log4jdbc.tools.LoggingType;
 import pl.java.scalatech.audit.SpringSecurityAuditorAware;
+import pl.java.scalatech.domain.User;
+import pl.java.scalatech.repository.UserRepository;
 
-
+@Configuration
 @EntityScan(basePackages = "pl.java.scalatech.domain")
 @EnableJpaRepositories(basePackages = "pl.java.scalatech.repository")
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
@@ -36,8 +39,7 @@ public class JpaConfig {
 
 
     @Bean
-    public AuditorAware<String> auditorAware() {
-        log.info("+++++++++++++ register AuditorAware...");
+    public AuditorAware<User> auditorAware() {
         return new SpringSecurityAuditorAware();
     }
 

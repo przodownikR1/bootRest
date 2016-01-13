@@ -37,7 +37,7 @@ public class BootRest {
     @Bean
     CommandLineRunner init(UserRepository userRepository, SkillRepository skillRepository, ProjectRepository projectRepository) {
         return (evt) -> Lists.newArrayList("przodownik", "kowalski", "nowak", "plank", "tyson", "holyfield", "jones", "obama").forEach(a -> {
-            User user = userRepository.save(User.builder().firstname(a).login("_" + a).email(a + "@tlen.pl").login(a).build());
+            User user = userRepository.save(User.builder().firstname(a).login("_" + a).email(a + "@tlen.pl").login(a).enabled(true).build());
             log.info("{}", user);
             Lists.newArrayList("java", "scala", "groovy", "gradle", "maven", "spring", "jpa")
                     .forEach(s -> skillRepository.save(Skill.builder().name(s).build()));
