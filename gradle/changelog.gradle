@@ -24,7 +24,7 @@ gitProperties {
 import org.ajoberstar.grgit.*
 
 ext {
-    isReleaseVersion = !project.version.endsWith("SNAPSHOT")
+   
     git = org.ajoberstar.grgit.Grgit.open(file('.'))
 }
 
@@ -59,7 +59,7 @@ task gitPull(group: 'versioning',  description: 'pull from remote branch'){
     git.pull()
 }
 
-task commit(group: 'versioning',  description: 'Commits to local branch.',dependsOn: gitPull) << {
+def commit()  {
     def clean=git.status().isClean()
     if (!clean) {
         git.add(patterns: ['.'])
@@ -70,7 +70,7 @@ task commit(group: 'versioning',  description: 'Commits to local branch.',depend
 }
 
 
-task releaseCanditate(group: 'versioning',  description: 'prepare to create new merge request', dependsOn:[commit]){
+task releaseCanditate(group: 'versioning',  description: 'prepare to create new merge request'){
     onlyIf{
         return new File(projectDir, '.git').exists()
     }
@@ -83,41 +83,60 @@ task releaseCanditate(group: 'versioning',  description: 'prepare to create new 
 
 
 
-task tagRelease(group: 'versioning',  description: 'tagRelease -> create tag on release',dependsOn: printVersion) {
+task tagRelease(group: 'versioning',  description: 'tagRelease -> create tag on release' ) {
     def tags = git.tag.list()
     println '+++++++++++++++++ tagRelease'
     tags.each { Tag t ->
-       println "id: $t.commit.id " + " fullMessage :  "  + t.commit.fullMessage + " time :  " + t.commit.time + "  date :  " + t.commit.getDate()
+     //  println "id: $t.commit.id " + " fullMessage :  "  + t.commit.fullMessage + " time :  " + t.commit.time + "  date :  " + t.commit.getDate()
      //  println "tag : " +  t.fullMessage + " fullName :   "+t.fullName + "  tagger  : " + t.tagger.name
        
     }
    
 }
 
-task markTask(group: 'versioning',  description: ' markTask -> mark current commit into last-release-commit.txt',dependsOn: printVersion){
+def markTask(String commitVersionForActualTag){
     def tags = git.tag.list()
     File f = file("${project.rootDir}/src/main/resources/last-release-commit.txt")
-    f.write(tags[0].commit.id)
+    f.write(commitVersionForActualTag)
     println '+++++++++++++++++ markTask'
 }
+//duplication
+def lastReleaseVersionByTag(){    
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'for-each-ref', 'refs/tags' ,'--count', '1' ,'--sort=taggerdate', '--format=\'%(refname:short)\''
+        standardOutput = stdout
+    }
+    String result =  stdout.toString()
+    return result.replaceAll('\'','').trim()
+}
 
-def lastReleaseVersionByTag(){
-    return  git.tag.list().first().fullName.replaceAll('refs/tags/','')
+
+def lastReleaseCommiterByTag(){
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'log', '--tags', -1 , '--simplify-by-decoration',  '--format=\'%H\''
+        standardOutput = stdout
+    }
+    String result =  stdout.toString()
+    return result.trim()
 }
 
 task createNewTag(group: 'versioning',  description: ' createNewTag -> create '/*,dependsOn:markTask*/){
-    
     def userName = System.properties['user.name']
     def lastCommit = lastReleaseVersionByTag()
-    
-    
-    println '+++++++++++++++++ createNewTag'
-    //git.tag.add(name: 12312, annotate: true, message: "RELEASE 1231255 - by $userName")
-    //git.push(tags: true)
+    //TODO get params like minor, minor
+    // def projectVersion = getIncreaseVersion("hotfix")
+     //generateChangelog()
+     //commit()
+     //markTask(lastReleaseCommiterByTag())
+     //println '+++++++++++++++++ createNewTag  => '+  getIncreaseVersion()
+     //git.tag.add(name: '$projectVersion', annotate: true, message: " '$projectVersion' by $userName")
+     //git.push(tags: true)
 }
 
 import java.text.SimpleDateFormat
-task generateChangelog(group: 'versioning',  description: 'generate git changelog') << {
+def generateChangelog() {
     println '+++++++++++++++++ generateChangeLog'
     def changelog = ""
     def tags = git.tag.list()

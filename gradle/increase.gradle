@@ -1,13 +1,9 @@
-
 import org.ajoberstar.grgit.*
-
 ext {
-    isReleaseVersion = !project.version.endsWith("SNAPSHOT")
+    
     git = org.ajoberstar.grgit.Grgit.open(file('.'))
     propsFile = file('version.properties')
 }
-
-
 class GitInfo{
     String changeLog;
     String bugfix;
@@ -26,65 +22,55 @@ class ProjectVersion {
     Integer major
     Integer minor
     Integer hotfix
-    Boolean release
-    GitInfo gitInfo;
-
+    Boolean release 
+    
     ProjectVersion(Integer major, Integer minor, Integer hotfix) {
         this.major = major
         this.minor = minor
-        this.hotfix = hotfix
-        this.release = Boolean.FALSE
+        this.hotfix = hotfix 
     }
-    ProjectVersion(Integer major, Integer minor, Integer hotfix, GitInfo gitInfo) {
-        this.major = major
-        this.minor = minor
-        this.hotfix = hotfix
-        this.release = Boolean.FALSE
-        this.gitInfo = gitInfo;
-    }
-    
+   
     ProjectVersion(Integer major, Integer minor, Integer hotfix, Boolean release) {
         this(major, minor, hotfix)
         this.release = release
     }
-    
-    ProjectVersion(Integer major, Integer minor, Integer hotfix, Boolean release, GitInfo gitInfo) {
-        this(major, minor, hotfix, gitInfo)
-        this.release = release
-    }
-    
+     
     @Override
     String toString() {
-        "$major.$minor.$hotfix${release ? '' : '-SNAPSHOT'}  -> $gitInfo"
+        "$major.$minor.$hotfix${release ? '' : '-SNAPSHOT'}"
     }
 }
 
-ProjectVersion getVersionInfo(String tag,String changelog,String bugfix){
-    def tempVersion = tag.split("\\.")
-    
-    
-    println "----------------------------------------0" + tempVersion[0]
-    println "----------------------------------------1" + tempVersion[1]
-    println "----------------------------------------2" + tempVersion[2]
-    
+ProjectVersion getVersionInfo(){
+    def tempVersion = lastReleaseVersionByTag().split("\\.")
     return new ProjectVersion(
-        Integer.parseInt(tempVersion[0]),
-        Integer.parseInt(tempVersion[1]),
-        Integer.parseInt(tempVersion[2]),
-        new GitInfo(changelog,bugfix))
+        Integer.parseInt(tempVersion[0].trim()),
+        Integer.parseInt(tempVersion[1].trim()),
+        Integer.parseInt(tempVersion[2].trim()),
+        !project.version.endsWith("SNAPSHOT")
+        )
   }
 
-def lastReleaseVersionByTag(){
-    return  git.tag.list().first().fullName.replaceAll('refs/tags/','')
+def lastReleaseVersionByTag(){    
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'for-each-ref', 'refs/tags' ,'--count', '1' ,'--sort=taggerdate', '--format=\'%(refname:short)\''
+        standardOutput = stdout
+    }
+    String result =  stdout.toString()
+    return result.replaceAll('\'','').trim()
 }
 
 task lastReleaseVersionByTag(group: 'versioning',  description: 'get last release from tags'){
-    println lastReleaseVersionByTag()
+    logger.quiet "Latest Version:  "  +  lastReleaseVersionByTag()
+    logger.quiet "new increase version " + getIncreaseVersion()
 }
 
-
 ProjectVersion getIncreaseVersion(String verDefinition) {
-    version = getVersionInfo(lastReleaseVersionByTag(),"slsslslls","sdfsdfsdf")
+    version = getVersionInfo()
+    if(verDefinition == null){
+        verDefinition = 'hotfix'
+    }
     switch(verDefinition){
         case 'major': 
              ++version.major
@@ -103,9 +89,4 @@ ProjectVersion getIncreaseVersion(String verDefinition) {
         default: throw new GradleException("Invalid version type '$verDef. Allowed types: ['Major', 'Minor', 'Hotfix', 'Release']")
     }
     return version
-}
-
-task printVersion(group: 'versioningIncrease', description: 'Prints the current project version') << {
-    logger.quiet "Version:  "+getVersionInfo("1.5.3","some changelog", "1.2 bugfix")
-    logger.quiet "Increase version " + getIncreaseVersion("major")
 }
