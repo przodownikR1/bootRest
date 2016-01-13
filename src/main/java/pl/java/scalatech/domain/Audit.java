@@ -50,12 +50,12 @@ public abstract class Audit extends AbstractEntity{
     private LocalDate lastModifiedDate = LocalDate.now();
 
     @CreatedBy
-    @OneToOne(cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private User createdBy;
 
     @LastModifiedBy
-    @OneToOne(cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private User lastModifiedBy;
 

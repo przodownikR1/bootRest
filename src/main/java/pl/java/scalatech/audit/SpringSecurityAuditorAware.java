@@ -48,20 +48,14 @@ public class SpringSecurityAuditorAware implements AuditorAware<User> {
     
     @Override
     public User getCurrentAuditor() {
-        //TODOO !!!!!!!!!!!!!!!!! WTF    
-        Optional<User> user = userRepository.findByLogin(ANONYMOUS);
-        User loaded =  user.orElseGet(()->User.builder().login(ANONYMOUS).enabled(true).build());
-        userRepository.save(loaded);
-    
-        
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String login = ANONYMOUS;
          if(auth != null){
              login = auth.getName();
          }
         log.info("+++++++++++++++++++  login from security context : {}",login);
-        user = userRepository.findByLogin(login);
-        loaded =  user.orElseThrow(()-> new IllegalArgumentException("user not exists"));
+        Optional<User> user = userRepository.findByLogin(login);
+        User loaded =  user.orElseThrow(()-> new IllegalArgumentException("user not exists"));
         log.info("+++++++++++++++++  {}",loaded);
         return loaded;
     }
