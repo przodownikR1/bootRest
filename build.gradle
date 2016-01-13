@@ -35,13 +35,13 @@ apply from : 'gradle/props.gradle'
 apply from : 'gradle/depencencies.gradle'
 apply from : 'gradle/changelog.gradle'
 
-processResources {
+/*processResources {
     filesMatching('application.properties') {
         filter org.apache.tools.ant.filters.ReplaceTokens, tokens: [
             'info.app.version': project.property('version') + '-' + git.head().abbreviatedId
         ]
     }
-}
+}*/
 
 test {
     if (gradle.startParameter.taskNames.find { ['integTest', 'release'].contains(it) })

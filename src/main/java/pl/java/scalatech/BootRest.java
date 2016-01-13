@@ -33,18 +33,21 @@ import pl.java.scalatech.repository.UserRepository;
 @SpringBootApplication
 @Slf4j
 public class BootRest {
-
+    private final static String ANONYMOUS = "anonymous";
     @Bean
     CommandLineRunner init(UserRepository userRepository, SkillRepository skillRepository, ProjectRepository projectRepository) {
-        return (evt) -> Lists.newArrayList("przodownik", "kowalski", "nowak", "plank", "tyson", "holyfield", "jones", "obama").forEach(a -> {
-            User user = userRepository.save(User.builder().firstname(a).login("_" + a).email(a + "@tlen.pl").login(a).enabled(true).build());
-            log.info("{}", user);
-            Lists.newArrayList("java", "scala", "groovy", "gradle", "maven", "spring", "jpa")
-                    .forEach(s -> skillRepository.save(Skill.builder().name(s).build()));
+        return (evt) ->
 
-            Lists.newArrayList("socialwarehouse", "ogw", "connector", "eo", "cash", "eb")
-                    .forEach(p -> projectRepository.save(Project.builder().name(p).build()));
-        });
+            Lists.newArrayList("przodownik", "kowalski", "nowak", "plank", "tyson", "holyfield", "jones", "obama",ANONYMOUS).forEach(a ->
+            {
+               User user = userRepository.save(User.builder().firstname(a).login(a).email(a + "@tlen.pl").login(a).enabled(true).build());
+              log.info("{}", user);
+               Lists.newArrayList("java", "scala", "groovy", "gradle", "maven", "spring", "jpa").forEach(s -> skillRepository.save(Skill.builder().name(s).build()));
+               Lists.newArrayList("socialwarehouse", "ogw", "connector", "eo", "cash", "eb").forEach(p -> projectRepository.save(Project.builder().name(p).build()));
+        }
+
+
+                );
 
     }
 

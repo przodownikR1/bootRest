@@ -25,12 +25,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
+import net.bull.javamelody.MonitoredWithSpring;
 import pl.java.scalatech.domain.Role;
 import pl.java.scalatech.repository.RoleRepository;
 
 @RestController
 @Slf4j
 @CrossOrigin
+@MonitoredWithSpring
 public class SampleRestController {
 
      @Autowired

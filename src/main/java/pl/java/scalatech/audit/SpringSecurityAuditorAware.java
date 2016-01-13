@@ -34,18 +34,7 @@ public class SpringSecurityAuditorAware implements AuditorAware<User> {
     private final static String ANONYMOUS = "anonymous";
     @Autowired
     private  UserRepository userRepository;
-    
-    
-    @Autowired
-    public SpringSecurityAuditorAware(UserRepository userRepository) {
-        this.userRepository = userRepository;
-        Optional<User> user = userRepository.findByLogin(ANONYMOUS);
-        User loaded =  user.orElseGet(()->User.builder().login(ANONYMOUS).enabled(true).build());
-        userRepository.save(loaded);
-        log.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++  {}",userRepository.findAll().stream().findFirst().get());
-    } 
-    
-    
+
     @Override
     public User getCurrentAuditor() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -53,10 +42,10 @@ public class SpringSecurityAuditorAware implements AuditorAware<User> {
          if(auth != null){
              login = auth.getName();
          }
-        log.info("+++++++++++++++++++  login from security context : {}",login);
+        log.info("+++++++++++++++++++ +++++++++++++++++++++++++++++ login from security context : {}",login);
         Optional<User> user = userRepository.findByLogin(login);
         User loaded =  user.orElseThrow(()-> new IllegalArgumentException("user not exists"));
-        log.info("+++++++++++++++++  {}",loaded);
+        log.info("+++++++++++++++++  +++++++++++++++++++++++++++++  {}",loaded);
         return loaded;
     }
 

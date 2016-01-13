@@ -44,7 +44,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
 
     @Autowired
     private LocaleChangeInterceptor localeChangeInterceptor;
-   
+
     @Override
     @Bean
     public RequestMappingHandlerMapping requestMappingHandlerMapping() {
@@ -52,7 +52,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         hm.setRemoveSemicolonContent(false);
         return hm;
     }
-    
+
     @Bean
     public ServletRegistrationBean h2servletRegistration() {
         ServletRegistrationBean registration = new ServletRegistrationBean(new WebServlet());
@@ -107,13 +107,19 @@ public class WebConfig extends WebMvcConfigurationSupport {
         return registrationBean;
     }
 
+/*    FilterRegistration.Dynamic mdcInsertingServletFilter =
+            servletContext.addFilter("mdcInsertingServletFilter", MDCInsertingServletFilter.class);
+    mdcInsertingServletFilter.addMappingForUrlPatterns(null, false, "/*");
+*/
+
+
     @Bean
     public FilterRegistrationBean filterRegistrationBeanHidden() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(new HiddenHttpMethodFilter());
         return registrationBean;
     }
-    
+
     @Bean
     public CommonsRequestLoggingFilter requestLoggingFilter() {
         CommonsRequestLoggingFilter crlf = new CommonsRequestLoggingFilter();
@@ -122,5 +128,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         crlf.setIncludePayload(true);
         return crlf;
     }
+
+
 
 }

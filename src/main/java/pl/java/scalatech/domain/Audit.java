@@ -17,7 +17,6 @@ package pl.java.scalatech.domain;
 
 import java.time.LocalDate;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Convert;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;

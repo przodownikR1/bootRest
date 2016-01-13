@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Role extends Audit {
 
     private static final long serialVersionUID = -804077594557972107L;

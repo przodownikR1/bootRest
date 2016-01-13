@@ -33,6 +33,7 @@ ext {
      cucumberVersion = "1.2.2"
      apacheHttpVersion = "4.5"
      gatlingVersion = "2.1.4"     
+     javamelodyVersion = "1.52.0"
 }
 
 dependencyManagement {
@@ -63,7 +64,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     
     compile 'redis.clients:jedis:2.1.0'
-    
+    compile 'net.bull.javamelody:javamelody-core:1.58.0'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.6+'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6+'
     compile 'com.fasterxml.jackson.core:jackson-core:2.6+'
