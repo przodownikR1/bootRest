@@ -199,3 +199,10 @@ Changes in version : [1.1.10.SNAPSHOT] - message -> [przodownik 1.1.10.SNAPSHOT]
 Changes in version : [1.1.10.SNAPSHOT] - message -> [przodownik 1.1.10.SNAPSHOT]  - date -> :  (Thu Jan 14 23:18:21 CET 2016)
 Changes in version : [1.1.10.SNAPSHOT] - message -> [przodownik 1.1.10.SNAPSHOT]  - date -> :  (Thu Jan 14 23:25:13 CET 2016)
 Changes in version : [1.1.10.SNAPSHOT] - message -> [przodownik 1.1.10.SNAPSHOT]  - date -> :  (Thu Jan 14 23:26:00 CET 2016)
+Changes in version : [1.1.10.SNAPSHOT] - message -> [przodownik 1.1.10.SNAPSHOT]  - date -> :  (Thu Jan 14 23:35:00 CET 2016)
+modification  inside changelog file
+16-01-14 23:35:00
+
+
+
+
