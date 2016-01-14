@@ -202,6 +202,10 @@ task generateChangelog() {
     changelogFile.append(")")
     changelogFile.append("\n");
      
+    if(commits.length==0){
+        return 
+    }
+    
     commits.each {
         def message = it.fullMessage
         def time = it.getDate()
