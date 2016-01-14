@@ -111,7 +111,6 @@ task gitPrepareDev(group: 'versioning',  description: 'git -> preparate dev') {
     logger.quiet "merge last changes to dev branch (only in merge allow no FF mode !)"
 }
 
-
 def markTask(){
     def tags = git.tag.list()
     File f = file("${project.rootDir}/src/main/resources/last-release-commit.txt")
@@ -148,7 +147,7 @@ task infoTag(group: 'versioning',  description: 'basic info about current git an
 }
 //lastReleaseVersionByTag.enable=false
 
-/*
+
 task tagRelease(group: 'versioning',  description: ' createNewTag -> create ',dependsOn:gitPrepareDev){
    onlyIf{
         return new File(projectDir, '.git').exists()
@@ -157,10 +156,10 @@ task tagRelease(group: 'versioning',  description: ' createNewTag -> create ',de
     git.pull()
     def currentBranch = git.branch.getCurrent().name
     def userName = System.properties['user.name']
-    generateChangelog()
+   
     def currentProjectVersion = getIncreaseVersion("hotfix")
-    commit()
-    println '+++++++++++++++++ createNewTag  => '+  getIncreaseVersion()
+    logger.quiet '+++++++++++++++++ createNewTag  => ' +currentProjectVersion
+    def versionType  = currentProjectVersion.type
     
     def stdout = new ByteArrayOutputStream()
     exec {
@@ -170,10 +169,11 @@ task tagRelease(group: 'versioning',  description: ' createNewTag -> create ',de
     git.tag.add(name: currentProjectVersion, annotate: true, message: " '$versionType' by '$userName'")
     git.push(tags: true)
     doLast {
-        println 'mark current version into last-release file'
+        logger.quiet 'mark current version into last-release file  and generate changelog...'
         markTask()
+        generateChangelog()
     }
-}*/
+}
 
 def commit(String message)  {
     def clean=git.status().isClean()
