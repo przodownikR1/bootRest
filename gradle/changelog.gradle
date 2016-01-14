@@ -38,7 +38,8 @@ class ProjectVersion {
     Integer major
     Integer minor
     Integer hotfix
-    Boolean release 
+    Boolean release
+    String type 
     
     ProjectVersion(Integer major, Integer minor, Integer hotfix) {
         this.major = major
@@ -79,12 +80,15 @@ ProjectVersion getIncreaseVersion(String verDefinition) {
              ++version.major
              version.minor = 0
              version.hotfix = 0
+             version.type='major change'
             break
         case 'minor': 
               ++version.minor
               version.hotfix = 0
+              version.type='minor change'
             break
         case 'hotfix': ++version.hotfix
+            version.type='hotfix/bugfix change'
             break
         case 'release': 
             version.release = true
@@ -215,7 +219,7 @@ task createNewTag(group: 'versioning',  description: ' createNewTag -> create '/
         standardOutput = stdout
     }
     */
-    git.tag.add(name: currentProjectVersion, annotate: true, message: " '$currentProjectVersion' by '$userName'")
+    git.tag.add(name: currentProjectVersion, annotate: true, message: " '$currentProjectVersion.type' by '$userName'")
     git.push(tags: true)
     markTask()
 }
