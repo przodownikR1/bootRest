@@ -228,4 +228,12 @@ fixed 16-01-14 23:49:59
 
 
 Changes in version : [1.2.23.SNAPSHOT]  - date -> :  (Thu Jan 14 23:58:03 CET 2016)
-fixed 
+fixed Changes in version : [1.2.23.SNAPSHOT]  - date -> :  (Fri Jan 15 00:00:43 CET 2016)
+fixed  cleanup changelog1
+16-01-15 00:00:43
+fixed  cleanup changelog
+16-01-14 23:58:03
+
+
+
+
