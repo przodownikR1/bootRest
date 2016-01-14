@@ -205,14 +205,15 @@ task generateChangelog() {
     commits.each {
         def message = it.fullMessage
         def time = it.getDate()
-        if(!message.startsWith("!"){
+        println 'messagte !!!!!!!!!!!!!!!!!!!!!!!!!!    ' + message
+        if(!message.startsWith("!")){
             println 'if  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1'
             changelogFile.append(message)
             def formatDate = new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(time)
             changelogFile.append(formatDate)
             changelogFile.append("\n");
             changelogFile.append("\n\n\n\n")
-        }else if{
+        }else{
            println 'else !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1'
         }
       /*if(message.startsWith("*"){
