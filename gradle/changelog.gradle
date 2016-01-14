@@ -17,7 +17,7 @@ apply plugin: 'com.gorylenko.gradle-git-properties'
 import org.ajoberstar.grgit.*
 ext {
     git = org.ajoberstar.grgit.Grgit.open(file('.'))
-    propsFile = file('version.properties')
+    propsFile = file('gradle.properties')
     isSnapshot = version.endsWith('-SNAPSHOT')
 }
 
@@ -128,15 +128,17 @@ def lastReleaseVersionByTag(){
 }
 
 //git show-ref --tags
-/*task infoTag(group: 'versioning',  description: 'basic info about current git and project situation'){
+task infoTag(group: 'versioning',  description: 'basic info about current git and project situation'){
     logger.quiet "Latest Version: :  "  +  lastReleaseVersionByTag()
-    logger.quiet "new increase version : " + getIncreaseVersion("hotfix")
+    def newVersion = getIncreaseVersion("release");
+    logger.quiet "new increase version : " + newVersion
     logger.quiet "last tagger commit hash : " + lastReleaseCommiterByTag()
     logger.quiet "current branch: " + git.branch.getCurrent().name
     logger.quiet " isSnapshotOrRelease  : " +  isSnapshot
-}*/
+    propsFile.append('theVersion='+newVersion)
+}
 
-task tagRelease(group: 'versioning',  description: ' createNewTag -> create '){
+/*task tagRelease(group: 'versioning',  description: ' createNewTag -> create '){
     onlyIf{
         return new File(projectDir, '.git').exists()
     }
@@ -158,7 +160,7 @@ task tagRelease(group: 'versioning',  description: ' createNewTag -> create '){
         logger.quiet 'mark current version into last-release file  and generate changelog...'
         markTask()
     }
-}
+}*/
 
 def commit(String message)  {
     def clean=git.status().isClean()
@@ -188,7 +190,7 @@ def generateChangelog() {
     changelogFile.append("  - date -> :  (")
     changelogFile.append(commits.first().getDate() ? commits.first().getDate() : " not")
     changelogFile.append(")")
-    changelogFile.append("\n")
+    changelogFile.append(System.getProperty("line.separator"))
 
 
     commits.each {
@@ -220,12 +222,12 @@ def generateChangelog() {
             }else{
                 changelogFile.append(message.concat(' '+formatDate))
             }   
-            changelogFile.append("\n")
+            changelogFile.append(System.getProperty("line.separator"))
         }else{
             logger.quiet "no exists any information that should be append into changelog.."
         }               
     }
-    changelogFile.append("\n\n\n\n")
+    changelogFile.append(System.getProperty("line.separator"))
     file("${project.rootDir}/src/main/resources/last-release-commit.txt").text = commits.first().id
     commit('! ommit in changelog')    
 }

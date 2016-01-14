@@ -3,6 +3,10 @@ apply plugin: 'groovy'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+
+group = 'theGroup'
+version = 'theVersion'
+
 sourceSets {
     intTest
     generated.java.srcDirs=['src/main/generated']
@@ -75,10 +79,7 @@ assemble.dependsOn sourcesJar, groovydocJar, javadocJar
 ]
 
 jar {
-    
-    baseName = 'java8Feature'
-    version =  '0.0.1'
-    
+        
     manifest {
       attributes(
               'Implementation-Title': "${project.name}",
