@@ -103,16 +103,6 @@ gitProperties {
     gitPropertiesDir = new File("${project.rootDir}/src/main/resources")
 }
 
-<<<<<<< HEAD
-task gitPrepareDev(group: 'versioning',  description: 'git -> preparate dev') {
-    commit('prepare to merge local branch with dev');
-    git.checkout(branch: 'dev')
-    git.fetch()
-    git.merge(head: 'origin/HEAD', mode: org.ajoberstar.grgit.operation.MergeOp.Mode.ONLY_FF)
-    logger.quiet "merge last changes to dev branch (only in merge allow no FF mode !)"
-}
-=======
->>>>>>> gradleUp
 
 def markTask(){
     def tags = git.tag.list()
@@ -140,15 +130,6 @@ def lastReleaseVersionByTag(){
     return result.replaceAll('\'','').trim()
 }
 
-task lastVer {
-   println '++++  lastVer ' +lastReleaseVersionByTag() 
-   
-}
-task lastVerCommiter {
-    println '++++ lastVerCommiter ' +lastReleaseCommiterByTag()
-    
- }
-
 //git show-ref --tags 
 task infoTag(group: 'versioning',  description: 'basic info about current git and project situation'){
     logger.quiet "Latest Version: :  "  +  lastReleaseVersionByTag()
@@ -160,11 +141,7 @@ task infoTag(group: 'versioning',  description: 'basic info about current git an
 //lastReleaseVersionByTag.enable=false
 
 
-<<<<<<< HEAD
-/*task tagRelease(group: 'versioning',  description: ' createNewTag -> create ',dependsOn:gitPrepareDev){
-=======
 task tagRelease(group: 'versioning',  description: ' createNewTag -> create '){
->>>>>>> gradleUp
    onlyIf{
         return new File(projectDir, '.git').exists()
     }
