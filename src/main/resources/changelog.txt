@@ -213,3 +213,10 @@ modification  inside changelog file 3
 
 
 
+Changes in version : [1.1.10.SNAPSHOT] - message -> [przodownik 1.1.10.SNAPSHOT]  - date -> :  (Thu Jan 14 23:43:50 CET 2016)
+modification  WTF
+16-01-14 23:43:50
+
+
+
+
