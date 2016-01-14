@@ -190,3 +190,9 @@ Changes in version : [1.1.10.SNAPSHOT] - message -> [przodownik 1.1.10.SNAPSHOT]
 
 
 
+Changes in version : [1.1.10.SNAPSHOT] - message -> [przodownik 1.1.10.SNAPSHOT]  - date -> :  (Thu Jan 14 23:15:14 CET 2016)
+1.2.15.SNAPSHOTversionType : hotfix/bugfix change userName : przodownik- 16-01-14 23:15:1416-01-14 23:15:14
+
+
+
+
