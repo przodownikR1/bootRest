@@ -201,7 +201,7 @@ def generateChangelog() {
 
             if(message.startsWith("*")){
                 changelogFile.append("fixed ")
-                changelogFile.append(message.replaceAll('*',''))
+                //changelogFile.append(message.replaceAll('*',''))
             }
             else if(message.startsWith("+")){
                 changelogFile.append("added ")
