@@ -203,36 +203,35 @@ def generateChangelog() {
 
             if(message.startsWith("*")){
                 changelogFile.append("fixed ")
-                changelogFile.append(message.replaceAll('\\*',''))                
+                changelogFile.append(message.replaceAll('\\*','').concat(' '+formatDate))                
             }
             else if(message.startsWith("+")){
                 changelogFile.append("added ")
-                changelogFile.append(message.replaceAll('+',''))
+                changelogFile.append(message.replaceAll('+','').concat(' '+formatDate))
             }
             else if(message.startsWith("-")){
                 changelogFile.append("removed ")
-                changelogFile.append(message.replaceAll('-',''))
+                changelogFile.append(message.replaceAll('-','').concat(' '+formatDate))
             }
             else if(message.startsWith("#")){
                 changelogFile.append("modification ")
-                changelogFile.append(message.replaceAll('#',''))
+                changelogFile.append(message.replaceAll('#','').concat(' '+formatDate))
             }
             else if(message.startsWith("@")){
                 changelogFile.append("upgrade ")
-                changelogFile.append(message.replaceAll('@',''))
+                changelogFile.append(message.replaceAll('@','').concat(' '+formatDate))
             }
             else if(message.startsWith("%")){
                 changelogFile.append("deprecated ")
-                changelogFile.append(message.replaceAll('%',''))
+                changelogFile.append(message.replaceAll('%','').concat(' '+formatDate))
             }
             else if(message.startsWith("&")){
                 changelogFile.append("improve ")
-                changelogFile.append(message.replaceAll('&',''))
+                changelogFile.append(message.replaceAll('&','').concat(' '+formatDate))
             }else{
-                changelogFile.append(message)
-                changelogFile.append(formatDate)
+                changelogFile.append(message.concat(' '+formatDate))
+                
             }   
-            changelogFile.append(formatDate)
             changelogFile.append("\n")
         }else{
             logger.quiet "no exists any information that should be append into changelog.."
