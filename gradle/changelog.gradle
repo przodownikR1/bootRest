@@ -250,3 +250,4 @@ task generateChangelog() {
             commit('! ommit in changelog')
         }
     }
+}
