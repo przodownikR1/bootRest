@@ -176,7 +176,7 @@ def commit(String message)  {
 
 
 import java.text.SimpleDateFormat
-task generateChangelog() {
+def generateChangelog() {
     def lastRef = file("${project.rootDir}/src/main/resources/last-release-commit.txt").text
     logger.quiet "generateChangeLog start from revision : " + lastRef
     def changelog = ""
@@ -242,7 +242,7 @@ task generateChangelog() {
             changelogFile.append("\n\n\n\n")
 
         }else{
-            logger.quiet "nothing data to generate .."
+            logger.quiet "no exists any information that should be append into changelog.."
         }
         
         file("${project.rootDir}/src/main/resources/last-release-commit.txt").text = commits.first().id
