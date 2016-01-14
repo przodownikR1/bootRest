@@ -184,7 +184,7 @@ task generateChangelog() {
     def changelog = ""
     def tags = git.tag.list()
     def commits = git.log {
-         range(file(lastRef, "HEAD")
+         range(lastRef, "HEAD")
     }
     println '++++++++++++++++++++++++++++++++++++++++++++++++++   ' +commits
     def changelogFile = new File("${project.rootDir}/src/main/resources/changelog.txt")

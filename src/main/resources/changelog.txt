@@ -166,3 +166,12 @@ Changes in version : [1.1.10.SNAPSHOT] - message -> [przodownik 1.1.10.SNAPSHOT]
 
 
 
+Changes in version : [1.1.10.SNAPSHOT] - message -> [przodownik 1.1.10.SNAPSHOT]  - date -> :  (Thu Jan 14 23:01:48 CET 2016)
+merge dev with gradleUp +7
+16-01-14 23:01:48
+merge dev with gradleUp +6
+16-01-14 23:01:33
+
+
+
+
