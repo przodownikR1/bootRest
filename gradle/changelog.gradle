@@ -205,8 +205,15 @@ task generateChangelog() {
     commits.each {
         def message = it.fullMessage
         def time = it.getDate()
-        if(message.startsWith("!"){
-           return
+        if(!message.startsWith("!"){
+            println 'if  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1'
+            changelogFile.append(message)
+            def formatDate = new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(time)
+            changelogFile.append(formatDate)
+            changelogFile.append("\n");
+            changelogFile.append("\n\n\n\n")
+        }else{
+           println 'else !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1'
         }
       /*if(message.startsWith("*"){
             changelogFile.append("fixed ")
@@ -236,13 +243,10 @@ task generateChangelog() {
             changelogFile.append("improve ")
             changelogFile.append(message.replaceAll('&',''))
         }*/
-        changelogFile.append(message)
-        def formatDate = new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(time)
-        changelogFile.append(formatDate)
-        changelogFile.append("\n");
+      
            
     }
-    changelogFile.append("\n\n\n\n")
+  
     file("${project.rootDir}/src/main/resources/last-release-commit.txt").text = commits.first().id
     doLast{
         commit('! ommit in changelog')
