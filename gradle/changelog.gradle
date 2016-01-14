@@ -111,12 +111,7 @@ task gitPrepareDev(group: 'versioning',  description: 'git -> preparate dev') {
     logger.quiet "merge last changes to dev branch (only in merge allow no FF mode !)"
 }
 
-task makeTagFromOtherBranch(group: 'versioning',  description: 'tagger works with other separate branch - different then dev',dependsOn:gitPrepareDev ){
-    
-    doLast{
-        println 'ddddddddddddddddd'
-    }
-}
+
 
 def markTask(){
     def tags = git.tag.list()
@@ -187,14 +182,14 @@ def commit(String message)  {
         git.add(patterns: ['.'])
         git.commit(message: "$message- ${new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(new Date())}", all: true)
     }else{
-        println("Clean, commit skipped.")
+        logger.quiet "Clean, commit skipped."
     }
 }
 
 
 import java.text.SimpleDateFormat
 def generateChangelog() {
-    println '+++++++++++++++++ generateChangeLog'
+    logger.quiet "generateChangeLog........"
     def changelog = ""
     def tags = git.tag.list()
     def commits = git.log {
@@ -211,7 +206,7 @@ def generateChangelog() {
     changelogFile.append(tags.first().shortMessage?tags.first().shortMessage  : " empty ")
     changelogFile.append("]")
     changelogFile.append("  - date -> :  (")
-    changelogFile.append(commits.first().getDate() ? commits.first().getDate() : "not")
+    changelogFile.append(commits.first().getDate() ? commits.first().getDate() : " not")
     changelogFile.append(")")
     changelogFile.append("\n");
      
