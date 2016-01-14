@@ -208,7 +208,14 @@ task createNewTag(group: 'versioning',  description: ' createNewTag -> create '/
     def currentProjectVersion = getIncreaseVersion("hotfix")
     commit()
     println '+++++++++++++++++ createNewTag  => '+  getIncreaseVersion()
-    git.tag.add(name: $currentProjectVersion, annotate: true, message: " '$currentProjectVersion' by '$userName'")
+    
+    /*def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'tag', '-a', currentProjectVersion , '-m' , userName+ ' ' +currentProjectVersion
+        standardOutput = stdout
+    }
+    */
+    git.tag.add(name: currentProjectVersion, annotate: true, message: " '$currentProjectVersion' by '$userName'")
     git.push(tags: true)
     markTask()
 }

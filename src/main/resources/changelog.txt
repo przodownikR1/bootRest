@@ -141,3 +141,11 @@ javamelody added
 
 
 
+Changes in version : [1.1.7] - message -> [ empty ]  - date -> :  (Thu Jan 14 13:14:50 CET 2016)
+release - 16-01-14 13:14:5016-01-14 13:14:50
+javamelody added
+16-01-14 00:15:54
+
+
+
+
