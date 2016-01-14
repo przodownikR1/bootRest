@@ -163,7 +163,7 @@ task tagRelease(group: 'versioning',  description: ' createNewTag -> create '){
         logger.quiet 'mark current version into last-release file  and generate changelog...'
         markTask()
         generateChangelog()
-        commit('! ommit in changelog')
+      
     }
 }
 
@@ -241,4 +241,7 @@ task generateChangelog() {
     }
     changelogFile.append("\n\n\n\n")
     file("${project.rootDir}/src/main/resources/last-release-commit.txt").text = commits.first().id
+    doLast{
+        commit('! ommit in changelog')
+    }
 }
