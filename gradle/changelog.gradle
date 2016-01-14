@@ -153,7 +153,7 @@ task tagRelease(group: 'versioning',  description: ' createNewTag -> create '){
     def currentProjectVersion = getIncreaseVersion("hotfix")
    
     def versionType  = currentProjectVersion.type
-    def commitMessage = currentProjectVersion + ' versionType : ' + versionType + ' userName : ' + userName
+    def commitMessage = "" + currentProjectVersion + "versionType : " + versionType + " userName : " + userName
     logger.quiet '+++++++++++++++++ createNewTag  =>  currentProjVersion :  ' +commitMessage
     commit(commitMessage)
     /*def stdout = new ByteArrayOutputStream()
