@@ -205,6 +205,9 @@ task generateChangelog() {
     commits.each {
         def message = it.fullMessage
         def time = it.getDate()
+        if(message.startsWith("!"){
+           return
+        }
       /*if(message.startsWith("*"){
             changelogFile.append("fixed ")
             changelogFile.append(message.replaceAll('*',''))
