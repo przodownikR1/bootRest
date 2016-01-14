@@ -26,6 +26,8 @@ buildscript {
 apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'groovy'
+apply from : 'gradle/gradleProperties.gradle'
+apply from : 'gradle/distribution.gradle'
 apply from : 'gradle/jar.gradle'
 //apply from : 'gradle/jpagen.gradle'
 //apply from : 'gradle/sonar.gradle'
@@ -35,6 +37,12 @@ apply from : 'gradle/props.gradle'
 apply from : 'gradle/depencencies.gradle'
 apply from : 'gradle/changelog.gradle'
 
+
+tasks.withType(Test) {
+    testLogging {
+        events 'passed'
+    }
+}
 
 
 test {

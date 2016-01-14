@@ -55,7 +55,7 @@ class ProjectVersion {
      
     @Override
     String toString() {
-        "$major.$minor.$hotfix${release ? '' : '-SNAPSHOT'}"
+        "$major.$minor.$hotfix.${release ? 'RELEASE' : 'SNAPSHOT'}"
     }
 }
 
