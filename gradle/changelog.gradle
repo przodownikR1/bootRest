@@ -103,15 +103,6 @@ gitProperties {
     gitPropertiesDir = new File("${project.rootDir}/src/main/resources")
 }
 
-task gitPrepareDev(group: 'versioning',  description: 'git -> preparate dev') {
-    commit('prepare to merge local branch with dev');
-    git.checkout(branch: 'dev')
-    git.fetch()
-    git.merge(head: 'origin/HEAD', mode: org.ajoberstar.grgit.operation.MergeOp.Mode.ONLY_FF)
-    logger.quiet "merge last changes to dev branch (only in merge allow no FF mode !)"
-}
-
-
 
 def markTask(){
     def tags = git.tag.list()
@@ -132,7 +123,7 @@ def lastReleaseCommiterByTag(){
 def lastReleaseVersionByTag(){
     def stdout = new ByteArrayOutputStream()
     exec {
-        commandLine 'git', 'for-each-ref', 'refs/tags' ,'--count', '1' ,'--sort=taggerdate', '--format=\'%(refname:short)\''
+        commandLine 'git', 'for-each-ref', 'refs/tags' ,'--count', '1' ,'--sort=-taggerdate', '--format=\'%(refname:short)\''
         standardOutput = stdout
     }
     String result =  stdout.toString()
@@ -150,7 +141,7 @@ task infoTag(group: 'versioning',  description: 'basic info about current git an
 //lastReleaseVersionByTag.enable=false
 
 
-task tagRelease(group: 'versioning',  description: ' createNewTag -> create ',dependsOn:gitPrepareDev){
+task tagRelease(group: 'versioning',  description: ' createNewTag -> create '){
    onlyIf{
         return new File(projectDir, '.git').exists()
     }
@@ -160,7 +151,8 @@ task tagRelease(group: 'versioning',  description: ' createNewTag -> create ',de
     def userName = System.properties['user.name']
    
     def currentProjectVersion = getIncreaseVersion("hotfix")
-    println '+++++++++++++++++ createNewTag  => '+  getIncreaseVersion()
+    logger.quiet '+++++++++++++++++ createNewTag  => ' +currentProjectVersion
+    def versionType  = currentProjectVersion.type
     
     def stdout = new ByteArrayOutputStream()
     exec {
@@ -170,7 +162,7 @@ task tagRelease(group: 'versioning',  description: ' createNewTag -> create ',de
     git.tag.add(name: currentProjectVersion, annotate: true, message: " '$versionType' by '$userName'")
     git.push(tags: true)
     doLast {
-        println 'mark current version into last-release file  and generate changelog...'
+        logger.quiet 'mark current version into last-release file  and generate changelog...'
         markTask()
         generateChangelog()
     }
