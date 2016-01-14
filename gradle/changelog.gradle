@@ -202,7 +202,7 @@ task generateChangelog() {
     changelogFile.append(")")
     changelogFile.append("\n");
      
-    if(commits.length==0){
+    if(commits.size == 0){
         return 
     }
     
