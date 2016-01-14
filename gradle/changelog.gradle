@@ -13,20 +13,92 @@ buildscript {
 }
 
 apply plugin: 'com.gorylenko.gradle-git-properties'
-apply from : 'gradle/increase.gradle'
 
+import org.ajoberstar.grgit.*
+ext {
+    git = org.ajoberstar.grgit.Grgit.open(file('.'))
+    propsFile = file('version.properties')
+}
+
+class GitInfo{
+    String changeLog;
+    String bugfix;
+    
+    GitInfo(String changeLog, String bugfix){
+        this.changeLog = changeLog;
+        this.bugfix = bugfix;
+    }
+    @Override
+    String toString() {
+        "changeLog :   $changeLog , bugfix:   $bugfix"
+    }
+}
+
+class ProjectVersion {
+    Integer major
+    Integer minor
+    Integer hotfix
+    Boolean release 
+    
+    ProjectVersion(Integer major, Integer minor, Integer hotfix) {
+        this.major = major
+        this.minor = minor
+        this.hotfix = hotfix 
+    }
+   
+    ProjectVersion(Integer major, Integer minor, Integer hotfix, Boolean release) {
+        this(major, minor, hotfix)
+        this.release = release
+    }
+     
+    @Override
+    String toString() {
+        "$major.$minor.$hotfix${release ? '' : '-SNAPSHOT'}"
+    }
+}
+
+ProjectVersion getVersionInfo(){
+    def tempVersion = lastReleaseVersionByTag().split("\\.")
+    return new ProjectVersion(
+        Integer.parseInt(tempVersion[0].trim()),
+        Integer.parseInt(tempVersion[1].trim()),
+        Integer.parseInt(tempVersion[2].trim()),
+       // !project.version.endsWith("SNAPSHOT")
+        true
+        )
+  }
+
+
+ProjectVersion getIncreaseVersion(String verDefinition) {
+    version = getVersionInfo()
+    if(verDefinition == null){
+        verDefinition = 'hotfix'
+    }
+    switch(verDefinition){
+        case 'major': 
+             ++version.major
+             version.minor = 0
+             version.hotfix = 0
+            break
+        case 'minor': 
+              ++version.minor
+              version.hotfix = 0
+            break
+        case 'hotfix': ++version.hotfix
+            break
+        case 'release': 
+            version.release = true
+            break
+        default: throw new GradleException("Invalid version type '$verDef. Allowed types: ['Major', 'Minor', 'Hotfix', 'Release']")
+    }
+    return version
+}
 
 
 gitProperties {
     gitPropertiesDir = new File("${project.rootDir}/src/main/resources")
 }
 
-import org.ajoberstar.grgit.*
-
-ext {
-   
-    git = org.ajoberstar.grgit.Grgit.open(file('.'))
-}
 
 task push(group: 'versioning',  description: 'Push to remote branch.')<<{
     System.setProperty("org.ajoberstar.grgit.auth.username","przodownikR1")
@@ -90,18 +162,25 @@ task tagRelease(group: 'versioning',  description: 'tagRelease -> create tag on 
      //  println "id: $t.commit.id " + " fullMessage :  "  + t.commit.fullMessage + " time :  " + t.commit.time + "  date :  " + t.commit.getDate()
      //  println "tag : " +  t.fullMessage + " fullName :   "+t.fullName + "  tagger  : " + t.tagger.name
        
-    }
-   
+    }  
 }
-
-def markTask(String commitVersionForActualTag){
+def markTask(){
     def tags = git.tag.list()
     File f = file("${project.rootDir}/src/main/resources/last-release-commit.txt")
-    f.write(commitVersionForActualTag)
+    f.write(lastReleaseCommiterByTag())
     println '+++++++++++++++++ markTask'
 }
-//duplication
-def lastReleaseVersionByTag(){    
+def lastReleaseCommiterByTag(){
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'log', '--tags', -1 , '--simplify-by-decoration',  '--format=\'%H\''
+        standardOutput = stdout
+    }
+    String result =  stdout.toString()
+    return result.replaceAll('\'','').trim()
+}
+
+def lastReleaseVersionByTag(){
     def stdout = new ByteArrayOutputStream()
     exec {
         commandLine 'git', 'for-each-ref', 'refs/tags' ,'--count', '1' ,'--sort=taggerdate', '--format=\'%(refname:short)\''
@@ -112,27 +191,26 @@ def lastReleaseVersionByTag(){
 }
 
 
-def lastReleaseCommiterByTag(){
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'log', '--tags', -1 , '--simplify-by-decoration',  '--format=\'%H\''
-        standardOutput = stdout
-    }
-    String result =  stdout.toString()
-    return result.trim()
+
+//git show-ref --tags 
+task lastReleaseVersionByTag(group: 'versioning',  description: 'get last release from tags'){
+    logger.quiet "Latest Version: :  "  +  lastReleaseVersionByTag()
+    logger.quiet "new increase version : " + getIncreaseVersion("hotfix")
+    logger.quiet "lastReleaseCommiterByTag : " + lastReleaseCommiterByTag()
+    markTask()
 }
+
 
 task createNewTag(group: 'versioning',  description: ' createNewTag -> create '/*,dependsOn:markTask*/){
     def userName = System.properties['user.name']
-    def lastCommit = lastReleaseVersionByTag()
-    //TODO get params like minor, minor
-    // def projectVersion = getIncreaseVersion("hotfix")
-     //generateChangelog()
-     //commit()
-     //markTask(lastReleaseCommiterByTag())
-     //println '+++++++++++++++++ createNewTag  => '+  getIncreaseVersion()
-     //git.tag.add(name: '$projectVersion', annotate: true, message: " '$projectVersion' by $userName")
-     //git.push(tags: true)
+    generateChangelog()
+    
+    def currentProjectVersion = getIncreaseVersion("hotfix")
+    commit()
+    println '+++++++++++++++++ createNewTag  => '+  getIncreaseVersion()
+    git.tag.add(name: $currentProjectVersion, annotate: true, message: " '$currentProjectVersion' by '$userName'")
+    git.push(tags: true)
+    markTask()
 }
 
 import java.text.SimpleDateFormat

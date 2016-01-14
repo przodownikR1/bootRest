@@ -18,3 +18,11 @@ import org.apache.tools.ant.filters.*
         }
         }
     
+        
+       /* processResources {
+            filesMatching('application.properties') {
+                filter org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+                    'info.app.version': project.property('version') + '-' + git.head().abbreviatedId
+                ]
+            }
+        }*/

@@ -120,3 +120,24 @@ changelog generate
 
 
 
+Changes in version : [1.1.7] - message -> [ empty ]  - date -> :  (Thu Jan 14 00:15:54 CET 2016)
+javamelody added
+16-01-14 00:15:54
+
+
+
+
+Changes in version : [1.1.7] - message -> [ empty ]  - date -> :  (Thu Jan 14 00:15:54 CET 2016)
+javamelody added
+16-01-14 00:15:54
+
+
+
+
+Changes in version : [1.1.7] - message -> [ empty ]  - date -> :  (Thu Jan 14 00:15:54 CET 2016)
+javamelody added
+16-01-14 00:15:54
+
+
+
+
