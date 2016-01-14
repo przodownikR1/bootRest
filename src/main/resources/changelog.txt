@@ -237,3 +237,10 @@ fixed  cleanup changelog
 
 
 
+Changes in version : [1.2.24.SNAPSHOT]  - date -> :  (Fri Jan 15 00:03:24 CET 2016)
+fixed  cleanup changelog23434
+ 16-01-15 00:03:24
+
+
+
+
