@@ -151,14 +151,13 @@ task tagRelease(group: 'versioning',  description: ' createNewTag -> create '){
 
     def versionType  = currentProjectVersion.type
     def commitMessage = "!" + currentProjectVersion + "  , versionType : " + versionType + " ,  userName : " + userName
+    generateChangelog()
     logger.quiet '+++++++++++++++++ createNewTag  =>  currentProjVersion :  ' +commitMessage
     commit(commitMessage)
-
     git.tag.add(name: currentProjectVersion, annotate: true, message: " '$versionType' by '$userName'")
     git.push(tags: true)
     doLast {
         logger.quiet 'mark current version into last-release file  and generate changelog...'
-        generateChangelog()
         markTask()
     }
 }
@@ -179,18 +178,14 @@ def generateChangelog() {
     def lastRef = file("${project.rootDir}/src/main/resources/last-release-commit.txt").text
     logger.quiet "generateChangeLog start from revision : " + lastRef
     def changelog = ""
-    def tags = git.tag.list()
+    
     def commits = git.log {
         range(lastRef, "HEAD")
     }
     def changelogFile = new File("${project.rootDir}/src/main/resources/changelog.txt")
     changelogFile.append("Changes in version : ")
     changelogFile.append("[")
-    changelogFile.append(tags.first().fullName.replaceAll('refs/tags/','') ? tags.first().fullName.replaceAll('refs/tags/','') : " empty ")
-    changelogFile.append("]")
-    changelogFile.append(" - message -> ")
-    changelogFile.append("[")
-    changelogFile.append(tags.first().shortMessage?tags.first().shortMessage  : " empty ")
+    changelogFile.append(lastReleaseVersionByTag())
     changelogFile.append("]")
     changelogFile.append("  - date -> :  (")
     changelogFile.append(commits.first().getDate() ? commits.first().getDate() : " not")
