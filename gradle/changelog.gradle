@@ -138,11 +138,11 @@ def lastReleaseVersionByTag(){
 }
 
 task lastVer {
-   println '++++  ' +lastReleaseVersionByTag() 
+   println '++++  lastVer ' +lastReleaseVersionByTag() 
    
 }
 task lastVerCommiter {
-    println '++++  ' +lastReleaseCommiterByTag()
+    println '++++ lastVerCommiter ' +lastReleaseCommiterByTag()
     
  }
 
