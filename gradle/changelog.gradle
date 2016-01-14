@@ -137,6 +137,15 @@ def lastReleaseVersionByTag(){
     return result.replaceAll('\'','').trim()
 }
 
+task lastVer {
+   println '++++  ' +lastReleaseVersionByTag() 
+   
+}
+task lastVerCommiter {
+    println '++++  ' +lastReleaseCommiterByTag()
+    
+ }
+
 //git show-ref --tags 
 task infoTag(group: 'versioning',  description: 'basic info about current git and project situation'){
     logger.quiet "Latest Version: :  "  +  lastReleaseVersionByTag()
