@@ -206,3 +206,4 @@ modification  inside changelog file
 
 
 
+Changes in version : [1.1.10.SNAPSHOT] - message -> [przodownik 1.1.10.SNAPSHOT]  - date -> :  (

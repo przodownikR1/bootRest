@@ -158,9 +158,8 @@ task tagRelease(group: 'versioning',  description: ' createNewTag -> create '){
     git.push(tags: true)
     doLast {
         logger.quiet 'mark current version into last-release file  and generate changelog...'
-        markTask()
         generateChangelog()
-
+        markTask()
     }
 }
 
