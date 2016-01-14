@@ -159,8 +159,8 @@ task tagRelease(group: 'versioning',  description: ' createNewTag -> create '){
         commandLine 'git', 'tag', '-a', currentProjectVersion , '-m' , userName+ ' ' +currentProjectVersion
         standardOutput = stdout
     }
-    git.tag.add(name: currentProjectVersion, annotate: true, message: " '$versionType' by '$userName'")
     commit(currentProjectVersion + ' versionType : ' + versionType + ' userName : ' + userName)
+    git.tag.add(name: currentProjectVersion, annotate: true, message: " '$versionType' by '$userName'")
     git.push(tags: true)
     doLast {
         logger.quiet 'mark current version into last-release file  and generate changelog...'
