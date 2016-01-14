@@ -212,7 +212,7 @@ task generateChangelog() {
             changelogFile.append(formatDate)
             changelogFile.append("\n");
             changelogFile.append("\n\n\n\n")
-        }else{
+        }else if{
            println 'else !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1'
         }
       /*if(message.startsWith("*"){
