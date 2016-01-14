@@ -227,3 +227,5 @@ fixed 16-01-14 23:49:59
 
 
 
+Changes in version : [1.2.23.SNAPSHOT]  - date -> :  (Thu Jan 14 23:58:03 CET 2016)
+fixed 
