@@ -141,7 +141,7 @@ task infoTag(group: 'versioning',  description: 'basic info about current git an
 //lastReleaseVersionByTag.enable=false
 
 
-task tagRelease(group: 'versioning',  description: ' createNewTag -> create '){
+/*task tagRelease(group: 'versioning',  description: ' createNewTag -> create '){
    onlyIf{
         return new File(projectDir, '.git').exists()
     }
@@ -156,11 +156,7 @@ task tagRelease(group: 'versioning',  description: ' createNewTag -> create '){
     def commitMessage = "" + currentProjectVersion + "versionType : " + versionType + " userName : " + userName
     logger.quiet '+++++++++++++++++ createNewTag  =>  currentProjVersion :  ' +commitMessage
     commit(commitMessage)
-    /*def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'tag', '-a', currentProjectVersion , '-m' , versionType + '  ' + userName+ ' ' +currentProjectVersion
-        standardOutput = stdout
-    }*/
+   
     git.tag.add(name: currentProjectVersion, annotate: true, message: " '$versionType' by '$userName'")
     git.push(tags: true)
     doLast {
@@ -168,7 +164,7 @@ task tagRelease(group: 'versioning',  description: ' createNewTag -> create '){
         markTask()
         generateChangelog()
     }
-}
+}*/
 
 def commit(String message)  {
     def clean=git.status().isClean()
@@ -182,14 +178,15 @@ def commit(String message)  {
 
 
 import java.text.SimpleDateFormat
-def generateChangelog() {
-    logger.quiet "generateChangeLog........"
+task generateChangelog() {
+    def lastRef = file("${project.rootDir}/src/main/resources/last-release-commit.txt").text
+    logger.quiet "generateChangeLog start from revision : " + lastRef
     def changelog = ""
     def tags = git.tag.list()
     def commits = git.log {
-         range(file("${project.rootDir}/src/main/resources/last-release-commit.txt").text, "HEAD")
+         range(file(lastRef, "HEAD")
     }
-  
+    println '++++++++++++++++++++++++++++++++++++++++++++++++++   ' +commits
     def changelogFile = new File("${project.rootDir}/src/main/resources/changelog.txt")
     changelogFile.append("Changes in version : ")
     changelogFile.append("[")
