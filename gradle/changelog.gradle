@@ -157,7 +157,7 @@ task infoTag(group: 'versioning',  description: 'basic info about current git an
 //lastReleaseVersionByTag.enable=false
 
 
-task tagRelease(group: 'versioning',  description: ' createNewTag -> create ',dependsOn:gitPrepareDev){
+/*task tagRelease(group: 'versioning',  description: ' createNewTag -> create ',dependsOn:gitPrepareDev){
    onlyIf{
         return new File(projectDir, '.git').exists()
     }
@@ -182,7 +182,7 @@ task tagRelease(group: 'versioning',  description: ' createNewTag -> create ',de
         markTask()
         generateChangelog()
     }
-}
+}*/
 
 def commit(String message)  {
     def clean=git.status().isClean()
