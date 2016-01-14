@@ -160,7 +160,6 @@ task tagRelease(group: 'versioning',  description: ' createNewTag -> create ',de
     def userName = System.properties['user.name']
    
     def currentProjectVersion = getIncreaseVersion("hotfix")
-    commit()
     println '+++++++++++++++++ createNewTag  => '+  getIncreaseVersion()
     
     def stdout = new ByteArrayOutputStream()
