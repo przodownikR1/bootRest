@@ -18,6 +18,7 @@ import org.ajoberstar.grgit.*
 ext {
     git = org.ajoberstar.grgit.Grgit.open(file('.'))
     propsFile = file('version.properties')
+    isSnapshot = version.endsWith('-SNAPSHOT')
 }
 
 class GitInfo{
@@ -64,8 +65,7 @@ ProjectVersion getVersionInfo(){
         Integer.parseInt(tempVersion[0].trim()),
         Integer.parseInt(tempVersion[1].trim()),
         Integer.parseInt(tempVersion[2].trim()),
-       // !project.version.endsWith("SNAPSHOT")
-        true
+        isSnapshot
         )
   }
 
@@ -103,76 +103,18 @@ gitProperties {
     gitPropertiesDir = new File("${project.rootDir}/src/main/resources")
 }
 
-
-task push(group: 'versioning',  description: 'Push to remote branch.')<<{
-    System.setProperty("org.ajoberstar.grgit.auth.username","przodownikR1")
-    System.setProperty("org.ajoberstar.grgit.auth.password","******")
-    git.push()
-}
-
 task gitPrepareDev(group: 'versioning',  description: 'git -> preparate dev') << {
     git.checkout(branch: 'dev')
     git.fetch()
     git.merge(head: 'origin/HEAD', mode: org.ajoberstar.grgit.operation.MergeOp.Mode.ONLY_FF)
-    tasks.replaceVersion.execute();
+    logger.quiet "merge last changes to dev branch (only in merge allow no FF mode !)"
 }
 
-
-task gitStatus(group: 'versioning',  description: 'git status') << {
-    
-    def status = git.status()
-    logger.quiet ""+status
-    if(status.unstaged.added || status.unstaged.modified || status.unstaged.removed ||
-        status.staged.added || status.staged.modified || status.staged.removed) {
-       logger.warn '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> '
-       logger.warn 'committing changes'
-       logger.warn '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> '
-    }
-}
-
-task gitPull(group: 'versioning',  description: 'pull from remote branch'){
-    //git.checkout(branch: 'dev')
-    git.pull()
-}
-
-def commit()  {
-    def clean=git.status().isClean()
-    if (!clean) {
-        git.add(patterns: ['.'])
-        git.commit(message: "release - ${new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(new Date())}", all: true)
-    }else{
-        println("Clean, commit skipped.")
-    }
-}
-
-
-task releaseCanditate(group: 'versioning',  description: 'prepare to create new merge request'){
-    onlyIf{
-        return new File(projectDir, '.git').exists()
-    }
-    def id =  git.head().abbreviatedId
-    def name = git.branch.getCurrent().name
-    def workDir = new File(".").absolutePath
-    
-    println  'prepare to merge request....'   
-}
-
-
-
-task tagRelease(group: 'versioning',  description: 'tagRelease -> create tag on release' ) {
-    def tags = git.tag.list()
-    println '+++++++++++++++++ tagRelease'
-    tags.each { Tag t ->
-     //  println "id: $t.commit.id " + " fullMessage :  "  + t.commit.fullMessage + " time :  " + t.commit.time + "  date :  " + t.commit.getDate()
-     //  println "tag : " +  t.fullMessage + " fullName :   "+t.fullName + "  tagger  : " + t.tagger.name
-       
-    }  
-}
 def markTask(){
     def tags = git.tag.list()
     File f = file("${project.rootDir}/src/main/resources/last-release-commit.txt")
     f.write(lastReleaseCommiterByTag())
-    println '+++++++++++++++++ markTask'
+
 }
 def lastReleaseCommiterByTag(){
     def stdout = new ByteArrayOutputStream()
@@ -194,35 +136,53 @@ def lastReleaseVersionByTag(){
     return result.replaceAll('\'','').trim()
 }
 
-
-
 //git show-ref --tags 
-task lastReleaseVersionByTag(group: 'versioning',  description: 'get last release from tags'){
+task infoTag(group: 'versioning',  description: 'basic info about current git and project situation'){
     logger.quiet "Latest Version: :  "  +  lastReleaseVersionByTag()
     logger.quiet "new increase version : " + getIncreaseVersion("hotfix")
-    logger.quiet "lastReleaseCommiterByTag : " + lastReleaseCommiterByTag()
-    markTask()
+    logger.quiet "last tagger commit hash : " + lastReleaseCommiterByTag()
+    logger.quiet "current branch: " + git.branch.getCurrent().name
+    logger.quiet " isSnapshotOrRelease  : " +  isSnapshot
 }
+//lastReleaseVersionByTag.enable=false
 
-
-task createNewTag(group: 'versioning',  description: ' createNewTag -> create '/*,dependsOn:markTask*/){
+/*
+task tagRelease(group: 'versioning',  description: ' createNewTag -> create ',dependsOn:gitPrepareDev){
+   onlyIf{
+        return new File(projectDir, '.git').exists()
+    }
+    git.checkout(branch: 'dev')
+    git.pull()
+    def currentBranch = git.branch.getCurrent().name
     def userName = System.properties['user.name']
     generateChangelog()
-    
     def currentProjectVersion = getIncreaseVersion("hotfix")
     commit()
     println '+++++++++++++++++ createNewTag  => '+  getIncreaseVersion()
     
-    /*def stdout = new ByteArrayOutputStream()
+    def stdout = new ByteArrayOutputStream()
     exec {
         commandLine 'git', 'tag', '-a', currentProjectVersion , '-m' , userName+ ' ' +currentProjectVersion
         standardOutput = stdout
     }
-    */
-    git.tag.add(name: currentProjectVersion, annotate: true, message: " '$currentProjectVersion.type' by '$userName'")
+    git.tag.add(name: currentProjectVersion, annotate: true, message: " '$versionType' by '$userName'")
     git.push(tags: true)
-    markTask()
+    doLast {
+        println 'mark current version into last-release file'
+        markTask()
+    }
+}*/
+
+def commit()  {
+    def clean=git.status().isClean()
+    if (!clean) {
+        git.add(patterns: ['.'])
+        git.commit(message: "create release candidate - ${new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(new Date())}", all: true)
+    }else{
+        println("Clean, commit skipped.")
+    }
 }
+
 
 import java.text.SimpleDateFormat
 def generateChangelog() {
