@@ -69,7 +69,6 @@ ProjectVersion getVersionInfo(){
     )
 }
 
-
 ProjectVersion getIncreaseVersion(String verDefinition) {
     version = getVersionInfo()
     if(verDefinition == null){
@@ -97,7 +96,6 @@ ProjectVersion getIncreaseVersion(String verDefinition) {
     }
     return version
 }
-
 
 gitProperties {
     gitPropertiesDir = new File("${project.rootDir}/src/main/resources")
@@ -130,15 +128,13 @@ def lastReleaseVersionByTag(){
 }
 
 //git show-ref --tags
-task infoTag(group: 'versioning',  description: 'basic info about current git and project situation'){
+/*task infoTag(group: 'versioning',  description: 'basic info about current git and project situation'){
     logger.quiet "Latest Version: :  "  +  lastReleaseVersionByTag()
     logger.quiet "new increase version : " + getIncreaseVersion("hotfix")
     logger.quiet "last tagger commit hash : " + lastReleaseCommiterByTag()
     logger.quiet "current branch: " + git.branch.getCurrent().name
     logger.quiet " isSnapshotOrRelease  : " +  isSnapshot
-}
-//lastReleaseVersionByTag.enable=false
-
+}*/
 
 task tagRelease(group: 'versioning',  description: ' createNewTag -> create '){
     onlyIf{
