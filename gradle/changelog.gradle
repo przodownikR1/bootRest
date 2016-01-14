@@ -245,8 +245,8 @@ def generateChangelog() {
         }
         
         file("${project.rootDir}/src/main/resources/last-release-commit.txt").text = commits.first().id
-        doLast{
-            commit('! ommit in changelog')
-        }
+        
+        commit('! ommit in changelog')
+        
     }
 }
