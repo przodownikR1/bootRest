@@ -103,6 +103,7 @@ gitProperties {
     gitPropertiesDir = new File("${project.rootDir}/src/main/resources")
 }
 
+<<<<<<< HEAD
 task gitPrepareDev(group: 'versioning',  description: 'git -> preparate dev') {
     commit('prepare to merge local branch with dev');
     git.checkout(branch: 'dev')
@@ -110,6 +111,8 @@ task gitPrepareDev(group: 'versioning',  description: 'git -> preparate dev') {
     git.merge(head: 'origin/HEAD', mode: org.ajoberstar.grgit.operation.MergeOp.Mode.ONLY_FF)
     logger.quiet "merge last changes to dev branch (only in merge allow no FF mode !)"
 }
+=======
+>>>>>>> gradleUp
 
 def markTask(){
     def tags = git.tag.list()
@@ -157,7 +160,11 @@ task infoTag(group: 'versioning',  description: 'basic info about current git an
 //lastReleaseVersionByTag.enable=false
 
 
+<<<<<<< HEAD
 /*task tagRelease(group: 'versioning',  description: ' createNewTag -> create ',dependsOn:gitPrepareDev){
+=======
+task tagRelease(group: 'versioning',  description: ' createNewTag -> create '){
+>>>>>>> gradleUp
    onlyIf{
         return new File(projectDir, '.git').exists()
     }
@@ -182,7 +189,7 @@ task infoTag(group: 'versioning',  description: 'basic info about current git an
         markTask()
         generateChangelog()
     }
-}*/
+}
 
 def commit(String message)  {
     def clean=git.status().isClean()
