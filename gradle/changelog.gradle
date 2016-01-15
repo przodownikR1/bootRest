@@ -144,13 +144,13 @@ def lastReleaseVersionByTag(){
      
 }*/
 
-task tagRelease(group: 'versioning',  description: ' createNewTag : command : gradle tagRelease -PversionType=[] '){
+task tagReleaseCi(group: 'versioning',  description: ' createNewTag : command : gradle tagRelease -PversionType=[] '){
     onlyIf{
-        return new File(projectDir, '.git').exists() 
+        return new File(projectDir, '.git').exists()
     }
     def currentProjectVersion
     if(project.hasProperty("versionType")){
-        currentProjectVersion = getIncreaseVersion(project.getProperty("versionType"))       
+        currentProjectVersion = getIncreaseVersion(project.getProperty("versionType"))
     }else{
        currentProjectVersion = getIncreaseVersion("hotfix")
     }
@@ -171,6 +171,37 @@ task tagRelease(group: 'versioning',  description: ' createNewTag : command : gr
     System.setProperty("org.ajoberstar.grgit.auth.username",project.getProperty("gitUser"))
     System.setProperty("org.ajoberstar.grgit.auth.password",project.getProperty("gitPasswd"))
     git.push(tags: true)
+    logger.quiet 'mark current version into last-release file  and generate changelog...'
+    markTask()
+    
+}
+
+task tagRelease(group: 'versioning',  description: ' createNewTag : command : gradle tagRelease -PversionType=[] '){
+    onlyIf{
+        return new File(projectDir, '.git').exists() 
+    }
+    def currentProjectVersion
+    if(project.hasProperty("versionType")){
+        currentProjectVersion = getIncreaseVersion(project.getProperty("versionType"))       
+    }else{
+       currentProjectVersion = getIncreaseVersion("hotfix")
+    }
+    propsFile.append('theVersion='+currentProjectVersion)
+     
+    git.checkout(branch: 'dev')
+    fetchAllTags()
+    git.pull()
+    def currentBranch = git.branch.getCurrent().name
+    def userName = System.properties['user.name']
+    def versionType  = currentProjectVersion.type
+    def commitMessage = "!" + currentProjectVersion + "  , versionType : " + versionType + " ,  userName : " + userName
+   
+    logger.quiet '+++++++++++++++++ createNewTag  =>  currentProjVersion :  ' +commitMessage
+    commit(commitMessage)
+    git.tag.add(name: currentProjectVersion, annotate: true, message: " '$versionType' by '$userName'")
+
+    git.push(tags: true)
+    generateChangelog()
     logger.quiet 'mark current version into last-release file  and generate changelog...'
     markTask()
     
