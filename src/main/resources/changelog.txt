@@ -278,3 +278,5 @@ Changes in version : [2.0.0.SNAPSHOT]  - date -> :  (Fri Jan 15 11:15:28 CET 201
  zmiana 3 - doLast problem !
  16-01-15 11:15:28
 
+Changes in version : [4.0.0.SNAPSHOT]  - date -> :  (Fri Jan 15 12:06:46 CET 2016)
+
