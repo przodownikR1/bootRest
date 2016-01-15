@@ -15,7 +15,7 @@ apply plugin: 'com.gorylenko.gradle-git-properties'
 import org.ajoberstar.grgit.*
 ext {
     git = org.ajoberstar.grgit.Grgit.open(file('.'))
-    propsFile = file('gradle.properties')
+   
     isSnapshot = version.endsWith('-SNAPSHOT')
 }
 
@@ -99,6 +99,22 @@ gitProperties {
     gitPropertiesDir = new File("${project.rootDir}/src/main/resources")
 }
 
+def getPropFile(){
+    Properties props = new Properties()
+    File gradleFile = new File('gradle.properties')
+    props.load(gradleFile.newDataInputStream())
+    return props.theVersion
+}
+
+
+def setPropFile(String newVersion){
+    Properties props = new Properties()
+    File gradleFile = new File('gradle.properties')
+    props.load(gradleFile.newDataInputStream())
+    props.setProperty('theVersion',newVersion)
+    props.store(gradleFile.newWriter(), null)
+}
+
 
 def markTask(){
     def tags = git.tag.list()
@@ -138,11 +154,13 @@ task infoTag(group: 'versioning',  description: 'basic info about current git an
             currentProjectVersion = getIncreaseVersion("hotfix")
         }
         logger.quiet "new increase version : " + currentProjectVersion
-        propsFile.append('theVersion='+currentProjectVersion)
+        logger.quiet "project version : " + project.property('version')
+        logger.quiet "project version from gradle.properties " + getPropFile()
+        setPropFile(currentProjectVersion.toString())
     }
 }
 
-task tagReleaseCi(group: 'versioning',  description: ' createNewTag : command : gradle tagRelease -PversionType=[] '){
+task tagReleaseCi(group: 'versioning',  description: ' createNewTag for CI enviroment: gradle tagRelease -PversionType=[major,minor] -PgitUser={user} -PgitPasswd={passwd} '){
     onlyIf{
         return new File(projectDir, '.git').exists()
     }
@@ -153,7 +171,7 @@ task tagReleaseCi(group: 'versioning',  description: ' createNewTag : command : 
         currentProjectVersion = getIncreaseVersion("hotfix")
     }
     doLast{
-        propsFile.append('theVersion='+currentProjectVersion)
+         setPropFile(currentProjectVersion.toString())
         git.checkout(branch: 'dev')
         fetchAllTags()
         git.pull()
@@ -173,7 +191,7 @@ task tagReleaseCi(group: 'versioning',  description: ' createNewTag : command : 
     }
 }
 
-task tagRelease(group: 'versioning',  description: ' createNewTag : command : gradle tagRelease -PversionType=[] '){
+task tagRelease(group: 'versioning',  description: ' createNewTag : command : gradle tagRelease -PversionType=[major,minor] '){
     onlyIf{
         return new File(projectDir, '.git').exists()
     }
@@ -184,7 +202,7 @@ task tagRelease(group: 'versioning',  description: ' createNewTag : command : gr
         currentProjectVersion = getIncreaseVersion("hotfix")
     }
     doLast{
-        propsFile.append('theVersion='+currentProjectVersion)
+        setPropFile(currentProjectVersion.toString())
         git.checkout(branch: 'dev')
         fetchAllTags()
         git.pull()

@@ -19,10 +19,11 @@ import org.apache.tools.ant.filters.*
         }
     
         
-       /* processResources {
-            filesMatching('application.properties') {
+       processResources {
+            filesMatching("**/*.properties") {
+                
                 filter org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-                    'info.app.version': project.property('version') + '-' + git.head().abbreviatedId
+                    'info.app.version': project.property('version') 
                 ]
             }
-        }*/
+        }
