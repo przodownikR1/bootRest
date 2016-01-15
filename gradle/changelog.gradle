@@ -127,40 +127,54 @@ def lastReleaseVersionByTag(){
     return result.replaceAll('\'','').trim()
 }
 
-//git show-ref --tags
-task infoTag(group: 'versioning',  description: 'basic info about current git and project situation'){
+/*task infoTag(group: 'versioning',  description: 'basic info about current git and project situation'){
     logger.quiet "Latest Version: :  "  +  lastReleaseVersionByTag()
-    def newVersion = getIncreaseVersion("release");
-    logger.quiet "new increase version : " + newVersion
     logger.quiet "last tagger commit hash : " + lastReleaseCommiterByTag()
     logger.quiet "current branch: " + git.branch.getCurrent().name
-    logger.quiet " isSnapshotOrRelease  : " +  isSnapshot
-    propsFile.append('theVersion='+newVersion)
-}
-
-/*task tagRelease(group: 'versioning',  description: ' createNewTag -> create '){
-    onlyIf{
-        return new File(projectDir, '.git').exists()
+    logger.quiet "isSnapshotOrRelease  : " +  isSnapshot
+    def currentProjectVersion
+    if(project.hasProperty("versionType")){
+        currentProjectVersion = getIncreaseVersion(project.getProperty("versionType"))
+    }else{
+       currentProjectVersion = getIncreaseVersion("hotfix")
     }
+     logger.quiet "new increase version : " + currentProjectVersion
+     propsFile.append('theVersion='+currentProjectVersion)
+     
+     
+}*/
+
+task tagRelease(group: 'versioning',  description: ' createNewTag : command : gradle tagRelease -PversionType=[] '){
+    onlyIf{
+        return new File(projectDir, '.git').exists() 
+    }
+    def currentProjectVersion
+    if(project.hasProperty("versionType")){
+        currentProjectVersion = getIncreaseVersion(project.getProperty("versionType"))       
+    }else{
+       currentProjectVersion = getIncreaseVersion("hotfix")
+    }
+    propsFile.append('theVersion='+currentProjectVersion)
+     
     git.checkout(branch: 'dev')
+    fetchAllTags()
     git.pull()
     def currentBranch = git.branch.getCurrent().name
     def userName = System.properties['user.name']
-
-    def currentProjectVersion = getIncreaseVersion("hotfix")
-
     def versionType  = currentProjectVersion.type
     def commitMessage = "!" + currentProjectVersion + "  , versionType : " + versionType + " ,  userName : " + userName
     generateChangelog()
     logger.quiet '+++++++++++++++++ createNewTag  =>  currentProjVersion :  ' +commitMessage
     commit(commitMessage)
     git.tag.add(name: currentProjectVersion, annotate: true, message: " '$versionType' by '$userName'")
+    
+    System.setProperty("org.ajoberstar.grgit.auth.username",project.getProperty("gitUser"))
+    System.setProperty("org.ajoberstar.grgit.auth.password",project.getProperty("gitPasswd"))
     git.push(tags: true)
-    doLast {
-        logger.quiet 'mark current version into last-release file  and generate changelog...'
-        markTask()
-    }
-}*/
+    logger.quiet 'mark current version into last-release file  and generate changelog...'
+    markTask()
+    
+}
 
 def commit(String message)  {
     def clean=git.status().isClean()
@@ -169,6 +183,14 @@ def commit(String message)  {
         git.commit(message: "$message- ${new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(new Date())}", all: true)
     }else{
         logger.quiet "Clean, commit skipped."
+    }
+}
+
+def fetchAllTags(){
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'fetch', 'origin' ,'--tags'
+        standardOutput = stdout
     }
 }
 
