@@ -160,14 +160,14 @@ task tagReleaseCi(group: 'versioning',  description: ' createNewTag : command : 
         def currentBranch = git.branch.getCurrent().name
         def userName = System.properties['user.name']
         def versionType  = currentProjectVersion.type
-        def commitMessage = "!" + currentProjectVersion + "  , versionType : " + versionType + " ,  userName : " + userName
-        generateChangelog()
+        def commitMessage = "!" + currentProjectVersion + "  , versionType : " + versionType + " ,  userName : " + userName       
         logger.quiet '+++++++++++++++++ createNewTag  =>  currentProjVersion :  ' +commitMessage
         commit(commitMessage)
         git.tag.add(name: currentProjectVersion, annotate: true, message: " '$versionType' by '$userName'")
         System.setProperty("org.ajoberstar.grgit.auth.username",project.getProperty("gitUser"))
         System.setProperty("org.ajoberstar.grgit.auth.password",project.getProperty("gitPasswd"))
         git.push(tags: true)
+        generateChangelog()
         logger.quiet 'mark current version into last-release file  and generate changelog...'
         markTask()
     }
@@ -185,7 +185,6 @@ task tagRelease(group: 'versioning',  description: ' createNewTag : command : gr
     }
     doLast{
         propsFile.append('theVersion='+currentProjectVersion)
-
         git.checkout(branch: 'dev')
         fetchAllTags()
         git.pull()
@@ -193,13 +192,12 @@ task tagRelease(group: 'versioning',  description: ' createNewTag : command : gr
         def userName = System.properties['user.name']
         def versionType  = currentProjectVersion.type
         def commitMessage = "!" + currentProjectVersion + "  , versionType : " + versionType + " ,  userName : " + userName
-
         logger.quiet '+++++++++++++++++ createNewTag  =>  currentProjVersion :  ' +commitMessage
         commit(commitMessage)
         git.tag.add(name: currentProjectVersion, annotate: true, message: " '$versionType' by '$userName'")
-
         git.push(tags: true)
         generateChangelog()
+        logger.quiet '++++++++++++  lastReleaseVersionByTag ' + lastReleaseVersionByTag()
         logger.quiet 'mark current version into last-release file  and generate changelog...'
         markTask()
     }
