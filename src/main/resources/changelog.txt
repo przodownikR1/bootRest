@@ -258,4 +258,9 @@ fixed  clear
 
 
 
-Changes in version : [1.2.27.SNAPSHOT]  - date -> :  (
+Changes in version : [1.2.27.SNAPSHOT]  - date -> :  (Changes in version : [1.2.27.SNAPSHOT]  - date -> :  (Fri Jan 15 11:03:33 CET 2016)
+zmiana 1
+ 16-01-15 11:03:33
+mod gradle.properties dynamic wat
+ 16-01-15 00:33:56
+
