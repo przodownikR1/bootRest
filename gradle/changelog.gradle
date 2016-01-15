@@ -183,7 +183,7 @@ task tagRelease(group: 'versioning',  description: ' createNewTag : command : gr
     }else{
         currentProjectVersion = getIncreaseVersion("hotfix")
     }
-    toLast{
+    doLast{
         propsFile.append('theVersion='+currentProjectVersion)
 
         git.checkout(branch: 'dev')
