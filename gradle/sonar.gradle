@@ -14,12 +14,16 @@ apply plugin: 'org.sonarqube'
 
 sonarqube {
     properties {
-        property "sonar.projectKey", "bootRest"
-        property "sonar.projectName", "bootRest"
-        property "sonar.host.url", "http://localhost:9000"
-        property "sonar.jdbc.url", "jdbc:mysql://localhost:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true"
-        property "sonar.jdbc.driverClassName", "com.mysql.jdbc.Driver"
-        property "sonar.jdbc.username", "sonar3"
-        property "sonar.jdbc.password", "sonar3"
+        property "sonar.analysis.mode", "issues"
+        property "sonar.issuesReport.console.enable", "true"
+        property "sonar.issuesReport.html.enable", "true"
+        
+        property "sonar.projectKey", sonarProjectKey
+        property "sonar.projectName", sonarProjectName
+        property "sonar.host.url", sonarHostUrl
+        property "sonar.jdbc.url", sonarJdbcUrl
+        property "sonar.jdbc.driverClassName", sonarJdbcDriverClassName
+        property "sonar.jdbc.username", sonarJdbcUsername
+        property "sonar.jdbc.password", sonarJdbcPassword
     }
   }

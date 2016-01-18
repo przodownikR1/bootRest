@@ -23,27 +23,6 @@ sourceSets {
 }
 
 
-/*compilerArgs =
- [
-   "-Xlint:-options", // intentionally disabled
-   "-Xlint:-rawtypes",
-   "-Xlint:-unchecked",
-   "-Xlint:serial",
-   "-Xlint:varargs",
-   "-Xlint:cast",
-   "-Xlint:classfile",
-   "-Xlint:dep-ann",
-   "-Xlint:divzero",
-   "-Xlint:empty",
-   "-Xlint:finally",
-   "-Xlint:overrides",
-   "-Xlint:path",
-   "-Xlint:processing",
-   "-Xlint:static",
-   "-Xlint:try",
-   "-Xlint:fallthrough",
-   "-Xlint:deprecation"
- ]*/
 
 task sourcesJar(type : Jar){
     baseName = projectName
@@ -78,8 +57,7 @@ assemble.dependsOn sourcesJar, groovydocJar, javadocJar
     "UTF-8"
 ]
 
-jar {
-        
+jar {      
     manifest {
       attributes(
               'Implementation-Title': "${project.name}",
