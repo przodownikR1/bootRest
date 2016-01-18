@@ -1,3 +1,5 @@
+import java.util.regex.Pattern.Dollar;
+
 apply plugin: 'java'
 apply plugin: 'groovy'
 sourceCompatibility = 1.8
@@ -24,7 +26,7 @@ sourceSets {
 
 
 
-task sourcesJar(type : Jar){
+/*task sourcesJar(type : Jar){
     baseName = projectName
     classifier 'sources'
     from sourceSets.main.allSource
@@ -49,7 +51,7 @@ artifacts{
 
 assemble.dependsOn sourcesJar, groovydocJar, javadocJar
 
-
+*/
 [compileJava, compileTestJava]*.options*.compilerArgs = [
     "-Xlint:none",
     "-g",

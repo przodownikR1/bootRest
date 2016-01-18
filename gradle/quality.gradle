@@ -1,6 +1,6 @@
 apply plugin: 'findbugs'
 apply plugin: 'jdepend'
-apply plugin: 'license'
+//apply plugin: 'license'
 
 findbugs {
     toolVersion = '3.0.0'
@@ -32,7 +32,7 @@ jdepend {
     reportsDir = file("$project.buildDir/reports/jdepend")
 }
 
-license {
+/*license {
     header = rootProject.file('config/HEADER')
     strictCheck = true
     ignoreFailures = true
@@ -45,4 +45,4 @@ license {
 
 licenseTest {
     source -= sourceSets.test.resources
-}
+}*/

@@ -1,0 +1,6 @@
+2016-01-18 13:39:22 logFileName=s1  [Test worker] INFO  pl.java.scalatech.log.LogTest - +++  slawek 
+2016-01-18 13:42:04 logFileName=s1  [Test worker] INFO  pl.java.scalatech.log.LogTest - +++  slawek 
+2016-01-18 13:42:42 logFileName=s1  [Test worker] INFO  pl.java.scalatech.log.LogTest - +++  slawek 
+2016-01-18 13:43:27 logFileName=s1  [Test worker] INFO  pl.java.scalatech.log.LogTest - +++  slawek 
+2016-01-18 13:44:55 logFileName=s1  [Test worker] INFO  pl.java.scalatech.log.LogTest - +++  slawek 
+2016-01-18 13:46:26 logFileName=s1  [main] INFO  pl.java.scalatech.log.LogTest - +++  slawek 

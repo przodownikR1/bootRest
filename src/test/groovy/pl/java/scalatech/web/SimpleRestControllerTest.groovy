@@ -16,9 +16,11 @@
 package pl.java.scalatech.web
 
 import groovyx.net.http.RESTClient
+import spock.lang.Ignore;
 import spock.lang.Specification
 
 class SimpleRestControllerTest extends Specification {
+    @Ignore
     def "Should return 200 & a message with the input appended"() {
         setup:
         def endpoint = new RESTClient( 'http://localhost:8080/' )
