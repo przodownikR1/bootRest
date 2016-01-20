@@ -1,5 +1,3 @@
-import java.util.regex.Pattern.Dollar;
-
 apply plugin: 'java'
 apply plugin: 'groovy'
 sourceCompatibility = 1.8
@@ -23,8 +21,6 @@ sourceSets {
         resources { srcDir 'src/test/resources' }
     }
 }
-
-
 
 /*task sourcesJar(type : Jar){
     baseName = projectName
@@ -50,8 +46,8 @@ artifacts{
 }
 
 assemble.dependsOn sourcesJar, groovydocJar, javadocJar
-
 */
+
 [compileJava, compileTestJava]*.options*.compilerArgs = [
     "-Xlint:none",
     "-g",
@@ -59,7 +55,7 @@ assemble.dependsOn sourcesJar, groovydocJar, javadocJar
     "UTF-8"
 ]
 
-jar {      
+jar {
     manifest {
       attributes(
               'Implementation-Title': "${project.name}",

@@ -15,7 +15,7 @@ apply plugin: 'com.gorylenko.gradle-git-properties'
 import org.ajoberstar.grgit.*
 ext {
     git = org.ajoberstar.grgit.Grgit.open(file('.'))
-   
+
     isSnapshot = version.endsWith('-SNAPSHOT')
 }
 
@@ -62,7 +62,7 @@ ProjectVersion getVersionInfo(){
     return new ProjectVersion(
             Integer.parseInt(tempVersion[0].trim()),
             Integer.parseInt(tempVersion[1].trim()),
-            Integer.parseInt(tempVersion[2].trim()),
+            Integer.parseInt(tempVersion[2].trim().replace('-SNAPSHOT','').replace('-RELEASE','')),
             isSnapshot
             )
 }
@@ -120,6 +120,7 @@ def markTask(){
     def tags = git.tag.list()
     File f = file("${project.rootDir}/src/main/resources/last-release-commit.txt")
     f.write(lastReleaseCommiterByTag())
+    commit('! markTask')
 }
 def lastReleaseCommiterByTag(){
     def stdout = new ByteArrayOutputStream()
@@ -141,61 +142,7 @@ def lastReleaseVersionByTag(){
     return result.replaceAll('\'','').trim()
 }
 
-def mergeWithBranchRealease(){
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'checkout', 'releaseBranch'
-        commandLine 'git', 'merge', 'dev'
-        commandLine 'git', 'push' , 'origin' , 'releaseBranch'
-        standardOutput = stdout
-        
-    }
-    String result =  stdout.toString()
-    logger.quiet "merge " + result
-}
-
-static String getRefHash(File repoFilePath) {
-    String refHash = ''
-    def process = "git log -n 1 --format=%H".execute([], repoFilePath)
-    process.in.eachLine{ line ->
-        if (line.length() == 40) {
-            refHash = line
-        }
-    }
-    refHash
-}
-static String getActiveBranch(File repoFilePath) {
-    String activeBranch = "(no branch)"
-    def process = "git branch".execute([], repoFilePath)
-    process.in.eachLine{ line ->
-        if ( line.startsWith('* ') ) {
-            activeBranch = line.replaceFirst('\\* ','')
-        }
-    }
-
-    activeBranch
-}
-
-task refHash(){
-    File repoFilePath = project.projectDir
-    println "############  " + getRefHash(repoFilePath)  + "  "  + getActiveBranch(repoFilePath)
-}
-
-def mergeWithHotfix(){
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'checkout', 'hotfix'
-        commandLine 'git', 'merge', 'dev'
-        commandLine 'git', 'push' , 'origin' , 'hotfix'
-        standardOutput = stdout
-        
-    }
-    String result =  stdout.toString()
-    logger.quiet "merge " + result
-}
-
 task infoTag(group: 'versioning',  description: 'basic info about current git and project situation'){
-  
     doLast{
         logger.quiet "Latest Version: :  "  +  lastReleaseVersionByTag()
         logger.quiet "last tagger commit hash : " + lastReleaseCommiterByTag()
@@ -214,52 +161,50 @@ task infoTag(group: 'versioning',  description: 'basic info about current git an
     }
 }
 
-task tagReleaseCi(group: 'versioning',  description: ' createNewTag for CI enviroment: gradle tagRelease -PversionType=[major,minor] -PgitUser={user} -PgitPasswd={passwd} '){
-  
-    onlyIf{
-        return new File(projectDir, '.git').exists()
-    }
+def createTagForRelease(){
     def currentProjectVersion
     if(project.hasProperty("versionType")){
         currentProjectVersion = getIncreaseVersion(project.getProperty("versionType"))
     }else{
         currentProjectVersion = getIncreaseVersion("hotfix")
     }
-    doLast{
-         setPropFile(currentProjectVersion.toString())
-        git.checkout(branch: 'dev')
-        fetchAllTags()
-        git.pull()
-        def currentBranch = git.branch.getCurrent().name
-        def userName = System.properties['user.name']
-        def versionType  = currentProjectVersion.type
-        def commitMessage = "!" + currentProjectVersion + "  , versionType : " + versionType + " ,  userName : " + userName       
-        logger.quiet '+++++++++++++++++ createNewTag  =>  currentProjVersion :  ' +commitMessage
-        commit(commitMessage)
-        git.tag.add(name: currentProjectVersion, annotate: true, message: " '$versionType' by '$userName'")
-        System.setProperty("org.ajoberstar.grgit.auth.username",project.getProperty("gitUser"))
-        System.setProperty("org.ajoberstar.grgit.auth.password",project.getProperty("gitPasswd"))
-        git.push(tags: true)
-        generateChangelog()
-        logger.quiet 'mark current version into last-release file  and generate changelog...'
-        markTask()
-    }
+
+    setPropFile(currentProjectVersion.toString())
+    git.checkout(branch: 'dev')
+    fetchAllTags()
+    git.pull()
+    def currentBranch = git.branch.getCurrent().name
+    def userName = System.properties['user.name']
+    def versionType  = currentProjectVersion.type
+    def commitMessage = "!" + currentProjectVersion + "  , versionType : " + versionType + " ,  userName : " + userName
+    logger.quiet '+++++++++++++++++ createNewTag  =>  currentProjVersion :  ' +commitMessage
+    commit(commitMessage)
+    git.tag.add(name: currentProjectVersion, annotate: true, message: " '$versionType' by '$userName'")
+    git.push(tags: true)
+    generateChangelog()
+    logger.quiet '++++++++++++  lastReleaseVersionByTag ' + lastReleaseVersionByTag()
+    logger.quiet 'mark current version into last-release file  and generate changelog...'
+    markTask()
+    git.push()
 }
 
-task tagHotFixRelease(group: 'versioning',  description: ' createNewTag : command : gradle tagRelease -PcurrentTagVersion=[currentTagVersion] '){
-   
+task tagHotFixRelease(group: 'versioning-hotfix',  description: ' createNewTag for hotfix: command : gradle tagHotFixRelease -PcurrentTagVersion=[currentTagVersion] '){
     onlyIf{
         return new File(projectDir, '.git').exists()
     }
     def currentProjectVersion
     def lastProjectVersion
-    if(project.hasProperty("currentTagVersion")){
-        currentProjectVersion = project.getProperty("currentTagVersion")
-        lastProjectVersion = project.getProperty("currentTagVersion")
-    }else{
-        currentProjectVersion = getIncreaseVersion("hotfix")
-    }
+
     doLast{
+        if(project.hasProperty("currentTagVersion")){
+            currentProjectVersion = project.getProperty("currentTagVersion")
+            lastProjectVersion = project.getProperty("currentTagVersion")
+            currentProjectVersion = getIncreaseVersion("hotfix")
+        }
+        else{
+            throw new GradleException("You have not entered the correct tag current version !!")
+        }
+
         setPropFile(currentProjectVersion.toString())
         git.checkout(branch: 'hotfix')
         fetchAllTags()
@@ -276,72 +221,55 @@ task tagHotFixRelease(group: 'versioning',  description: ' createNewTag : comman
         logger.quiet '++++++++++++  lastReleaseVersionByTag ' + lastProjectVersion
         logger.quiet 'mark current version into last-release file  and generate changelog...'
         markTask()
+        git.push()
     }
 }
 
-task tagHotFixReleaseCi(group: 'versioning',  description: ' createNewTag : command : gradle tagRelease -PcurrentTagVersion=[currentTagVersion] -PgitUser={user} -PgitPasswd={passwd} '){
-    
-     onlyIf{
-         return new File(projectDir, '.git').exists()
-     }
-     def currentProjectVersion
-     def lastProjectVersion
-     if(project.hasProperty("currentTagVersion")){
-         currentProjectVersion = project.getProperty("currentTagVersion")
-         lastProjectVersion = project.getProperty("currentTagVersion")
-     }else{
-         currentProjectVersion = getIncreaseVersion("hotfix")
-     }
-     doLast{
-         setPropFile(currentProjectVersion.toString())
-         git.checkout(branch: 'hotfix')
-         fetchAllTags()
-         git.pull()
-         def currentBranch = git.branch.getCurrent().name
-         def userName = System.properties['user.name']
-         def versionType  = currentProjectVersion.type
-         def commitMessage = "!" + currentProjectVersion + "  , versionType : " + versionType + " ,  userName : " + userName
-         logger.quiet '+++++++++++++++++ createNewTag  =>  currentProjVersion :  ' +commitMessage
-         commit(commitMessage)
-         git.tag.add(name: currentProjectVersion, annotate: true, message: " '$versionType' by '$userName'")
-         System.setProperty("org.ajoberstar.grgit.auth.username",project.getProperty("gitUser"))
-         System.setProperty("org.ajoberstar.grgit.auth.password",project.getProperty("gitPasswd"))
-         git.push(tags: true)
-         generateChangelog()
-         logger.quiet '++++++++++++  lastReleaseVersionByTag ' + lastProjectVersion
-         logger.quiet 'mark current version into last-release file  and generate changelog...'
-         markTask()
-     }
- }
+task tagReleaseBranch(group: 'versioning-branchRelease',  description: 'create releaseBranch -PversionType=[major,minor]'){
+    doFirst{ createTagForRelease() }
 
-task tagRelease(group: 'versioning',  description: ' createNewTag : command : gradle tagRelease -PversionType=[major,minor] '){
-    
-    onlyIf{
-        return new File(projectDir, '.git').exists()
+    doLast{
+        git.checkout(branch: 'releaseBranch')
+        git.merge(head: 'origin/dev', mode: org.ajoberstar.grgit.operation.MergeOp.Mode.ONLY_FF)
+        commit('!mergeWithReleaseBranch')
+        git.push()
+        git.push(tags: true)
     }
-    def currentProjectVersion
-    if(project.hasProperty("versionType")){
-        currentProjectVersion = getIncreaseVersion(project.getProperty("versionType"))
-    }else{
-        currentProjectVersion = getIncreaseVersion("hotfix")
+}
+
+task ciMergeRequestHotfixDone(group: 'versioning-CI',  description: 'merge hotfix with master - Only for CI env !!'){
+
+    doFirst(){
+        if(project.hasProperty("ci")){
+            logger.quiet 'CI enviroment build start'
+        }else{
+            throw new GradleException("This task should be launch only for CI enviroment !!")
+        }
     }
     doLast{
-        setPropFile(currentProjectVersion.toString())
-        git.checkout(branch: 'dev')
-        fetchAllTags()
-        git.pull()
-        def currentBranch = git.branch.getCurrent().name
-        def userName = System.properties['user.name']
-        def versionType  = currentProjectVersion.type
-        def commitMessage = "!" + currentProjectVersion + "  , versionType : " + versionType + " ,  userName : " + userName
-        logger.quiet '+++++++++++++++++ createNewTag  =>  currentProjVersion :  ' +commitMessage
-        commit(commitMessage)
-        git.tag.add(name: currentProjectVersion, annotate: true, message: " '$versionType' by '$userName'")
+        git.checkout(branch: 'master')
+        git.merge(head: 'origin/hotfix', mode: org.ajoberstar.grgit.operation.MergeOp.Mode.ONLY_FF)
+        commit('!mergeWithMasterHotfix')
+        git.push()
         git.push(tags: true)
-        generateChangelog()
-        logger.quiet '++++++++++++  lastReleaseVersionByTag ' + lastReleaseVersionByTag()
-        logger.quiet 'mark current version into last-release file  and generate changelog...'
-        markTask()
+    }
+}
+
+task ciMergeRequestDone(group: 'versioning-CI',  description: 'merge releaseBranch with master - Only for CI env !!'){
+    doFirst(){
+        if(project.hasProperty("ci")){
+            logger.quiet 'CI enviroment build start'
+        }else{
+            throw new GradleException("This task should be launch only for CI enviroment !!")
+        }
+    }
+
+    doLast{
+        git.checkout(branch: 'master')
+        git.merge(head: 'origin/releaseBranch', mode: org.ajoberstar.grgit.operation.MergeOp.Mode.ONLY_FF)
+        commit('!mergeWithMasterBranch')
+        git.push()
+        git.push(tags: true)
     }
 }
 
@@ -350,6 +278,7 @@ def commit(String message)  {
     if (!clean) {
         git.add(patterns: ['.'])
         git.commit(message: "$message- ${new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(new Date())}", all: true)
+        logger.quiet " " + message
     }else{
         logger.quiet "Clean, commit skipped."
     }

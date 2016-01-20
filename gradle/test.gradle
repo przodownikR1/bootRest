@@ -11,7 +11,7 @@ buildscript {
 apply plugin: "info.solidsoft.pitest"
 
 pitest {
-    targetClasses = ['pl.java.scalatech.*']
+    targetClasses = ['pl.java.riscosoftware.*']
     pitestVersion = "1.1.6"
     threads = 4
     outputFormats = ['XML', 'HTML']

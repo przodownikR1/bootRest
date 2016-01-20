@@ -1,20 +1,20 @@
 buildscript {
-    ext {
-        springBootVersion = '1.3.1.RELEASE'
+   ext {
+        springBootVersion = '1.2.6.RELEASE'
     }
     repositories {
         mavenCentral()
-        jcenter()
         maven {
             url "https://plugins.gradle.org/m2/"
           }
+        jcenter()
     }
-    dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}'
-        classpath 'io.spring.gradle:dependency-management-plugin:0.5.3.RELEASE'
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.3.1.RELEASE'
+    dependencies {  
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE")
     }
-}
+}    
+  
 
 apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management'
@@ -24,111 +24,107 @@ repositories {
 }
 
 ext {
-    springDataVersion = 'Fowler-RELEASE'
-     springVersion = '4.2+'
-     hibernateVersion = "5.0+"
-     javaxValidationVersion = "1.1.0.Final"
-     hibernateValidatorVersion = "5.0.+"
-     lombokVersion = "1.16.+"
-     cucumberVersion = "1.2.2"
-     apacheHttpVersion = "4.5"
-     gatlingVersion = "2.1.4"     
-     javamelodyVersion = "1.52.0"
+    camelVersion = '2.15.2'
+    hawtioVersion = '2.0.0'
+    junitVersion = "4.12"
+    hamcrestVersion = "1.3"
+    mockitoVersion  = "1.9.5"
+    slf4jVersion = "1.7.12"
+    logbackVersion = "1.1.3"
+    springVersion = "4.1.7.RELEASE"
+    springDataRestWebmvcVersion = "2.1.1.RELEASE"
+    hibernateVersion = "4.3.8.Final"
+    springDataJPAVersion = "1.8.0.RELEASE"
+    javaxValidationVersion = "1.1.0.Final"
+    hibernateValidatorVersion = "5.1.1.Final"
+    servletVersion = "3.1.0"
+    jacksonMapperVersion = "1.9.13"
+    lombokVersion = "1.16.4"
+    guavaVersion = "18.0"
+    aspectJVersion = "1.7.4"
+    javaVersion = "1.8"
+    codahale="3.0.2"
+    httpClientVersion="4.3.5"
 }
 
-dependencyManagement {
-    imports {
-        mavenBom 'org.springframework:spring-framework-bom:4.2.4.RELEASE'
-        mavenBom "org.springframework.data:spring-data-releasetrain:${springDataVersion}"
-    }
-}
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-actuator')
-    compile('org.springframework.boot:spring-boot-actuator-docs')
-    compile('org.springframework.boot:spring-boot-starter-aop')
-    compile('org.springframework.boot:spring-boot-starter-cache')
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
-       // compile('org.springframework.boot:spring-boot-starter-data-rest')
-       // compile('org.springframework.data:spring-data-rest-hal-browser')
-       // compile('org.springframework.boot:spring-boot-devtools')
-       // compile('org.springframework.boot:spring-boot-starter-redis')
-    compile('org.springframework.boot:spring-boot-starter-security')
-    compile('org.springframework.boot:spring-boot-starter-hateoas')
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "org.springframework.boot:spring-boot-starter-aop"
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.boot:spring-boot-starter-jetty"
+    compile "org.springframework.boot:spring-boot-starter-logging"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa"
    
-    compile('org.springframework.retry:spring-retry')
-
-    compile('org.springframework.session:spring-session')
-    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
-    compile('org.springframework.boot:spring-boot-starter-validation')
-    compile('org.springframework.boot:spring-boot-starter-web')
-    
-    compile 'redis.clients:jedis:2.1.0'
-    compile 'net.bull.javamelody:javamelody-core:1.58.0'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.6+'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.6+'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.6+'
-    
-    compile 'org.springframework:spring-core'
-    compile 'org.springframework:spring-beans'
-    compile 'org.springframework:spring-context'
-    compile 'org.springframework:spring-orm'
-    compile 'org.springframework:spring-tx'
-    compile 'org.springframework:spring-aop'
-    compile 'org.projectlombok:lombok:1+'
-    compile 'com.google.guava:guava:18.+'
-    compile 'net.logstash.logback:logstash-logback-encoder:4.3'
-   
-    compile 'javax.validation:validation-api:1+'
-    compile 'org.hibernate:hibernate-validator:5+'
-    compile 'org.hibernate:hibernate-core:5+'
-    compile 'org.hibernate:hibernate-entitymanager:5.0+'
-    compile 'javax.money:money-api:1+'
-    compile 'org.javamoney:moneta:1+'
-   
-    compile 'org.lazyluke:log4jdbc-remix:0.2.7'
-    compile 'com.h2database:h2'
-    compile 'org.webjars:bootstrap:3.3.5'
-    compile 'org.webjars:jquery:2.1.4'
-    compile 'org.webjars:jquery-ui:1.11.4'
-    compile 'org.webjars:jquery-ui-themes:1.11.4'
-    compile ("org.webjars.bower:jquery.bootgrid:1.2.0") {
-        exclude group: 'org.webjars.bower'
-    }
-    //compile 'com.github.tomakehurst:wiremock:1.57'
-    
-    compile 'org.codehaus.groovy:groovy-all:2.4.5'
-    compile 'com.fasterxml.jackson.core:jackson-databind'
-    compile 'org.apache.httpcomponents:httpclient:4+'
-    compile 'org.apache.httpcomponents:fluent-hc:4+'
-    
+    compile 'org.apache.camel:camel-core:2.15.2'
+    compile "org.apache.camel:camel-spring-boot:2.15.2"
+    compile 'org.apache.camel:camel-spring:2.15.2'
+    compile 'org.apache.camel:camel-spring-javaconfig:2.15.2'
+    compile 'org.apache.camel:camel-metrics:2.15.2'
+    compile "org.apache.camel:camel-jaxb:2.15.2"
+    compile "org.apache.camel:camel-jms:2.15.2"
+    compile 'org.apache.camel:camel-soap:2.15.2'
     compile("org.apache.activemq:activemq-client")
-    compile("org.apache.xbean:xbean-spring:4+") {
+    compile("org.apache.activemq:activemq-camel:5.11.1")
+    compile("org.apache.xbean:xbean-spring:4.2") {
         exclude module: "org.springframework:spring"
     }
-    compile("org.springframework:spring-jms:4+.RELEASE")
-    compile("org.apache.activemq:activemq-broker:5+")
+    compile "org.apache.camel:camel-bindy:2.15.2"
+    compile 'org.apache.camel:camel-stream:2.15.2'
     
-  //  jpametamodel ('org.hibernate:hibernate-jpamodelgen:5.0.6.Final')
-    testCompile('org.springframework.boot:spring-boot-starter-test'){
-        exclude module: 'hamcrest-core'
-        exclude module: 'hamcrest-library'
-        exclude module: 'mockito-core'
-    }
-    testCompile 'org.mockito:mockito-all:1+'
-    testCompile 'com.jayway.jsonpath:json-path'
-    testCompile('junit:junit:4.12') {
-            exclude module: 'hamcrest-core'
-        }
-    testCompile 'org.assertj:assertj-core:3+'
+    compile ("org.apache.camel:camel-cxf:2.15.2")  {
+       exclude module: "org.apache.cxf » cxf-rt-frontend-jaxws"  
+       exclude module: "org.apache.cxf:cxf-rt-bindings-soap"
+       exclude module: "org.apache.cxf:cxf-rt-frontend-jaxrs"
+    
+    }   
+    compile 'org.bouncycastle:bcprov-jdk15on:1.52'
+    
+    compile("org.springframework:spring-jms:4.1.7.RELEASE")
+    compile("org.apache.activemq:activemq-broker:5.11.1")
+    compile("commons-io:commons-io:2.4")
+ 
+    compile 'org.apache.cxf:cxf-rt-management:3.1.2'
+    compile 'org.apache.cxf:cxf-rt-bindings-soap:3.1.2'
+    compile "org.apache.cxf:cxf-rt-frontend-jaxws:3.1.2"
+    compile 'org.apache.cxf:cxf-rt-transports-http:3.1.0'
+    compile 'org.apache.cxf:cxf-rt-transports-jms:3.1.2'
+    compile 'org.apache.cxf:cxf-rt-transports-http-jetty:3.1.2'
+    compile "org.apache.cxf:cxf-core:3.1.2"
+   
+    compile 'org.apache.httpcomponents:httpasyncclient:4.1'    
+    compile 'org.apache.httpcomponents:httpclient:4.3.5'
+    compile 'org.apache.httpcomponents:fluent-hc:4.3.5'
+    
+    compile 'com.codahale.metrics:metrics-core:3.0.2'
+    compile 'com.codahale.metrics:metrics-jvm:3.0.2'
+    compile 'com.codahale.metrics:metrics-logback:3.0.2'
+    compile 'com.ryantenney.metrics:metrics-spring:3.0.1'
+
+     
+    compile 'org.projectlombok:lombok:1.16.4'
+    compile 'com.google.guava:guava:18.0'
+    
+    compile fileTree(dir: 'libs', include: '*.jar')
+    
+    compile 'org.jasypt:jasypt:1.9.2'
+    compile 'org.jasypt:jasypt-spring31:1.9.2'
+    
+    compile("org.projectlombok:lombok:1.16.4")
+    compile("com.google.guava:guava:18.0")
+    compile("org.reflections:reflections:0.9.10")
+    compile("uk.com.robust-it:cloning:1.9.2")
+    compile 'javax.mail:mail:1.4.7'
+    
+    testCompile "org.apache.camel:camel-test:2.15.2" 
+    testCompile "org.springframework.boot:spring-boot-starter-test"
+    testCompile "org.apache.camel:camel-test-spring:2.15.2"
+    testCompile 'org.assertj:assertj-core:3.1.0'
     testCompile 'com.jayway.awaitility:awaitility-java8:1.6.1'
-    testCompile 'com.jayway.awaitility:awaitility:1.6+'
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
-    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
-    testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7+'
-    testCompile 'net.sf.json-lib:json-lib:2.4:jdk15'
-    testCompile('org.springframework.restdocs:spring-restdocs-mockmvc:1.0.0.RELEASE')
-    //springLoaded 'org.springframework:springloaded:1.2.5.RELEASE'    
+    testCompile 'com.jayway.awaitility:awaitility:1.6.1'
+    
+    runtime 'com.h2database:h2'
+    
 }
 
 test {
@@ -156,9 +152,7 @@ configurations.all {
         if (details.requested.name == 'springloaded') {
             details.useVersion '1.2.5.RELEASE'
         }
-        if (details.requested.group == 'org.springframework.security') {
-            details.useVersion '4.0.3.RELEASE'
-        }
+      
         if (details.requested.group == 'org.hibernate') {
             details.useVersion '5.0.2.Final'
         }
