@@ -23,6 +23,7 @@ import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
 import org.springframework.data.repository.support.DomainClassConverter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
@@ -35,6 +36,7 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.java.scalatech.hibernate.RequestStatisticsInterceptor;
 
 @Configuration
 @Slf4j
@@ -80,9 +82,16 @@ public class WebConfig extends WebMvcConfigurationSupport {
 
     }
 
+    
+    @Bean
+    Resource picture() {
+        return new org.springframework.core.io.ClassPathResource("new_mg.png");
+    }
+    
     @Override
     public void addInterceptors(org.springframework.web.servlet.config.annotation.InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor);
+        registry.addInterceptor(new RequestStatisticsInterceptor());
     }
 
     @Bean
