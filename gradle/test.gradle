@@ -45,4 +45,9 @@ test {
     if (gradle.startParameter.taskNames.find { ['integTest', 'release'].contains(it) })
       systemProperty 'integTest', 'true'
       maxHeapSize = '1024m'
+      jacoco {
+          append = false
+          destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+          classDumpFile = file("$buildDir/jacoco/classpathdumps")
+      }
 }

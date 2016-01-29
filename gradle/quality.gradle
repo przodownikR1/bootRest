@@ -17,13 +17,30 @@ jacocoTestReport {
         xml.enabled true
         html.enabled true
         csv.enabled false
+        html.destination "${buildDir}/jacocoHtml"
     }
-    sourceSets project.sourceSets.main
 }
+
+
 
 pmd {
     ignoreFailures = true
+    sourceSets = [sourceSets.main]
+   
        
+}
+
+task pmd(type: Pmd) {
+    description 'Run pmd'
+    group 'verification'
+
+    ruleSets = ["java-basic", "java-braces", "java-strings", "java-design", "java-unusedcode"]
+    source = fileTree('src/main/java')
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
 }
 
 tasks.withType(Pmd) {
@@ -32,6 +49,7 @@ tasks.withType(Pmd) {
         html.enabled = true
     }
 }
+
 
 
 findbugs {
@@ -50,6 +68,8 @@ findbugsMain {
     }
 }
 
+
+
 findbugsTest {
     reports {
         xml.enabled = false
@@ -63,6 +83,7 @@ jdepend {
     ignoreFailures = true
     reportsDir = file("$project.buildDir/reports/jdepend")
 }
+
 
 /*license {
     header = rootProject.file('config/HEADER')
