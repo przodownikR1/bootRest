@@ -91,7 +91,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
     @Override
     public void addInterceptors(org.springframework.web.servlet.config.annotation.InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor);
-        registry.addInterceptor(new RequestStatisticsInterceptor());
+      //  registry.addInterceptor(new RequestStatisticsInterceptor());
     }
 
     @Bean

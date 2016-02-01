@@ -84,14 +84,12 @@ dependencies {
     compile 'org.projectlombok:lombok:1+'
     compile 'com.google.guava:guava:18.+'
     compile 'net.logstash.logback:logstash-logback-encoder:4.3'
-   
     compile 'javax.validation:validation-api:1+'
     compile 'org.hibernate:hibernate-validator:5+'
     compile 'org.hibernate:hibernate-core:5+'
     compile 'org.hibernate:hibernate-entitymanager:5.0+'
     compile 'javax.money:money-api:1+'
     compile 'org.javamoney:moneta:1+'
-   
     compile 'org.lazyluke:log4jdbc-remix:0.2.7'
     compile 'com.h2database:h2'
     compile 'org.webjars:bootstrap:3.3.5'
