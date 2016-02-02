@@ -105,6 +105,7 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind'
     compile 'org.apache.httpcomponents:httpclient:4+'
     compile 'org.apache.httpcomponents:fluent-hc:4+'
+    compile 'org.apache.httpcomponents:httpasyncclient:4.1.1'
     
     compile("org.apache.activemq:activemq-client")
     compile("org.apache.xbean:xbean-spring:4+") {

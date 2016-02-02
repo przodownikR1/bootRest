@@ -1,5 +1,7 @@
 package pl.java.scalatech.web.async;
 
+import java.util.concurrent.Callable;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsAsyncClientHttpRequestFactory;
@@ -62,5 +64,13 @@ public class AsyncOneController {
 
         System.out.println("Started");
         return result;
+    }
+    
+    @RequestMapping("hello1")
+    public Callable<String> helloCallable() throws InterruptedException {
+        return () -> {
+            Thread.sleep(3000);
+            return "hello";
+        };
     }
 }
