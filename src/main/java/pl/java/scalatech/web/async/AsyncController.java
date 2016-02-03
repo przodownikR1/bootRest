@@ -55,4 +55,13 @@ public class AsyncController {
 
         return deferredResult;
     }
+    
+    @RequestMapping(value = "/block")
+    public String executeSlowTask() {
+        
+        String result = taskService.processSync("test data..." +now().format(ofPattern("HH:mm:ss")));
+        log.info("Servlet thread released");
+
+        return result;
+    }
 }
