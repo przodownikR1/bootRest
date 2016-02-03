@@ -1,5 +1,8 @@
 package pl.java.scalatech.web.async;
 
+import static java.time.LocalDateTime.now;
+import static java.time.format.DateTimeFormatter.ofPattern;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -34,7 +37,7 @@ public class AsyncController {
     @RequestMapping("/async-callable")
     public Callable<String> processAsyncCallable() {
 
-        Callable<String> callable = () -> taskService.processSync("test data...");
+        Callable<String> callable = () -> taskService.processSync("test data..."+now().format(ofPattern("HH:mm:ss")));
 
         log.info("Servlet thread released!!!");
 
@@ -46,7 +49,7 @@ public class AsyncController {
 
         DeferredResult<String> deferredResult = new DeferredResult<>();
 
-        CompletableFuture.supplyAsync(() -> taskService.processSync("test data...")).whenCompleteAsync((result, throwable) -> deferredResult.setResult(result));
+        CompletableFuture.supplyAsync(() -> taskService.processSync("test data..." +now().format(ofPattern("HH:mm:ss")))).whenCompleteAsync((result, throwable) -> deferredResult.setResult(result));
 
         log.info("Servlet thread released!!!");
 
