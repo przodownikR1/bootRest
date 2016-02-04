@@ -23,6 +23,8 @@ buildscript {
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.1'
         classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.6'
         classpath 'com.github.jruby-gradle:jruby-gradle-plugin:0.1.5'
+       
+          classpath "net.saliman:gradle-cobertura-plugin:2.3.0"
         
        // classpath 'org.springframework:springloaded:1.2.5.RELEASE'
     }
