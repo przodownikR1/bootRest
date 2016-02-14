@@ -7,6 +7,10 @@ targetCompatibility = 1.8
 group = 'theGroup'
 version = 'theVersion'
 
+
+
+
+
 sourceSets {
     intTest
     generated.java.srcDirs=['src/main/generated']
@@ -68,3 +72,16 @@ jar {
       )
     }
   }
+bootRun {
+   
+    def profileName = project.hasProperty('activeProfile') ? project.activeProfile : 'development'
+    def appOpts = ["-Dspring.profiles.active=$profileName"]
+    def stdOpts = ['-Dfile.encoding=UTF8', '-Xms1024m', '-Xmx2048M' ,'-XX:+UseG1GC']
+    def gcOpts = ['-verbose:gc','-XX:+PrintGCDetails', '-XX:+PrintHeapAtGC',
+                  '-XX:+PrintGCDateStamps', '-XX:+PrintTenuringDistribution',
+                  '-XX:+PrintClassHistogram', '-Xloggc:gc.log']
+  
+    jvmArgs = stdOpts + gcOpts
+  }
+  
+//applicationDefaultJvmArgs  = ["-Xms1024m -Xmx2048M -XX:+PrintClassHistogram -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintHeapAtGC -Xloggc:gc.log"]
