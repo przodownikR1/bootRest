@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import pl.java.scalatech.service.user.WeatherService;
 
-@RestController
+//@RestController
 @PropertySource("classpath:weather.properties")
 public class WeatherServiceController {
     @Autowired

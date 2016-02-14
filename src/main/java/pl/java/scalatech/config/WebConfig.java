@@ -22,9 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.data.repository.support.DomainClassConverter;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
@@ -40,8 +42,8 @@ import pl.java.scalatech.hibernate.RequestStatisticsInterceptor;
 
 //@Configuration
 @Slf4j
-//@ComponentScan(basePackages = { "pl.java.scalatech.converters", "pl.java.scalatech.web.interceptor" })
-//@EnableSpringDataWebSupport
+@ComponentScan(basePackages = { "pl.java.scalatech.converters", "pl.java.scalatech.web.interceptor" })
+@EnableSpringDataWebSupport
 public class WebConfig extends WebMvcConfigurationSupport {
 
     @Autowired
