@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 
 import com.google.common.collect.Lists;
 
+import groovyjarjarantlr.collections.List;
 import lombok.extern.slf4j.Slf4j;
 import pl.java.scalatech.domain.Project;
 import pl.java.scalatech.domain.Skill;
@@ -42,8 +43,11 @@ public class BootRest {
             {
                User user = userRepository.save(User.builder().firstname(a).login(a).email(a + "@tlen.pl").login(a).enabled(true).build());
               log.info("{}", user);
-               Lists.newArrayList("java", "scala", "groovy", "gradle", "maven", "spring", "jpa").forEach(s -> skillRepository.save(Skill.builder().name(s).build()));
-               Lists.newArrayList("socialwarehouse", "ogw", "connector", "eo", "cash", "eb").forEach(p -> projectRepository.save(Project.builder().name(p).build()));
+              Lists.newArrayList("java", "scala", "groovy", "gradle", "maven", "spring", "jpa").forEach(s -> skillRepository.save(Skill.builder().name(s).build()));
+              Lists.newArrayList("socialwarehouse", "ogw", "connector", "eo", "cash", "eb").forEach(p -> projectRepository.save(Project.builder().name(p).build()));
+              user.setSkills(Lists.newArrayList(skillRepository.getOne(1l),skillRepository.getOne(2l)));  
+              
+              
         }
 
 

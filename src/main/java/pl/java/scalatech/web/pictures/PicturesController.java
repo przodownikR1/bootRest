@@ -25,7 +25,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import pl.java.scalatech.domain.User;
 import pl.java.scalatech.repository.UserRepository;
 
-@RestController
+//@RestController
 public class PicturesController {
 
     @Resource

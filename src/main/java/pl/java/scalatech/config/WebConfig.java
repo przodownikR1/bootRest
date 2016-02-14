@@ -38,7 +38,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import lombok.extern.slf4j.Slf4j;
 import pl.java.scalatech.hibernate.RequestStatisticsInterceptor;
 
-@Configuration
+//@Configuration
 @Slf4j
 //@ComponentScan(basePackages = { "pl.java.scalatech.converters", "pl.java.scalatech.web.interceptor" })
 //@EnableSpringDataWebSupport
@@ -78,7 +78,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/images/**").addResourceLocations("classpath:/resources/images/").setCachePeriod(3000);
         //registry.addResourceHandler("/favicon.ico").addResourceLocations("classpath:/static/favicon.ico").setCachePeriod(3000);
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/js/").setCachePeriod(3000);
+      //  registry.addResourceHandler("/js/**").addResourceLocations("classpath:/js/").setCachePeriod(3000);
 
     }
 
