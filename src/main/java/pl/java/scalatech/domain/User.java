@@ -15,16 +15,23 @@
  */
 package pl.java.scalatech.domain;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -50,6 +57,13 @@ public class User extends AbstractEntity{
     private String login;
     private String password;
     private boolean enabled;
+    @Transient
+    private LocalDate birthDate;
+    
+    private String lastName;
+    
+    @Enumerated
+    private Gender gender;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "skillId")
@@ -60,4 +74,23 @@ public class User extends AbstractEntity{
     @JoinTable(name = "USER_ROLE", joinColumns = { @JoinColumn(name = "userId") }, inverseJoinColumns = { @JoinColumn(name = "roleId") })
     // @Valid
     private List<Role> roles ;
+    
+    public static Function<User,Integer> daysSinceBirth(){
+        return x -> Period.between(x.getBirthDate(),LocalDate.now()).getDays();
+      }
+    
+    public static Predicate<User> isOlderThan(final LocalDate localDate){
+        return x -> x.getBirthDate().isBefore(localDate);
+      }
+    
+    public static Predicate<User> isOlderThanOrEqual(final LocalDate localDate){
+        return isOlderThan(localDate).or( x -> x.getBirthDate().isEqual(localDate));
+      }
+    
+    public static Predicate<User> isAnAdult(){
+        return isOlderThanOrEqual(LocalDate.now().minus(18, ChronoUnit.YEARS));
+      }
+    public static Function<User,Integer> age(){
+        return x -> LocalDate.now().getYear() - x.getBirthDate().getYear();
+      }
 }
