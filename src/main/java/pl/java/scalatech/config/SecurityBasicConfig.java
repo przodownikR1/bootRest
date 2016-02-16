@@ -29,7 +29,7 @@ public class SecurityBasicConfig extends WebSecurityConfigurerAdapter{
         @Override
         public void configure(WebSecurity web) throws Exception {
             web.ignoring().antMatchers("/assets/**").antMatchers("/css/**").antMatchers("/js/**").antMatchers("/images/**")
-            .antMatchers("/favicon.ico").antMatchers("/browser/*");
+            .antMatchers("/favicon.ico").antMatchers("/browser/*").antMatchers("/**");
         }
 
         @Override
@@ -38,7 +38,7 @@ public class SecurityBasicConfig extends WebSecurityConfigurerAdapter{
             AccessDeniedHandlerImpl deniedhandler = new AccessDeniedHandlerImpl();
             deniedhandler.setErrorPage("/accessdenied");
             http.authorizeRequests()
-                    .antMatchers("/welcome", "/api/ping", "/api/cookie", "/signup", "loginAjax", "/about", "/register", "/currentUser",  "/", "/welcome","/docs/*")
+                    .antMatchers("/welcome", "/api/ping", "/api/cookie", "/signup", "loginAjax", "/about", "/register","/browser/*", "/currentUser",  "/", "/welcome","/docs/*")
                     .permitAll().antMatchers("/api/admin/**").hasRole("ADMIN")
                     .antMatchers("/api/appContext").hasRole("ADMIN")
                     .antMatchers("/role/**").hasRole("ADMIN")
