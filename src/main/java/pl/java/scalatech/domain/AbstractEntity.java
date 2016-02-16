@@ -38,6 +38,7 @@ public abstract class AbstractEntity implements Serializable, Identifiable<Long>
     protected Long id;
 
     @Version
+    @Getter
     private Long version;
 
     

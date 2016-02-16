@@ -37,6 +37,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -51,11 +53,20 @@ import lombok.NoArgsConstructor;
 @EntityListeners(AuditingEntityListener.class)
 public class User extends AbstractEntity{
 
+    public static interface OnlyLoginView {}
+    public static interface OnlyEmailView {}
+    public static interface OnlyEnabledView {}
+    public static interface OnlyVersionView {}
+    public static interface AllView extends OnlyLoginView, OnlyEmailView, OnlyEnabledView, OnlyVersionView {}
+    
     private static final long serialVersionUID = -8920961125119379475L;
     private  String firstname;
+    @JsonView(User.OnlyEmailView.class)
     private  String email;
+    @JsonView(User.OnlyLoginView.class)
     private String login;
     private String password;
+    @JsonView(User.OnlyEnabledView.class)
     private boolean enabled;
     @Transient
     private LocalDate birthDate;
@@ -93,4 +104,12 @@ public class User extends AbstractEntity{
     public static Function<User,Integer> age(){
         return x -> LocalDate.now().getYear() - x.getBirthDate().getYear();
       }
+
+    @Override
+    @JsonView(User.OnlyVersionView.class)
+    public Long getVersion() {
+        return super.getVersion();
+    }
+    
+    
 }

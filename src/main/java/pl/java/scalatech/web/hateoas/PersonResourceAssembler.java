@@ -15,7 +15,7 @@ class RoleResourceAssembler extends ResourceAssemblerSupport<Role, RoleResource>
   @Override
   public RoleResource toResource(Role role) {
     RoleResource resource = new RoleResource(role.getName(), role.getDesc());
-    resource.add(ControllerLinkBuilder.linkTo(RoleResourceController.class).slash(role.getName()).withSelfRel());
+    resource.add(ControllerLinkBuilder.linkTo(RoleResourceController.class).slash("/name").slash(role.getName()).withSelfRel());
     return resource;
   }
 
