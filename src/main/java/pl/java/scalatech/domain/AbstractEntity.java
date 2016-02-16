@@ -22,6 +22,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.hateoas.Identifiable;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,7 +30,7 @@ import lombok.Getter;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(of="id")
-public abstract class AbstractEntity implements Serializable {
+public abstract class AbstractEntity implements Serializable, Identifiable<Long> {
     private static final long serialVersionUID = 1764429777262538648L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

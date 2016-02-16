@@ -7,4 +7,6 @@ import pl.java.scalatech.domain.Role;
 @RepositoryRestResource(exported = false)
 public interface RoleRepository extends JpaRepository<Role, Long>{
 
+    
+    Role findByName(String name);
 }

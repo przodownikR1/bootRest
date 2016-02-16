@@ -23,10 +23,16 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.data.repository.support.DomainClassConverter;
+import org.springframework.data.web.HateoasPageableHandlerMethodArgumentResolver;
+import org.springframework.data.web.HateoasSortHandlerMethodArgumentResolver;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.data.web.PagedResourcesAssemblerArgumentResolver;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.format.support.FormattingConversionService;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -91,11 +97,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         // registry.addInterceptor(new RequestStatisticsInterceptor());
     }
 
-    @Bean
-    // @Profile("converter")
-    public DomainClassConverter<?> domainClassConverter() {
-        return new DomainClassConverter<>(mvcConversionService());
-    }
+ 
 
     @Override
     public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
@@ -133,6 +135,41 @@ public class WebConfig extends WebMvcConfigurationSupport {
         crlf.setIncludeQueryString(true);
         crlf.setIncludePayload(true);
         return crlf;
+    }
+    
+
+    @Bean
+    // @Profile("converter")
+    public DomainClassConverter<?> domainClassConverter() {
+        return new DomainClassConverter<>(mvcConversionService());
+    }
+    
+ 
+    @Bean
+    public HateoasPageableHandlerMethodArgumentResolver pageableResolver() {
+        return new HateoasPageableHandlerMethodArgumentResolver(sortResolver());
+    }
+
+    @Bean
+    public HateoasSortHandlerMethodArgumentResolver sortResolver() {
+        return new HateoasSortHandlerMethodArgumentResolver();
+    }
+
+    @Bean
+    public PagedResourcesAssembler<?> pagedResourcesAssembler() {
+        return new PagedResourcesAssembler<>(pageableResolver(), null);
+    }
+
+    @Bean
+    public PagedResourcesAssemblerArgumentResolver pagedResourcesAssemblerArgumentResolver() {
+        return new PagedResourcesAssemblerArgumentResolver(pageableResolver(), null);
+    }
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        super.addArgumentResolvers(argumentResolvers);
+        argumentResolvers.add(pageableResolver());
+        argumentResolvers.add(sortResolver());
+        argumentResolvers.add(pagedResourcesAssemblerArgumentResolver());
     }
 
 }
