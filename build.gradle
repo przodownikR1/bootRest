@@ -33,10 +33,11 @@ buildscript {
 apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'groovy'
+apply from : 'gradle/jar.gradle'
 apply from : 'gradle/depencencies.gradle'
 apply from : 'gradle/gradleProperties.gradle'
 apply from : 'gradle/distribution.gradle'
-apply from : 'gradle/jar.gradle'
+
 apply from : 'gradle/props.gradle'
 
 //apply from : 'gradle/jpagen.gradle'

@@ -17,12 +17,26 @@ package pl.java.scalatech.repository;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import pl.java.scalatech.domain.User;
-
+//@RepositoryRestResource(excerptProjection = NoSkills.class)
 public interface UserRepository extends JpaRepository<User, Long>{
-    
+    @RestResource(rel="bylogin", path="byLogin")
     Optional<User> findByLogin(String login);
+    
+    
+    @RestResource(exported=false)
+    Optional<User> findByEmail(String email);
+   
+   
+    @RestResource(path = "nameStartsWith", rel = "nameStartsWith")
+    public Page<User> findByLoginStartsWith(String login, Pageable p);
+
+
+  
 
 }

@@ -22,12 +22,9 @@ import org.springframework.context.annotation.Bean;
 
 import com.google.common.collect.Lists;
 
-import groovyjarjarantlr.collections.List;
 import lombok.extern.slf4j.Slf4j;
-import pl.java.scalatech.domain.Project;
 import pl.java.scalatech.domain.Skill;
 import pl.java.scalatech.domain.User;
-import pl.java.scalatech.repository.ProjectRepository;
 import pl.java.scalatech.repository.SkillRepository;
 import pl.java.scalatech.repository.UserRepository;
 
@@ -36,15 +33,14 @@ import pl.java.scalatech.repository.UserRepository;
 public class BootRest {
     private final static String ANONYMOUS = "anonymous";
     @Bean
-    CommandLineRunner init(UserRepository userRepository, SkillRepository skillRepository, ProjectRepository projectRepository) {
+    CommandLineRunner init(UserRepository userRepository, SkillRepository skillRepository) {
         return (evt) ->
 
             Lists.newArrayList("przodownik", "kowalski", "nowak", "plank", "tyson", "holyfield", "jones", "obama",ANONYMOUS).forEach(a ->
             {
                User user = userRepository.save(User.builder().firstname(a).login(a).email(a + "@tlen.pl").login(a).enabled(true).build());
               log.info("{}", user);
-              Lists.newArrayList("java", "scala", "groovy", "gradle", "maven", "spring", "jpa").forEach(s -> skillRepository.save(Skill.builder().name(s).build()));
-              Lists.newArrayList("socialwarehouse", "ogw", "connector", "eo", "cash", "eb").forEach(p -> projectRepository.save(Project.builder().name(p).build()));
+              Lists.newArrayList("java", "scala", "groovy", "gradle", "maven", "spring", "jpa").forEach(s -> skillRepository.save(Skill.builder().name(s).build()));            
               user.setSkills(Lists.newArrayList(skillRepository.getOne(1l),skillRepository.getOne(2l)));  
               
               

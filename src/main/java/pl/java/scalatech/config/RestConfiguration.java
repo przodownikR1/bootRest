@@ -2,6 +2,7 @@ package pl.java.scalatech.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
+import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
 
 import pl.java.scalatech.domain.User;
@@ -15,6 +16,11 @@ public class RestConfiguration extends RepositoryRestConfigurerAdapter {
         config.setBasePath("/api");
         config.setDefaultPageSize(15);
         
+    }
+    
+    @Override
+    public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener v){
+       
     }
     
 

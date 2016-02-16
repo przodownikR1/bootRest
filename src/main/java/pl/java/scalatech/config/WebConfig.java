@@ -1,12 +1,9 @@
 /*
  * Copyright 2016 the original author or authors.
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,9 +35,8 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.java.scalatech.hibernate.RequestStatisticsInterceptor;
 
-//@Configuration
+@Configuration
 @Slf4j
 @ComponentScan(basePackages = { "pl.java.scalatech.converters", "pl.java.scalatech.web.interceptor" })
 @EnableSpringDataWebSupport
@@ -65,7 +61,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         return registration;
     }
 
-     @Override
+    @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("welcome");
         registry.addViewController("/welcome").setViewName("welcome");
@@ -78,22 +74,21 @@ public class WebConfig extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/META-INF/resources/webjars/").setCachePeriod(3000);
         registry.addResourceHandler("/css/**").addResourceLocations("classpath:/css/").setCachePeriod(0);
         registry.addResourceHandler("/images/**").addResourceLocations("classpath:/resources/images/").setCachePeriod(3000);
-        //registry.addResourceHandler("/favicon.ico").addResourceLocations("classpath:/static/favicon.ico").setCachePeriod(3000);
+        registry.addResourceHandler("/favicon.ico").addResourceLocations("classpath:/static/favicon.ico").setCachePeriod(3000);
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-      //  registry.addResourceHandler("/js/**").addResourceLocations("classpath:/js/").setCachePeriod(3000);
+       /* registry.addResourceHandler("/js/**").addResourceLocations("classpath:/js/").setCachePeriod(3000);*/
 
     }
 
-    
     @Bean
     Resource picture() {
         return new org.springframework.core.io.ClassPathResource("new_mg.png");
     }
-    
+
     @Override
     public void addInterceptors(org.springframework.web.servlet.config.annotation.InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor);
-      //  registry.addInterceptor(new RequestStatisticsInterceptor());
+        // registry.addInterceptor(new RequestStatisticsInterceptor());
     }
 
     @Bean
@@ -118,11 +113,11 @@ public class WebConfig extends WebMvcConfigurationSupport {
         return registrationBean;
     }
 
-/*    FilterRegistration.Dynamic mdcInsertingServletFilter =
-            servletContext.addFilter("mdcInsertingServletFilter", MDCInsertingServletFilter.class);
-    mdcInsertingServletFilter.addMappingForUrlPatterns(null, false, "/*");
-*/
-
+    /*
+     * FilterRegistration.Dynamic mdcInsertingServletFilter =
+     * servletContext.addFilter("mdcInsertingServletFilter", MDCInsertingServletFilter.class);
+     * mdcInsertingServletFilter.addMappingForUrlPatterns(null, false, "/*");
+     */
 
     @Bean
     public FilterRegistrationBean filterRegistrationBeanHidden() {
@@ -139,7 +134,5 @@ public class WebConfig extends WebMvcConfigurationSupport {
         crlf.setIncludePayload(true);
         return crlf;
     }
-
-
 
 }

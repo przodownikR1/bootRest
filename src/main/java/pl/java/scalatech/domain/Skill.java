@@ -15,15 +15,8 @@
  */
 package pl.java.scalatech.domain;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -46,13 +39,6 @@ public class Skill extends AbstractEntity{
     private String name;
     @Column(name="skillDesc")
     private String desc;
-    @Enumerated
-    private KnownleageLevel knownleageLevel;
-
-    private int yearOfExperience;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "skill_technology", joinColumns = { @JoinColumn(name = "skillId") }, inverseJoinColumns = { @JoinColumn(name = "technologyId") })
-    List<Technology> technologies;
+    private int yearOfExperience;  
 
 }
