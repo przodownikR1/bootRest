@@ -10,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
-import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,15 +20,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import pl.java.scalatech.domain.Role;
 import pl.java.scalatech.repository.RoleRepository;
 
 @RestController
 @RequestMapping("/roleResource")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RoleResourceController {
 
-    @Autowired
-    private RoleRepository roleRepository;
+    
+    private final @NonNull RoleRepository roleRepository;
 
     /*
      * @RequestMapping(method = RequestMethod.GET)
