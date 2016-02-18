@@ -36,6 +36,7 @@ public class RateLimiterController {
         return summaryStatistics.toString();
     }
     @SneakyThrows
+    @RequestMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id){
         Optional<User> optUser = Optional.of(userRepository.findOne(id));
         User userLoaded = null;
