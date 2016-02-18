@@ -3,6 +3,7 @@ package pl.java.scalatech.rate;
 import static com.google.common.cache.CacheBuilder.newBuilder;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
+import java.util.Random;
 import java.util.concurrent.ConcurrentMap;
 
 import org.junit.Test;
@@ -51,23 +52,42 @@ public class CacheTest {
         log.info("stats : {}", stringCache.stats());
         stringCache.invalidateAll();
     }
-    
+
     static class StringService {
-        @SneakyThrows        
-        public static String longRunningTask(String key) {          
-            Thread.sleep(2000);         
+        @SneakyThrows
+        public static String longRunningTask(String key) {
+            Thread.sleep(2000);
             log.info("time long ...");
             return "key : " + key;
         }
     }
+
     @Test
     @SneakyThrows
-    public void shouldFunctionWithCacheWork(){
-        LoadingCache<String, Integer> loadingCache = CacheBuilder.newBuilder().build(CacheLoader.from((Function<String, Integer>) input -> input.length()));
-        log.info("+++  {}",loadingCache.getIfPresent("Hello Workd")); //null
-    //    loadingCache.put("World", 67);
-        log.info("+++  {}",loadingCache.get("Hello World")); //5
-        log.info("+++  {}",loadingCache.get("Hello World")); //5
+    public void shouldFunctionWithCacheWork() {
+        LoadingCache<String, Integer> loadingCache = newBuilder().build(CacheLoader.from((Function<String, Integer>) input -> input.length()));
+        log.info("+++  {}", loadingCache.getIfPresent("Hello Workd")); // null
+        // loadingCache.put("World", 67);
+        log.info("+++  {}", loadingCache.get("Hello World")); // 5
+        log.info("+++  {}", loadingCache.get("Hello World")); // 5
+    }
+
+    @Test
+    @SneakyThrows
+    public void shouldCacheWork2() {
+        LoadingCache<String, String> cache = newBuilder().maximumSize(100).build(new CacheLoader<String, String>() {
+            @Override
+            public String load(String key) throws Exception {
+                log.info("not exists in cache");
+                return "value " + Math.abs(new Random().nextInt()) + " key " + key;
+            }
+        });
+        log.info(cache.get("hello"));
+        log.info(cache.get("hello"));
+        log.info(cache.get("hello"));
+        log.info(cache.get("hello1"));
+        log.info(cache.get("hello1"));
+        log.info(cache.get("hello1"));
     }
 
 }
