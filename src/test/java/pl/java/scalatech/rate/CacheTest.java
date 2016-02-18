@@ -7,6 +7,8 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.junit.Test;
 
+import com.google.common.base.Function;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.MapMaker;
@@ -47,6 +49,7 @@ public class CacheTest {
         stringCache.put("marcin", "spring");
         log.info("key8 : {}", stringCache.get("marcin"));
         log.info("stats : {}", stringCache.stats());
+        stringCache.invalidateAll();
     }
     
     static class StringService {
@@ -56,6 +59,15 @@ public class CacheTest {
             log.info("time long ...");
             return "key : " + key;
         }
+    }
+    @Test
+    @SneakyThrows
+    public void shouldFunctionWithCacheWork(){
+        LoadingCache<String, Integer> loadingCache = CacheBuilder.newBuilder().build(CacheLoader.from((Function<String, Integer>) input -> input.length()));
+        log.info("+++  {}",loadingCache.getIfPresent("Hello Workd")); //null
+    //    loadingCache.put("World", 67);
+        log.info("+++  {}",loadingCache.get("Hello World")); //5
+        log.info("+++  {}",loadingCache.get("Hello World")); //5
     }
 
 }

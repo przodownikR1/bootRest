@@ -5,11 +5,9 @@ import static com.google.common.base.Optional.of;
 import static java.util.concurrent.Executors.newCachedThreadPool;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import com.google.common.base.Optional;
-import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -56,7 +54,7 @@ public class Concurrency {
 
         ListeningExecutorService exec = MoreExecutors.listeningDecorator(newCachedThreadPool());
         ListenableFuture<String> future = exec.submit(() -> longRunning1());
-        //future.addListener(() -> log.info("Done...."), exec);
+        //sfuture.addListener(() -> log.info("Done...."), exec);
 
         Futures.addCallback(future, new FutureCallback<String>() {
             @Override
