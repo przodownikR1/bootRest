@@ -27,7 +27,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @ComponentScan(basePackages= {"pl.java.scalatech.service","pl.java.scalatech.repository"})
 @EnableJpaRepositories(basePackages="pl.java.scalatech.repository")
-@EntityScan(basePackages="pl.java.scalatech.domain")
+@EntityScan(basePackages="pl.java.scalatech.domain"/*,basePackageClasses={Jsr310JpaConverters.class}*/)
 //@EnableAutoConfiguration
 @Import({DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 @Profile("test")

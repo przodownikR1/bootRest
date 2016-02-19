@@ -16,6 +16,7 @@ import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ import net.sf.log4jdbc.tools.Log4JdbcCustomFormatter;
 import net.sf.log4jdbc.tools.LoggingType;
 
 @Configuration
-@EntityScan(basePackages = "pl.java.scalatech.domain")
+@EntityScan(basePackages = "pl.java.scalatech.domain",basePackageClasses={Jsr310JpaConverters.class})
 @EnableJpaRepositories(basePackages = "pl.java.scalatech.repository")
 
 @Slf4j

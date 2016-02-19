@@ -102,6 +102,9 @@ dependencies {
     
     //compile 'com.github.tomakehurst:wiremock:1.57'
     
+    
+    compile 'commons-lang:commons-lang:2.6'
+    
     compile 'org.codehaus.groovy:groovy-all:2.4.5'
     compile 'com.fasterxml.jackson.core:jackson-databind'
     compile 'org.apache.httpcomponents:httpclient:4+'

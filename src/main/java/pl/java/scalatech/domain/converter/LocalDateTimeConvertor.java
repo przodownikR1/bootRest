@@ -7,17 +7,21 @@ import java.util.Date;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-@Converter(autoApply = true)
-public class LocalDateTimeConvertor implements AttributeConverter<LocalDateTime, Date>
-{
+import lombok.extern.slf4j.Slf4j;
 
-  @Override
-  public Date convertToDatabaseColumn(LocalDateTime date) {
-    return Date.from(Instant.from(date));
-  }
+//@Converter(autoApply = true)
+@Slf4j
+public class LocalDateTimeConvertor implements AttributeConverter<LocalDateTime, Date> {
 
-  @Override
-  public LocalDateTime convertToEntityAttribute(Date value) {
-    return LocalDateTime.from(value.toInstant());
-  }
+    @Override
+    public Date convertToDatabaseColumn(LocalDateTime date) {
+        if (date != null) return Date.from(Instant.from(date));
+        return null;
+    }
+
+    @Override
+    public LocalDateTime convertToEntityAttribute(Date value) {
+        if (value != null) return LocalDateTime.from(value.toInstant());
+        return null;
+    }
 }
