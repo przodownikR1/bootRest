@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +16,7 @@ import javax.persistence.Version;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +29,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
+@EntityListeners(AuditingEntityListener.class)
 public class Simple implements Supplier<Simple>{
 
     @Id
@@ -40,15 +43,11 @@ public class Simple implements Supplier<Simple>{
 
     private String name;
 
-   private @CreatedDate LocalDateTime createDate = LocalDateTime.now();
+    private @CreatedDate LocalDateTime createDate;
 
     private @LastModifiedDate LocalDateTime lastModifiedDate ;
 
-    @PreUpdate
-    public void preUpdate() {
-      lastModifiedDate = LocalDateTime.now();
-    }
-
+  
     @Override
     public Simple get() {      
         return Simple.builder().name(randomAlphabetic(15)).build();

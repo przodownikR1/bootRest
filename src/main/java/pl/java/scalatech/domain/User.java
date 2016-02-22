@@ -15,6 +15,9 @@
  */
 package pl.java.scalatech.domain;
 
+import static java.time.LocalDate.now;
+import static java.time.Period.between;
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
@@ -87,7 +90,7 @@ public class User extends AbstractEntity{
     private List<Role> roles ;
     
     public static Function<User,Integer> daysSinceBirth(){
-        return x -> Period.between(x.getBirthDate(),LocalDate.now()).getDays();
+        return x -> between(x.getBirthDate(),LocalDate.now()).getDays();
       }
     
     public static Predicate<User> isOlderThan(final LocalDate localDate){
@@ -102,7 +105,7 @@ public class User extends AbstractEntity{
         return isOlderThanOrEqual(LocalDate.now().minus(18, ChronoUnit.YEARS));
       }
     public static Function<User,Integer> age(){
-        return x -> LocalDate.now().getYear() - x.getBirthDate().getYear();
+        return x -> now().getYear() - x.getBirthDate().getYear();
       }
 
     @Override

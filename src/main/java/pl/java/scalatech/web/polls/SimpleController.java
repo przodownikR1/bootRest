@@ -7,11 +7,15 @@ import static org.springframework.http.ResponseEntity.ok;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +31,7 @@ import pl.java.scalatech.repository.poll.SimpleRepository;
 @RequestMapping("/simple")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SimpleController {
-
+    private final ProjectionFactory projections;
     private final @NonNull SimpleRepository simpleRepository;
     
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
@@ -60,5 +64,19 @@ public class SimpleController {
     
     private Simple verify(Long id) {        
         return of(simpleRepository.findOne(checkNotNull(id))).map(identity()).orElseThrow(()->new ResourceNotFoundException("Poll with id " + id + " not found"));
+    }
+    
+    
+    @RequestMapping(value="/onlyNames", method=RequestMethod.GET)
+    public List<? extends Object> getOnlyName(){
+        return simpleRepository.findAll(new PageRequest(0, 20))
+        .map(s -> projections.createProjection(NamesOnly.class, s))//
+        .getContent();
+    }
+    
+    interface NamesOnly {
+
+        @Value("#{target.name.toString()}")
+        String getName();
     }
 }

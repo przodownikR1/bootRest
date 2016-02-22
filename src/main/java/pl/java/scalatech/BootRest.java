@@ -12,10 +12,14 @@
  */
 package pl.java.scalatech;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.stream.IntStream;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
 import com.google.common.collect.Lists;
@@ -28,14 +32,10 @@ import pl.java.scalatech.repository.RoleRepository;
 import pl.java.scalatech.repository.SkillRepository;
 import pl.java.scalatech.repository.UserRepository;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @Slf4j
 public class BootRest {
     private final static String ANONYMOUS = "anonymous";
-    
-  
-
-    
 
     @Bean
     CommandLineRunner init(UserRepository userRepository, SkillRepository skillRepository, RoleRepository roleRepository) {
@@ -54,6 +54,12 @@ public class BootRest {
         );
 
     }
+    @PostConstruct
+    public void init() {
+
+        IntStream.range(0, 60).forEach(index -> { log.info("++++ {}",index); }           );
+    };
+    
 
     public static void main(String[] args) {
         SpringApplication.run(BootRest.class, args);

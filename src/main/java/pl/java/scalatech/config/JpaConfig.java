@@ -18,6 +18,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.projection.ProjectionFactory;
+import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sf.log4jdbc.tools.Log4JdbcCustomFormatter;
@@ -37,5 +39,9 @@ public class JpaConfig {
         formatter.setLoggingType(LoggingType.SINGLE_LINE);
         formatter.setSqlPrefix("SQL:\r");
         return formatter;
+    }
+    
+    public @Bean ProjectionFactory projectionFactory() {
+        return new SpelAwareProxyProjectionFactory();
     }
 }
