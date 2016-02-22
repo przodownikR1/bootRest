@@ -39,8 +39,7 @@ apply from : 'gradle/gradleProperties.gradle'
 apply from : 'gradle/distribution.gradle'
 
 apply from : 'gradle/props.gradle'
-
-//apply from : 'gradle/jpagen.gradle'
+apply from : 'gradle/jpagen.gradle'
 apply from : 'gradle/sonar.gradle'
 apply from : 'gradle/quality.gradle'
 apply from : 'gradle/coverage.gradle'

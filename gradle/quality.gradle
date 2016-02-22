@@ -2,13 +2,13 @@ apply plugin: 'findbugs'
 apply plugin: 'jdepend'
 //apply plugin: 'license'
 apply plugin: 'jacoco'
-apply plugin: 'checkstyle'
+//apply plugin: 'checkstyle'
 apply plugin: "pmd"
 
-tasks.withType(Checkstyle).each {task -> configure(task) {
+/*tasks.withType(Checkstyle).each {task -> configure(task) {
     group = "checkstyle"
 }}
-
+*/
 tasks.withType(FindBugs).each {task -> configure(task) {
     group = "FindBugs"
 }}

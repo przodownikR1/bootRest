@@ -6,17 +6,20 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
+import javax.persistence.Tuple;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import pl.java.scalatech.domain.poll.Simple;
 
-public interface SimpleRepository extends JpaRepository<Simple, Long> {
+public interface SimpleRepository extends JpaRepository<Simple, Long> , JpaSpecificationExecutor<Tuple>{
 
     @Async
     Future<Simple> findByName( String username );

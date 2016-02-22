@@ -71,7 +71,7 @@ public class RepositoryConverterTest {
 
         log.info("+++  End!!");
         simpleRepository.deleteAllInBatch();
-        
+
     }
 
     private void createTestSimple(int i) {
