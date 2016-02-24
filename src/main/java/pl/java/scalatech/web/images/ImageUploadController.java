@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ public class ImageUploadController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
+    @ResponseBody
     public String handleFileUpload(@RequestParam("name") String name, @RequestParam("file") MultipartFile file) {
         log.info("++++  file {} , name : {}",file,name);
         if (!file.isEmpty()) {

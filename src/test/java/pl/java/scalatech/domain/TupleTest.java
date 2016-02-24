@@ -3,7 +3,6 @@ package pl.java.scalatech.domain;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -29,8 +28,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.google.common.base.Supplier;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import lombok.extern.slf4j.Slf4j;
 import pl.java.scalatech.config.TestSelectorConfig;
 import pl.java.scalatech.domain.poll.Simple;
@@ -51,11 +50,10 @@ public class TupleTest {
             Function<Tuple, ENTITY> mapToEntity, Pageable pageable) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tuple> query = builder.createQuery(Tuple.class);
-        Root<ENTITY> from = query.from(entity);
-        List<Path<?>> pathsInner = Lists.newArrayList();
-        for (Entry<String, SingularAttribute<? extends AbstractEntity, ?>> entry : paths.entrySet()) {
-            pathsInner.add((Path<?>) from.get(entry.getKey()).alias(entry.getValue().getName()));
-        }
+        final Root<ENTITY> from = query.from(entity);
+        
+                
+        List<Path<?>> pathsInner= paths.entrySet().stream().map((t) -> (Path<?>) from.get(t.getKey()).alias(t.getValue().getName())).collect(Collectors.toList());        
 
         Path[] pathsArray = new Path[pathsInner.size()];
         query.select(builder.tuple(pathsInner.toArray(pathsArray)));
@@ -76,7 +74,9 @@ public class TupleTest {
         Simple loaded = simpleRepository.save(s);
         Map<String, SingularAttribute<? extends AbstractEntity, ?>> path = Maps.newHashMap();
         path.put(Skill_.id.getName(), Skill_.id);
-        path.put(Skill_.name.getName(), Skill_.name);
+        path.put(Skill_.name.getName(), Skill_.name);        
+        
+        //path.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getKey));                                            
         Function<Tuple, Simple> tupleToSimple = t -> Simple.builder().id((Long) t.get(Skill_.id.getName())).name((String) t.get(Skill_.name.getName())).build();
         Page<Simple> result = genericSolution(Simple.class, path, tupleToSimple, new PageRequest(0, 20));
         log.info("{}", result.getContent());

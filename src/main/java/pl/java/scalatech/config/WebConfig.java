@@ -33,6 +33,9 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -85,6 +88,21 @@ public class WebConfig extends WebMvcConfigurationSupport {
        /* registry.addResourceHandler("/js/**").addResourceLocations("classpath:/js/").setCachePeriod(3000);*/
 
     }
+    
+
+    /*@Bean
+    public MultipartResolver multipartResolver() {
+        StandardServletMultipartResolver standardServletMultipartResolver = new StandardServletMultipartResolver();
+        return standardServletMultipartResolver;
+        
+    }*/
+    @Bean
+    public CommonsMultipartResolver commonsMultipartResolver() {
+    CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+    multipartResolver.setMaxUploadSize(50 * 1024 * 1024);
+    return multipartResolver;
+    }
+    
 
     @Bean
     Resource picture() {
