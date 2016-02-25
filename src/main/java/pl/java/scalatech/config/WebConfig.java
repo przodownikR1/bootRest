@@ -90,25 +90,12 @@ public class WebConfig extends WebMvcConfigurationSupport {
     }
     
 
-    /*@Bean
+    @Bean
     public MultipartResolver multipartResolver() {
         StandardServletMultipartResolver standardServletMultipartResolver = new StandardServletMultipartResolver();
         return standardServletMultipartResolver;
         
-    }*/
-    @Bean
-    public CommonsMultipartResolver commonsMultipartResolver() {
-    CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-    multipartResolver.setMaxUploadSize(50 * 1024 * 1024);
-    return multipartResolver;
     }
-    
-
-    @Bean
-    Resource picture() {
-        return new org.springframework.core.io.ClassPathResource("new_mg.png");
-    }
-
     @Override
     public void addInterceptors(org.springframework.web.servlet.config.annotation.InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor);
