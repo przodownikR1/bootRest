@@ -36,6 +36,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 
 @Configuration
 @ComponentScan(basePackages= {"pl.java.scalatech.service","pl.java.scalatech.repository","pl.java.scalatech.web"},
@@ -50,6 +52,7 @@ includeFilters= {@ComponentScan.Filter(type=FilterType.ANNOTATION,value= {Contro
     HttpMessageConvertersAutoConfiguration.class,
     ServerPropertiesAutoConfiguration.class,EmbeddedServletContainerAutoConfiguration.class})
 @Profile("test")
+@Slf4j
 public class JpaWebConfig {
 
     
@@ -59,12 +62,12 @@ public class JpaWebConfig {
     public static class MyEntityEventHandler {
         @HandleBeforeCreate
         public void handleBeforeEntityCreate(Object e) {
-            System.out.printf("Before create %s\n", e);
+            log.info("Before create {}", e);
         }
 
         @HandleAfterCreate
         public void handleAfterEntityCreate(Object e) {
-            System.out.printf("After create %s\n", e);
+            log.info("After create {}", e);
         }
     }
     
