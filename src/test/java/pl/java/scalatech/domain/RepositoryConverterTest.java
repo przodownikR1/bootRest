@@ -1,5 +1,7 @@
 package pl.java.scalatech.domain;
 
+import static java.time.LocalDateTime.of;
+
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.concurrent.CompletableFuture;
@@ -12,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import static java.time.LocalDateTime.of;
+
 import lombok.extern.slf4j.Slf4j;
 import pl.java.scalatech.config.TestSelectorConfig;
 import pl.java.scalatech.domain.poll.Simple;
@@ -39,7 +41,7 @@ public class RepositoryConverterTest {
 
         final LocalDateTime created = of(2016, Month.FEBRUARY, 1, 6, 46);
         final LocalDateTime modified = of(2016, Month.FEBRUARY, 16, 10, 50);
-        Simple entity = new Simple(null, 0l, "przodownik", created, modified);
+        Simple entity = new Simple("przodownik", created, modified);
         Simple loaded = simpleRepository.save(entity);
         log.info("{}", loaded);
     }

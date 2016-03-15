@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import pl.java.scalatech.repository.UserRepository;
 @RestController
 @RequestMapping("/userOpt")
 @Slf4j
+@Profile("opt")
 public class UserOptController {
 
     @Autowired

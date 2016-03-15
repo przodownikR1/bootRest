@@ -12,6 +12,8 @@ buildscript {
     dependencies { 
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath 'io.spring.gradle:dependency-management-plugin:0.5.3.RELEASE'       
+        classpath 'io.spring.gradle:dependency-management-plugin:0.5.3.RELEASE'
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:1.2'
         classpath 'gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.7'
         classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:3.1.1'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
@@ -39,7 +41,7 @@ apply from : 'gradle/gradleProperties.gradle'
 
 apply from : 'gradle/props.gradle'
 //apply from : 'gradle/jpagen.gradle'
-//apply from : 'gradle/sonar.gradle'
+apply from : 'gradle/sonar.gradle'
 apply from : 'gradle/quality.gradle'
 apply from : 'gradle/coverage.gradle'
 apply from : 'gradle/changelog.gradle'

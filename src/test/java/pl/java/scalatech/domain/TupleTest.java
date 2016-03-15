@@ -77,7 +77,10 @@ public class TupleTest {
         path.put(Skill_.name.getName(), Skill_.name);        
         
         //path.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getKey));                                            
-        Function<Tuple, Simple> tupleToSimple = t -> Simple.builder().id((Long) t.get(Skill_.id.getName())).name((String) t.get(Skill_.name.getName())).build();
+        Function<Tuple, Simple> tupleToSimple = 
+                t -> Simple.builder().name((String) t.get(Skill_.name.getName())).build();
+                
+                //
         Page<Simple> result = genericSolution(Simple.class, path, tupleToSimple, new PageRequest(0, 20));
         log.info("{}", result.getContent());
 

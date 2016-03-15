@@ -28,6 +28,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDateConverter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.Data;
@@ -41,11 +42,11 @@ public abstract class Audit extends AbstractEntity{
     private static final long serialVersionUID = 2663518387056045900L;
 
     @CreatedDate
-    @Convert(converter=LocalDateAttributeConverter.class)
+    @Convert(converter=LocalDateConverter.class)
     private LocalDate createdDate = LocalDate.now();
 
     @LastModifiedDate
-    @Convert(converter=LocalDateAttributeConverter.class)
+    @Convert(converter=LocalDateConverter.class)
     private LocalDate lastModifiedDate = LocalDate.now();
 
     @CreatedBy

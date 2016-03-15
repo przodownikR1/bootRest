@@ -7,13 +7,7 @@ import java.util.function.Supplier;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PreUpdate;
-import javax.persistence.Version;
 
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -21,8 +15,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
+import pl.java.scalatech.domain.AbstractEntity;
 
 @Entity
 @AllArgsConstructor
@@ -30,26 +24,21 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @EntityListeners(AuditingEntityListener.class)
-public class Simple implements Supplier<Simple>{
+public class Simple extends AbstractEntity implements Supplier<Simple>{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter
-    protected Long id;
-
-    @Version
-    @Getter
-    private Long version;
+    private static final long serialVersionUID = -2694435948470261613L;
 
     private String name;
 
     private @CreatedDate LocalDateTime createDate;
 
     private @LastModifiedDate LocalDateTime lastModifiedDate ;
-
+    
+    
   
     @Override
     public Simple get() {      
         return Simple.builder().name(randomAlphabetic(15)).build();
     }
+
 }

@@ -6,24 +6,18 @@ import static java.util.function.Function.identity;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
-import java.net.URI;
-import java.util.function.Function;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.google.common.base.Preconditions;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +26,7 @@ import pl.java.scalatech.repository.poll.PollRespository;
 
 @RestController
 @RequestMapping("/poll")
+@Profile("poll")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PollController {
 
@@ -43,11 +38,12 @@ public class PollController {
     }
 
     private ResponseEntity<Poll> verifyAndResponseEntityWrap(Long id) {
-        return of(pollRespository.findOne(id)).map(p -> ok(p)).orElseThrow(()->new ResourceNotFoundException("Poll with id " + id + " not found"));
+        return of(pollRespository.findOne(id)).map(p -> ok(p)).orElseThrow(
+                ()->new ResourceNotFoundException(Poll.class.getSimpleName(),id));
     }
     
     private Poll verify(Long id) {        
-        return of(pollRespository.findOne(checkNotNull(id))).map(identity()).orElseThrow(()->new ResourceNotFoundException("Poll with id " + id + " not found"));
+        return of(pollRespository.findOne(checkNotNull(id))).map(identity()).orElseThrow(()->new ResourceNotFoundException(Poll.class.getSimpleName(),id));
     }
         
     @RequestMapping(value="/", method=RequestMethod.GET)

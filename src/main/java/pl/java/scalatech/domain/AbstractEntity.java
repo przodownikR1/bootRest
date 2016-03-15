@@ -26,6 +26,7 @@ import org.springframework.hateoas.Identifiable;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -35,6 +36,7 @@ public abstract class AbstractEntity implements Serializable, Identifiable<Long>
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
+    @Setter
     protected Long id;
 
     @Version
