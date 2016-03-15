@@ -26,4 +26,8 @@ public class Role extends Audit {
     private String name;
     @Column(name = "roleDesc")
     private String desc;
+
+  
+    
+
 }
