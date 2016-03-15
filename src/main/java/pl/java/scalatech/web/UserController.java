@@ -1,9 +1,6 @@
 package pl.java.scalatech.web;
 
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static pl.java.scalatech.web.hateoas.Version.BOOT_REST_V1;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,5 +26,10 @@ public class UserController extends RestControllerAbstract<User>{
     @RequestMapping(value = "/{id}/test", method = RequestMethod.GET)
     @ResponseBody User getUserByIdTest(@PathVariable("id") User user) {
        return user;
+    }
+    @RequestMapping("/test")
+    String test(){
+        return "ok";
+        
     }
 }
