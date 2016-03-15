@@ -27,6 +27,6 @@ public class Project extends AbstractEntity{
     private String desc;
     
     @OneToMany
-    List<Person> people;
+    List<User> people;
     
 }

@@ -13,7 +13,6 @@ buildscript {
     dependencies { 
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath 'io.spring.gradle:dependency-management-plugin:0.5.3.RELEASE'
-        classpath "org.sonarqube.gradle:gradle-sonarqube-plugin:1.1"
         classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.7")
     }
 }
@@ -22,19 +21,8 @@ apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'groovy'
 apply plugin: 'com.gorylenko.gradle-git-properties'
-apply plugin: 'org.sonarqube'
 
-sonarqube {
-    properties {
-        property "sonar.projectKey", "bootRest"
-        property "sonar.projectName", "bootRest"
-        property "sonar.host.url", "http://localhost:9000"
-        property "sonar.jdbc.url", "jdbc:mysql://localhost:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true"
-        property "sonar.jdbc.driverClassName", "com.mysql.jdbc.Driver"
-        property "sonar.jdbc.username", "sonar3"
-        property "sonar.jdbc.password", "sonar3"
-    }
-  }
+
 
 gitProperties {
     gitPropertiesDir = new File("${project.rootDir}/src/main/resources")
@@ -92,10 +80,10 @@ configurations {
 
 dependencies {
     
-   compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-actuator-docs')
     compile('org.springframework.boot:spring-boot-starter-aop')
-    compile('org.springframework.boot:spring-boot-starter-cache')
+  
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
    // compile('org.springframework.boot:spring-boot-starter-data-rest')
    // compile('org.springframework.data:spring-data-rest-hal-browser')
@@ -106,7 +94,6 @@ dependencies {
     compile('org.springframework.retry:spring-retry')
    // compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.session:spring-session')
-    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
     compile('org.springframework.boot:spring-boot-starter-validation')
     compile('org.springframework.boot:spring-boot-starter-web')
     
@@ -129,31 +116,16 @@ dependencies {
     compile 'org.hibernate:hibernate-validator:5.2.2.Final'
     compile 'org.hibernate:hibernate-core:5.0.2.Final'
     compile 'org.hibernate:hibernate-entitymanager:5.0.2.Final'
-    compile 'javax.money:money-api:1.0'
-    compile 'org.javamoney:moneta:1.0'
+ 
    
     compile 'org.lazyluke:log4jdbc-remix:0.2.7'
     compile 'com.h2database:h2'
-	compile 'org.webjars:bootstrap:3.3.5'
-	compile 'org.webjars:jquery:2.1.4'
-	compile 'org.webjars:jquery-ui:1.11.4'
-	compile 'org.webjars:jquery-ui-themes:1.11.4'
-	compile ("org.webjars.bower:jquery.bootgrid:1.2.0") {
-		exclude group: 'org.webjars.bower'
-	}
-    //compile 'com.github.tomakehurst:wiremock:1.57'
-    
+	
     compile 'org.codehaus.groovy:groovy-all:2.4.5'
     compile 'com.fasterxml.jackson.core:jackson-databind'
     compile 'org.apache.httpcomponents:httpclient:4.5'
     compile 'org.apache.httpcomponents:fluent-hc:4.5'
     
-    compile("org.apache.activemq:activemq-client")
-    compile("org.apache.xbean:xbean-spring:4.2") {
-        exclude module: "org.springframework:spring"
-    }
-    compile("org.springframework:spring-jms:4.2.4.RELEASE")
-    compile("org.apache.activemq:activemq-broker:5.11.1")
     
   //  jpametamodel ('org.hibernate:hibernate-jpamodelgen:5.0.6.Final')
     

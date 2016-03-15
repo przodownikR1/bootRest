@@ -33,11 +33,11 @@ public abstract class Audit extends AbstractEntity{
     @CreatedBy
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-    private Person createdBy;
+    private User createdBy;
 
     @LastModifiedBy
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-    private Person lastModifiedBy;
+    private User lastModifiedBy;
 
 }

@@ -1,10 +1,17 @@
 package pl.java.scalatech.web;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Optional.ofNullable;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.ResponseEntity.created;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static pl.java.scalatech.web.hateoas.Version.BOOT_REST_V1;
 
+import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -15,39 +22,40 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import pl.java.scalatech.domain.User;
+import pl.java.scalatech.exception.UserNotFoundException;
 import pl.java.scalatech.repository.UserRepository;
 
 @RestController
+@RequestMapping(value = "/users", consumes = BOOT_REST_V1, produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired) )
 public class UserController {
     @NonNull
     private final UserRepository userRepository;
 
-    @RequestMapping(method = GET, value = "/users", produces = APPLICATION_JSON_VALUE)
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<User>> getUsers() {
+        return ResponseEntity.ok(userRepository.findAll());
     }
 
-    @RequestMapping(method = GET, value = "/users/{userId}", produces = APPLICATION_JSON_VALUE)
-    public User getUser(@PathVariable("authorId") Long userId) {
-        return userRepository.findOne(userId);
+    @RequestMapping(method = GET, value = "/{userId}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> getUserById(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(userRepository.findOne(userId)).;
     }
 
-    @RequestMapping(method = POST, value = "/users", consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> addAuthor(@RequestBody User user) {
-        /*
-         * if(null != authorRepository.findByFullName(author.getFullName())) {
-         * throw new DuplicateEntryException();
-         * }
-         * authorRepository.save(new AuthorRecord(authorId, author.getFullName()));
-         * headers.add(HttpHeaders.LOCATION, linkTo(methodOn(AuthorRestService.class).getAuthor(authorId)).toUri().toString());
-         */
-        MultiValueMap<String, String> headers = new HttpHeaders();
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+    @RequestMapping(method = POST, consumes = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> addUser(@RequestBody User user) {         
+        //User loaded = ofNullable(userRepository.findOne(checkNotNull(user).getId())).orElseThrow(()->new UserNotFoundException(user.getId()));
+        User loaded = userRepository.save(user); 
+
+        return (ResponseEntity<Void>) created(linkTo(methodOn(UserController.class).getUserById(loaded.getId())).toUri());
     }
 
 }
