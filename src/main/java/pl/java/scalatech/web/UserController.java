@@ -1,18 +1,17 @@
 package pl.java.scalatech.web;
 
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.Optional.ofNullable;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.created;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static pl.java.scalatech.web.hateoas.Version.BOOT_REST_V1;
-import java.lang.reflect.Method;
-import java.net.URI;
+
 import java.util.List;
-import java.util.Optional;
-import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,20 +19,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
+
 import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import pl.java.scalatech.domain.User;
-import pl.java.scalatech.exception.UserNotFoundException;
 import pl.java.scalatech.repository.UserRepository;
 
 
 @RestController
 @RequestMapping(value = "/users", consumes = BOOT_REST_V1, produces = APPLICATION_JSON_VALUE)
-@RequiredArgsConstructor(onConstructor = @__(@Autowired) )
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserController {
     
     private final @NonNull UserRepository userRepository;
