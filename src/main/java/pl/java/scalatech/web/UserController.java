@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.java.scalatech.domain.User;
@@ -32,8 +33,11 @@ public class UserController extends RestControllerAbstract<User>{
     }
     @RequestMapping("/test")
     String test(){
-        return "ok";
-        
+        return "ok";        
+    }
+    @RequestMapping("/link/{id}")
+    String getLink(@PathVariable Long id){
+        return MvcUriComponentsBuilder.fromMethodName(this.getClass(), " getResourceById", id).build().toUri().toString();
     }
     
     @RequestMapping("/test/{str}")
