@@ -25,9 +25,7 @@ public class SimpleUserControllerTest extends StandaloneSetupTest {
 
     @Test
     public void shouldSimpleTestWork() throws Exception {
-
         this.mockMvc.perform(get(URI_SIMPLE).accept(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(content().string("ok")).andExpect(status().isOk());
-
     }
 
     @Override
