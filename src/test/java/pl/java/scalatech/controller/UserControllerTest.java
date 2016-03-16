@@ -41,13 +41,12 @@ public class UserControllerTest {
         public void setUp() {
             MockitoAnnotations.initMocks(this);
             userController =new UserController(userRepository);
-            mockMvc = standaloneSetup(userController).build();
-            when(userRepository.findOne(1l)).thenReturn(User.builder().login("przodownik").email("przodownikR1@gmail.com").build());
-           
+            mockMvc = standaloneSetup(userController).build();                     
         }
         
         @Test
         public void shouldFindUserById() throws Exception{
+            when(userRepository.findOne(1l)).thenReturn(User.builder().login("przodownik").email("przodownikR1@gmail.com").build());
             this.mockMvc.perform(get(URI_ONE, 1).accept(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.login").value("przodownik"))

@@ -35,4 +35,10 @@ public class UserController extends RestControllerAbstract<User>{
         return "ok";
         
     }
+    
+    @RequestMapping("/test/{str}")
+    String testStr(@PathVariable String str){
+        return "ok"+"_"+str;
+        
+    }
 }
