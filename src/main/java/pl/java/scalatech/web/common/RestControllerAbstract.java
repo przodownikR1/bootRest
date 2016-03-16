@@ -28,9 +28,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import pl.java.scalatech.domain.AbstractEntity;
 import pl.java.scalatech.web.polls.ResourceNotFoundException;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired) )
+@Slf4j
 public abstract class RestControllerAbstract<T extends AbstractEntity> {
 
     private Class<T> clazz =getDomainClass();
@@ -69,15 +71,16 @@ public abstract class RestControllerAbstract<T extends AbstractEntity> {
         return ResponseEntity.noContent().build();
     }
      
-    protected ResponseEntity<T> verifyAndResponseEntityWrap(Long id) {
-        return of(checkNotNull(service).findOne(id)).map(p -> ok(p)).orElseThrow(() -> new ResourceNotFoundException(clazz.getSimpleName(), id));
+    protected ResponseEntity<T> verifyAndResponseEntityWrap(Long id) {        
+        //log.info("+++++++++++++++++++++++  tutaj : {}  {}",service,service.findAll());
+        return of(checkNotNull(this.service).findOne(id)).map(p -> ok(p)).orElseThrow(() -> new ResourceNotFoundException(clazz.getSimpleName(), id));
     }
 
     protected T verify(Long id) {
-        return of(checkNotNull(service).findOne(checkNotNull(id))).map(identity()).orElseThrow(() -> new ResourceNotFoundException(clazz.getSimpleName(), id));
+        return of(checkNotNull(this.service).findOne(checkNotNull(id))).map(identity()).orElseThrow(() -> new ResourceNotFoundException(clazz.getSimpleName(), id));
     }
     
     protected T ifNotExistsCreate(T t) {
-        return of(checkNotNull(service).findOne(checkNotNull(t.getId()))).map(identity()).orElseGet(() -> service.save(t));
+        return of(checkNotNull(this.service).findOne(checkNotNull(t.getId()))).map(identity()).orElseGet(() -> service.save(t));
     }
 }

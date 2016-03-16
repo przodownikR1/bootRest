@@ -24,6 +24,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Configuration
 @ComponentScan(basePackages= {"pl.java.scalatech.service","pl.java.scalatech.repository"})
 @EnableJpaRepositories(basePackages="pl.java.scalatech.repository")
@@ -31,6 +33,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 //@EnableAutoConfiguration
 @Import({DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class,AsyncConfig.class})
 @Profile("test")
+@Slf4j
 public class TestSelectorConfig {
 
 }

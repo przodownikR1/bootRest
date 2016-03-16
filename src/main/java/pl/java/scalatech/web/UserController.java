@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.java.scalatech.domain.User;
 import pl.java.scalatech.repository.UserRepository;
 import pl.java.scalatech.web.common.RestControllerAbstract;
@@ -15,14 +16,16 @@ import pl.java.scalatech.web.common.RestControllerAbstract;
 
 @RestController
 @RequestMapping(value = "/users")
-
+@Slf4j
 public class UserController extends RestControllerAbstract<User>{
+       
     
     @Autowired
-    public UserController(UserRepository repository) {
+    public UserController(UserRepository repository) {        
         super(repository);
+        log.info("+++ userController constructor :  {}",repository.getClass());
     }
-
+      
     @RequestMapping(value = "/{id}/test", method = RequestMethod.GET)
     @ResponseBody User getUserByIdTest(@PathVariable("id") User user) {
        return user;
