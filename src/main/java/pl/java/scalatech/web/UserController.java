@@ -2,6 +2,8 @@ package pl.java.scalatech.web;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.PersistentEntityResource;
+import org.springframework.data.rest.webmvc.PersistentEntityResourceAssembler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,7 +21,6 @@ import pl.java.scalatech.web.common.RestControllerAbstract;
 @RequestMapping(value = "/users")
 @Slf4j
 public class UserController extends RestControllerAbstract<User>{
-       
     
     @Autowired
     public UserController(UserRepository repository) {        
@@ -27,6 +28,12 @@ public class UserController extends RestControllerAbstract<User>{
         log.info("+++ userController constructor :  {}",repository.getClass());
     }
       
+    @RequestMapping(value = "hate/{id}", method = RequestMethod.POST, produces = "application/hal+json")
+    public PersistentEntityResource publish(@PathVariable("id") Long id, PersistentEntityResourceAssembler assembler)
+            throws Exception {
+        return assembler.toFullResource(service.findOne(id));
+    } 
+    
     @RequestMapping(value = "/{id}/test", method = RequestMethod.GET)
     @ResponseBody User getUserByIdTest(@PathVariable("id") User user) {
        return user;

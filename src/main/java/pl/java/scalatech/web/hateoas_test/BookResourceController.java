@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import pl.java.scalatech.domain.Role;
+import pl.java.scalatech.repository.UserRepository;
+
 @RestController
 @RequestMapping("/books")
 @ExposesResourceFor(Book.class)
@@ -24,11 +27,6 @@ public class BookResourceController {
     private BookResourceAssembler assembler = new BookResourceAssembler();
 
     
-    @RequestMapping(value = "/ads/{id}/publishing", method = RequestMethod.POST, produces = "application/hal+json")
-    public PersistentEntityResource publish(@PathVariable("id") Long id, PersistentEntityResourceAssembler assembler)
-            throws Exception {
-        return assembler.toFullResource(adService.publish(id));
-    }
     
     @RequestMapping(method = RequestMethod.GET)
     public Object all() {
