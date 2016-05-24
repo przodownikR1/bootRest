@@ -58,13 +58,16 @@ image:{image-link} [role='img-circle']
 
 -- Uniform interface
 
--- Podział na warstwy (Layered)
+-- Layered
 
 -- CRUD (Create Read Update Delete)
 
 -- Wszystkie zasoby mogą być identyfikowalne przez URI
+
 -- Wszystkie zasoby mogą mieć wiele reprezentacji
+
 -- Wszystkie zasoby mogą być dostępne, modyfikowane,tworzone czy kasowane przez standardowe wywołania HTTP
+
 -- Wszystkie informacje powinnym być bezstanowe , tzn bez potrzeby przechowywania stanu po stronie serwera. 
 
 
@@ -151,11 +154,11 @@ https://restlet.com/http-status-codes-map
 
 === Retry-After
 
-=== X-RateLimit-Remaining
+-- **X-RateLimit-Remaining**
 
-=== X-RateLimit-Limit : max ilość requestów jakie możemy wykonać w ramach zadanego okresu czasu
+-- **X-RateLimit-Limit** : max ilość requestów jakie możemy wykonać w ramach zadanego okresu czasu
 
-=== X-RateLimit-Remaining : ilość requestów pozostała do wykorzystania w danym oknie czasowym.
+-- **X-RateLimit-Remaining** : ilość requestów pozostała do wykorzystania w danym oknie czasowym.
 
 == Response pagination
 
