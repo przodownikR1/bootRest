@@ -44,6 +44,28 @@ image:{image-link} [role='img-circle']
 
 == REST
 
+-- Client-server
+
+-- Bezstanowość (Stateless) 
+
+--- Widocznośc 
+
+--- Niezawodność 
+
+--- Skalowalność
+
+-- Cache'owalność (Cacheable)
+
+-- Uniform interface
+
+-- Podział na warstwy (Layered)
+
+-- CRUD (Create Read Update Delete)
+
+-- Wszystkie zasoby mogą być identyfikowalne przez URI
+-- Wszystkie zasoby mogą mieć wiele reprezentacji
+-- Wszystkie zasoby mogą być dostępne, modyfikowane,tworzone czy kasowane przez standardowe wywołania HTTP
+-- Wszystkie informacje powinnym być bezstanowe , tzn bez potrzeby przechowywania stanu po stronie serwera. 
 
 
 [options="header,footer"]
@@ -66,15 +88,47 @@ Idempotent = result independent on the number of executions
 
 == Richardson's maturity model
 
-=== Level 0 – HTTP
+=== Level 0 – HTTP 
 
-=== Level 1 – Resources
+=== Zdalne wywoływanie procedur : SOAP, XML-RPC
 
-=== Level 2 – HTTP verbs
+=== Level 1 – Resources 
+
+=== Level 2 – HTTP verbs 
+
+
+**	 GET :  czytanie danych z URI
+**	 HEAD : to samo co GET tylko, że bez body.(metadane)
+**	 DELETE : Skasowanie konkretnego zasobu
+**	 PUT : Aktualizacja lub tworzenie zasobu
+**	 POST : Aktualizacja lub tworzenie zasobu
+**	 PATCH : Częściowy update zasobu
+**	 OPTIONS : Lista metod, które wspiera konkretny zasób.
+
 
 === Level 3 – Hypermedia controls
 
+Hypertext As The Engine Of Application State (HATEOAS)
+
+Dostarczenie mechanizmu odkrywania URI danych zasobów.
+
+
 == API versioning
+
+
+=== URI
+
+=== Request query parameter
+
+=== Accept header
+
+[source,json]
+====
+
+Accept: application/vnd.foo-v1+json
+
+====
+
 
 == HTTP codes
 
@@ -88,7 +142,22 @@ Code       |  Meaninig
 |5XX	   |Server Error
 |=======================
 
+
+https://restlet.com/http-status-codes-map
+
 == Rate Limitter
+
+=== 429 Too Many Requests
+
+=== Retry-After
+
+=== X-RateLimit-Remaining
+
+=== X-RateLimit-Limit : max ilość requestów jakie możemy wykonać w ramach zadanego okresu czasu
+
+=== X-RateLimit-Remaining : ilość requestów pozostała do wykorzystania w danym oknie czasowym.
+
+== Response pagination
 
 == Cache
 
@@ -96,15 +165,48 @@ Code       |  Meaninig
 
 == Performance
 
+=== Zasady cache'oawnia
+
+==== Strong caching headers
+
+Określnie jak długo zasób ma być 'świeży' i nie wymaga wysłania kolejnego polecenia GET do serwera.
+
+--  Expires
+
+--  Cache-Control max-age
+
+====  Weak caching headers
+
+Pozwala zdecydować przeglądarce czy potrzebujemy pobierać dane z cache przez warunkowe polecenie GET.
+
+-- Last-Modified
+
+-- ETag
+
+=== Asynchroniczność dla długo działających procesów
+
+=== Http Patch dla częściowych uaktualnień
+
+
+
 == Hateoas
 
 == Security
+
+=== OWASP https://www.owasp.org/index.php/REST_Security_Cheat_Sheet
 
 === Spring Security
 
 === OAuth2
 
-=== Basic Header
+=== Basic authentication
+
+=== Thymeleaf security tags
+
+
+=== Login Form
+
+=== Social authentication
 
 === x509
 
@@ -112,7 +214,64 @@ Code       |  Meaninig
 
 === Stateful
 
+
+== Narzędzia
+
+=== httpie
+
+=== Swagger
+
+=== Postman
+
+=== RestClient
+
+=== Curl
+
+
+
+
+== Rozproszona sesja
+
+=== Redis
+
+
+== Integracja ze Spring 
+
+=== Content negotiation
+
+==== Based on URL
+
+==== using HTTP headers
+
+=== ResponseEntity
+
+=== Exception 
+
+==== @ExceptionHandler
+
+==== @ControllerAdvice
  
+== Logging REST APIs
+
+=== Co jest ważne :
+
+==== Data i czas
+
+==== Poziom logowania
+
+==== Nazwa wątku
+
+==== Nazwa loggera
+
+==== Szczegóły wiadomości 
+
+
+== Testowanie Rest
+
+
+=== MockMvcBuilders
+
+
 
 
 
