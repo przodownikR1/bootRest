@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import pl.java.scalatech.domain.Audit;
 
 @Entity
@@ -20,6 +21,7 @@ import pl.java.scalatech.domain.Audit;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@ToString(callSuper=true)
 public class Option extends Audit {
 
     private static final long serialVersionUID = 1L;

@@ -86,6 +86,9 @@ dependencies {
   
     compile 'commons-lang:commons-lang:2.6'
     
+    
+    compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.1.2.RELEASE'
+    
     compile 'org.codehaus.groovy:groovy-all:2.4.5'
     compile 'com.fasterxml.jackson.core:jackson-databind'
     compile 'org.apache.httpcomponents:httpclient:4+'

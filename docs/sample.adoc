@@ -25,7 +25,7 @@ System.out.println("test code");
 * Demo
 
 
-[source,java]
+[source,java,linenums]
 ----
 System.out.println("engine code");
 ----
@@ -117,7 +117,7 @@ Baauer,Harlem Shake,Hip Hop
 
 [[yamaha]]
 .This image represents a yamaha bike
-image::yamaha.jpg[]
+image::yamaha.jpg
 
 If you are reporting a bug, please help to speed up problem diagnosis by providing as much
 information as possible. Ideally, that would include a small
