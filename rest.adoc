@@ -154,11 +154,11 @@ https://restlet.com/http-status-codes-map
 
 === Retry-After
 
-=== X-RateLimit-Remaining
+-- **X-RateLimit-Remaining**
 
-=== X-RateLimit-Limit : max ilość requestów jakie możemy wykonać w ramach zadanego okresu czasu
+-- **X-RateLimit-Limit** : max ilość requestów jakie możemy wykonać w ramach zadanego okresu czasu
 
-=== X-RateLimit-Remaining : ilość requestów pozostała do wykorzystania w danym oknie czasowym.
+-- **X-RateLimit-Remaining** : ilość requestów pozostała do wykorzystania w danym oknie czasowym.
 
 == Response pagination
 
