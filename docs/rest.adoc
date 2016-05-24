@@ -1,0 +1,92 @@
+= REST KATA
+:numbered:
+:icons: font
+:pagenums:
+:imagesdir: img
+:iconsdir: ./icons
+:stylesdir: ./styles
+:scriptsdir: ./js
+
+:image-link: https://pbs.twimg.com/profile_images/425289501980639233/tUWf7KiC.jpeg
+ifndef::sourcedir[:sourcedir: ./src/main/java/]
+ifndef::resourcedir[:resourcedir: ./src/main/resources/]
+ifndef::imgsdir[:imgsdir: ./../img]
+:source-highlighter: coderay
+
+
+== O mnie
+* Architect Solution - RiscoSoftware 
+* JavaTech trener : Spring ekosystem, JPA , EIP Camel 
+* blog link:http://przewidywalna-java.blogspot.com[]
+* twitter przodownikR1
+
+image:{image-link} [role='img-circle']
+
+
+
+== Źródła wiedzy 
+
+-- Spring Rest
+
+-- RESTful Java Patterns and Best Practices
+
+-- BUILDING_A_RESTFUL_WEB_SERVICE_WITH_SPRING
+
+-- Building_Microservices
+
+-- Learning Spring Boot 
+
+-- Mastering Spring MVC 4 
+
+-- etc
+
+
+
+== REST 
+
+
+== Richardson's maturity model
+
+=== Level 0 – HTTP
+
+=== Level 1 – Resources
+
+=== Level 2 – HTTP verbs
+
+=== Level 3 – Hypermedia controls
+
+== API versioning
+
+== HTTP codes
+
+== Rate Limitter
+
+== Cache
+
+== Swagger API
+
+== Performance
+
+== Hateoas
+
+== Security
+
+=== Spring Security
+
+=== OAuth2
+
+=== Basic Header
+
+=== x509
+
+=== JWT
+
+=== Stateful
+
+ 
+
+
+
+ 
+
+
