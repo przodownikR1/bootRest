@@ -42,7 +42,26 @@ image:{image-link} [role='img-circle']
 
 
 
-== REST 
+== REST
+
+
+
+[options="header,footer"]
+|=======================
+Method|	Safe    |	Idempotent  
+|GET	   |   Yes	    |  Yes
+|HEAD	   |   Yes	    |  Yes
+|POST	   |   No	    |  No
+|PUT	   |   No	    |  Yes
+|PATCH	   |   No	    |  No
+|DELETE	   |   No	    |  Yes
+
+|=======================
+
+Safe = cacheable
+
+Idempotent = result independent on the number of executions
+ 
 
 
 == Richardson's maturity model
@@ -58,6 +77,16 @@ image:{image-link} [role='img-circle']
 == API versioning
 
 == HTTP codes
+
+[options="header,footer"]
+|=======================
+Code       |  Meaninig
+|1XX	   |Information
+|2XX	   |Success
+|3XX	   |Redirection
+|4XX	   |Client Error
+|5XX	   |Server Error
+|=======================
 
 == Rate Limitter
 
