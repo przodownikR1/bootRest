@@ -1,0 +1,50 @@
+= Spring Boot book
+:numbered:
+:icons: font
+:pagenums:
+:imagesdir: img
+:iconsdir: ./icons
+:stylesdir: ./styles
+:scriptsdir: ./js
+
+:image-link: https://pbs.twimg.com/profile_images/425289501980639233/tUWf7KiC.jpeg
+ifndef::sourcedir[:sourcedir: ./src/main/java/]
+ifndef::resourcedir[:resourcedir: ./src/main/resources/]
+ifndef::imgsdir[:imgsdir: ./../img]
+:source-highlighter: coderay
+
+
+== O mnie
+* Architect Solution - RiscoSoftware 
+* JavaTech trener : Spring ekosystem, JPA , EIP Camel 
+* Sages trener : JPA , EIP - Apache Camel 
+* blog link:http://przewidywalna-java.blogspot.com[]
+* twitter przodownikR1
+
+image:{image-link} [role='img-circle']
+
+== Źródła wiedzy  
+ - Spring Data Modern Data Access for Enterprise Java
+ - Spring Data
+ - Spring Boot
+ - Spring Essentials
+ - Spring in Action
+ - etc 
+
+== Narzędzia 
+
+-- http://start.spring.io/
+
+-- Spring boot console : spring init -dweb,data-jpa,h2,thymeleaf --build gradle simpleApp --force
+
+-- STS
+
+== Wyłączanie autokonfiguracji
+
+[source,java]
+----
+@Configuration
+@EnableAutoConfiguration(exclude=[ThymeleafConfiguration.class])
+class WebConfig{
+}
+----
