@@ -16,10 +16,15 @@ import java.util.stream.IntStream;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 
 import com.google.common.collect.Lists;
@@ -34,7 +39,7 @@ import pl.java.scalatech.repository.UserRepository;
 
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @Slf4j
-public class BootRest {
+public class BootRest implements CommandLineRunner, ApplicationRunner{
     private final static String ANONYMOUS = "anonymous";
 
     @Bean
@@ -56,13 +61,58 @@ public class BootRest {
     }
     @PostConstruct
     public void init() {
-
         IntStream.range(0, 60).forEach(index -> { log.info("++++ {}",index); }           );
-    };
-    
+    }
+
+
+    @Bean
+    String info(){
+      return "Simple bean ";
+    }
+
+    @Autowired
+    String info;
+
+
+    @Value("${rest.cacheTll}")
+    String cache;
+
+    @Autowired
+    private MyRestProperties props;
+
 
     public static void main(String[] args) {
-        SpringApplication.run(BootRest.class, args);
+        new SpringApplicationBuilder()
+        .listeners(event -> log.info("#### > " + event.getClass().getCanonicalName()))
+        .bannerMode(Banner.Mode.CONSOLE)
+        .web(true)
+        .sources(BootRest.class)
+        .logStartupInfo(false)
+        //.profiles("dev")
+
+        .run(args);
+        //SpringApplication app = new SpringApplication(BootRest.class);
+       // app.setBanner((environment, sourceClass, out) -> out.print("\n\n\tThis is my own banner!\n\n".toUpperCase()));
+        //app.run(args);
+
+
+    }
+    @Override
+    public void run(String... args) throws Exception {
+        log.info("!!!! : " + info);
+        log.info("my rest props : {}",props);
+        log.info("cachTll : {}",cache);
+
+        for(String arg:args) {
+            log.info("arg : {}",arg);
+        }
+
+    }
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        log.info("## > ApplicationRunner Implementation...");
+        args.getNonOptionArgs().forEach(file -> log.info("+++++++++++++  {} : args :{}",file,args));
+
 
     }
 }

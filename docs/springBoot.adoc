@@ -48,3 +48,320 @@ image:{image-link} [role='img-circle']
 class WebConfig{
 }
 ----
+
+== Konfiguracja z XML
+
+[source,java]
+----
+@ImportResource({"META-INF/spring/services.xml","META-INF/spring/repository.xml"})
+//
+@ImportResource("classpath:applicationContext.xml")
+----
+
+== Banner
+
+=== Sposób programowy
+
+[source,java]
+----
+  SpringApplication app = new SpringApplication(BootRest.class);
+  app.setBanner((environment, sourceClass, out) -> out.print("\n\n\t Spring Boot Rest Demo\n\n".toUpperCase()));
+  app.run(args);
+        
+----      
+
+[source,java]
+----
+new SpringApplicationBuilder().bannerMode(Banner.Mode.OFF).sources(BootRest.class).run(args);
+----
+
+-- Wyłącznie programowe : 
+
+[source,java]
+----
+
+app.setBannerMode(Mode.OFF)
+  
+----
+
+=== Sposób konfiguracyjny
+
+Dodać banner.txt do classpath
+
+NOTE: Generator Ascii http://patorjk.com/software/taag/
+
+-- Ustawianie lokacji 
+
+banner.location=classpath:/META-INF/banner.txt
+
+-- Wyłącznie bannera
+
+spring.main.banner-mode=off
+
+
+== SpringApplicationBuilder
+
+-- fluent API
+
+-- SpringApplication i ApplicationContext builder
+
+-- wsparcie dla hierarchii
+
+=== Włączanie/Wyłączenie banneru
+
+[source,java]
+----
+ .bannerMode(Banner.Mode.OFF) 
+ 
+ //
+ 
+ .bannerMode(Banner.Mode.CONSOLE)
+---- 
+
+
+=== Hierarchia 
+
+[source,java]
+----
+.child(WebConfig.class)
+----
+
+=== Logowanie na start
+
+[source,java]
+----
+.logStartupInfo(false)
+----
+
+=== Aktywowanie profilu 
+
+[source,java]
+----
+.profiles("prod","cache")
+----
+
+=== Nasłuchiwanie zdarzeń ApplicationEvent
+
+[source,java]
+----
+
+.listeners(event -> log.info("#### > " + event.getClass().getCanonicalName()))
+
+----
+
+
+== Przekazywanie argumentów
+
+gradle bootrun  -Drun.arguments="slawek,borowiec"
+
+
+[source,java]
+----
+@Component
+@Slf4j
+class ArgumentReader {
+    @Autowired
+    public ArgumentReader(ApplicationArguments args) {
+        boolean enable = args.containsOption("enable");
+        log.info("enabled : {}",enable);
+        List<String> _args = args.getNonOptionArgs();
+        log.info("## > extra args ... {}",_args);
+    }
+}
+
+-- Argumenty uruchomieniowe jara
+
+java -jar target/bootRest.jar --enable slawek borowiec
+---- 
+
+
+== CommandLineRunner
+
+Uruchomienie kodu przez startem aplikacji
+
+[source,java]
+----
+public class BootRest implements CommandLineRunner{
+
+    @Bean
+    String info(){
+      return "Simple bean ";
+    }
+    
+    @Autowired
+    String info;
+
+    @Override
+    public void run(String... args) throws Exception {
+        log.info("!!!! : " + info);
+
+    }
+
+}
+----
+
+[source,txt]
+----
+NFO|2016-05-31 10:26:14.210|[restartedMain]|pl.java.scalatech.BootRest:92 - !!!! : Simple bean 
+
+----
+
+
+== Kolejność odczytywania konfiguracji 
+
+-- Linia poleceń
+-- SPRING_APPLICATION_JSON 
+-- JNDI (java:comp/env)
+-- System.getProperties()
+-- Zmienne systemu operacyjnego
+-- RandomValuePropertySource (random.*)
+-- Profil ( application-{profile}.jar ) poza jar'em
+-- Profil ( application-{profile}.jar ) w środku jar'a
+-- Application properties ( application.properties ) poza jar'em
+-- Application properties ( application.properties ) w środku jar'a
+-- @PropertySource
+-- SpringApplication.setDefaultProperties
+
+
+== Wybór profilu 
+
+application-{profile}.properties
+
+
+=== Aktywacja profilu
+
+ spring-boot:run -Dspring.profiles.active=prod
+ 
+ 
+ === Tworzenie własnych prefix'ów
+ 
+-- Zależność
+
+[source,xml]
+----
+<dependency>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-configuration-processor</artifactId>
+<optional>true</optional>
+</dependency>
+----
+
+-- Użycie
+
+[source,java]
+----
+ @Autowired
+ MyRestProperties props;
+ 
+@Component
+@ConfigurationProperties(prefix="rest")
+@Data
+public  class MyRestProperties {
+private String name;
+private int rateLimitter;
+private int cacheTll
+}
+}
+}
+----
+
+== Włączanie rozwiązań
+
+**@EnableJms - JMS
+**@EnableCaching - Cache
+**@EnableRabbit -  RabbitMQ
+**@EnableBatchProcessing -  Spring batch
+**@EnableWebSecurity -  Spring security
+**@EnableRedisHttpSession -  Spring session
+**@EnableJpaRepositories - Spring data
+**@EnableIntegration - Spring integration
+
+
+
+== Testy
+
+[source,java]
+----
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = BootRest.class)
+public class BootRestTests {
+
+@Test
+public void contextLoads() {
+}
+}
+----
+
+** @Test(expected=...) - oczekiwany wyjątek
+** @Test(timeout=...) - oczekiwany czas wykonywania testu 
+** @Timed - oczekiwany czas wykonywania testu
+** @Repeat - ilość powtórzeń 
+** @Ignore - pomiń test
+** @ProfileValueSourceConfiguration - ?
+** @IfProfileValue - CI
+
+** @FixMethodOrder(MethodSorters.NAME_ASCENDING) - alfabetyczna kolejność testów
+
+** @WebAppConfiguration - włączenie testów web
+
+=== REST Test
+
+[source,xml]
+----
+dependency>
+ <groupId>com.jayway.jsonpath</groupId>
+ <artifactId>json-path</artifactId>
+ <scope>test</scope>
+</dependency>
+----
+ 
+
+ 
+== Dostęp do danych 
+
+=== Uruchomienie konsoli H2 
+
+spring.h2.console.enabled=true
+
+=== JdbcTemplate jdbcTemplate
+
+przykład 
+
+
+=== Spring Data integracja
+
+--Zależność :  **spring-boot-starter-data-jpa**
+
+-- Mongo : spring-boot-starter-data-mongodb
+
+=== Serializacja 
+
+[source,java]
+----
+@JsonSerialize(using=JsonDateSerializer.class)
+private Date createdDate; 
+
+
+public class JsonDateSerializer extends JsonSerializer<Date>{
+private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+@Override
+public void serialize(Date date, JsonGenerator gen, SerializerProvider provider) throws IOException, JsonProcessingException {
+String formattedDate = dateFormat.format(date);
+gen.writeString(formattedDate);
+}
+}
+
+----
+
+== REST
+
+=== HAL Browser
+
+[soruce,xml]
+----
+<dependency>
+  <groupId>org.springframework.data</groupId>
+  <artifactId>spring-data-rest-hal-browser</artifactId>
+</dependency>
+----
+

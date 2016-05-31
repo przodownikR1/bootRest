@@ -86,3 +86,4 @@ gc.log*
 app.log*
 in-out.log*
 coberturaReports/
+/.apt_generated/
