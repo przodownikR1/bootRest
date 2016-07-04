@@ -34,7 +34,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.annotation.ExceptionMetered;
+import com.codahale.metrics.annotation.Metric;
 import com.codahale.metrics.annotation.Timed;
+
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -50,19 +53,20 @@ public class UserController {
     private final UserRepository userRepository;
     @NonNull
     private final Histogram searchResultHistogram;
-    @NonNull
-    private final Meter requestUser;
+  
 
     @NonNull
     private final   MetricRegistry metricRegistry;
     
-    @Timed(name="userInfo")    
+    @Timed(name="userTimed")    
+    @com.codahale.metrics.annotation.Counted(name="userCounted")
+    @Metric(name="userMetric")
+    @ExceptionMetered(name="exceptionUserMetered")
     @RequestMapping(method = GET, value = "/users", produces = APPLICATION_JSON_VALUE)
     public List<User> getUsers() {
         log.info("++++Sdd");
         List<User> result =userRepository.findAll();
         searchResultHistogram.update(result.size());
-        requestUser.mark();
         return result; 
     }
     @Timed(name="userId")    

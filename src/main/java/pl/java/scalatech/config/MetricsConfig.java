@@ -29,19 +29,21 @@ import com.codahale.metrics.jvm.MemoryUsageGaugeSet;
 import com.codahale.metrics.jvm.ThreadStatesGaugeSet;
 import com.codahale.metrics.servlets.HealthCheckServlet;
 import com.codahale.metrics.servlets.MetricsServlet;
+import com.ryantenney.metrics.spring.config.annotation.EnableMetrics;
+import com.ryantenney.metrics.spring.config.annotation.MetricsConfigurerAdapter;
 
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import pl.java.scalatech.metrics.DatabaseH2HealthCheck;
+import pl.java.scalatech.metrics.DiskCapacityHealthCheck;
 import pl.java.scalatech.metrics.MemoryHealthCheck;
+import pl.java.scalatech.metrics.Ping;
 
 @Configuration
 @Slf4j
 @Profile("metrics")
-@NoArgsConstructor
-public class MetricsConfig {
+@EnableMetrics
+public class MetricsConfig extends MetricsConfigurerAdapter{
 
     private static final String JVM_MEMORY = "jvm.memory";
     private static final String JVM_GARBAGE = "jvm.garbage";
@@ -51,9 +53,7 @@ public class MetricsConfig {
     
     @Autowired
     private DataSource dataSource;    
-    @Autowired
-    private MetricRegistry metricRegistry;
-
+   
     
     @Bean
     HealthCheckRegistry healthCheckRegistry(){
@@ -61,85 +61,69 @@ public class MetricsConfig {
     }
 
     @Bean
-    Histogram searchResultHistogram() {
+    Histogram searchResultHistogram(MetricRegistry metricRegistry) {
         return metricRegistry.histogram("histogram.search.results");
     }
 
-    @Bean
-    ConsoleReporter consoleReporter() {
-        return ConsoleReporter.forRegistry(metricRegistry).outputTo(System.out).build();
+    @Override
+    public void configureReporters(MetricRegistry metricRegistry) {
+        ConsoleReporter
+                .forRegistry(metricRegistry)
+                .build()
+                .start(10, TimeUnit.MINUTES);
     }
 
     @Bean
     @Profile("memory-metrics")
-    public MemoryUsageGaugeSet memory() {
-
+    public MemoryUsageGaugeSet memory(MetricRegistry metricRegistry) {
         return metricRegistry.register(JVM_MEMORY, new MemoryUsageGaugeSet());
     }
 
     @Bean
     @Profile("thread-metrics")
-    ThreadStatesGaugeSet thread() {
+    ThreadStatesGaugeSet thread(MetricRegistry metricRegistry) {
         return metricRegistry.register(JVM_THREADS, new ThreadStatesGaugeSet());
     }
 
     @Bean
     @Profile("file-metrics")
-    FileDescriptorRatioGauge fileMetrics() {
+    FileDescriptorRatioGauge fileMetrics(MetricRegistry metricRegistry) {
         return metricRegistry.register(JVM_FILES, new FileDescriptorRatioGauge());
     }
 
     @Bean
     @Profile("gc-metrics")
-    GarbageCollectorMetricSet gcMetrics() {
+    GarbageCollectorMetricSet gcMetrics(MetricRegistry metricRegistry) {
         return metricRegistry.register(JVM_GARBAGE, new GarbageCollectorMetricSet());
     }
     
     @Bean
     @Profile("buffer-metrics")
-    BufferPoolMetricSet poolMetrics(){
+    BufferPoolMetricSet poolMetrics(MetricRegistry metricRegistry){
         return metricRegistry.register(JVM_BUFFERS, new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer()));
     }
 
-    @PostConstruct
-    @Profile("metricConsole")
-    public void init() {
-        consoleReporter().start(10, TimeUnit.SECONDS);
-    }
+   
     
     @Bean
     @SneakyThrows(SQLException.class)
     public HealthCheck healthCheck() {
         final HealthCheck healthCheck = new MemoryHealthCheck();
         final DatabaseH2HealthCheck h2Check = new DatabaseH2HealthCheck(dataSource);
+        final Ping ping= new Ping();
+        final DiskCapacityHealthCheck disk = new DiskCapacityHealthCheck();        
         healthCheckRegistry().register("mem", healthCheck);
+        healthCheckRegistry().register("ping", ping);
+        healthCheckRegistry().register("disk", disk);
         healthCheckRegistry().register("h2", h2Check);
         return healthCheck;        
     }
     
-    @Bean
-    public Histogram histogram() {
-        return metricRegistry.histogram("histogram");
-    }
-    
-    @Bean
-    public Counter counter() {
-        return metricRegistry.counter("counter");
-    }
-    @Bean
-    public Meter requestUser(){
-        return metricRegistry.meter("requestUser");
-    }
-
-    
-    @Bean
-    public Timer timer() {
-        return metricRegistry.timer("head");
-    }
+   
     
     @Bean
     @Profile("jmx-metrics")
-    public JmxReporter jmxReporter() {
+    public JmxReporter jmxReporter(MetricRegistry metricRegistry) {
         final JmxReporter reporter = JmxReporter.forRegistry(metricRegistry).build();                
         reporter.start();
         return reporter;
