@@ -1,7 +1,9 @@
 
 <configuration scan="true" scanperiod="5 seconds">
    <property scope="context" name="pattern_stdout"
-		value="%highlight(%.-5level)|%green(%date{yyyy-MM-dd HH:mm:ss.SSS})|%boldMagenta([%thread])|%yellow(%logger{70}:%boldYellow(%line)) - %msg%n%red(%rEx)" />
+		
+		
+		value="%.-5level | %date{yyyy-MM-dd HH:mm:ss.SSS} | [%thread] | %logger{70}:%line - %msg%n%rEx" />
 
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
 		<file>app.log</file>
@@ -9,18 +11,31 @@
 			<pattern>[%level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %logger{36} - [requestID: %X{requestID}] %msg%n</pattern>
 		</encoder>
 	</appender>
-<!-- 	
-		<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+ 	
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<charset>utf-8</charset>
 			<pattern>${pattern_stdout}</pattern>
 			<pattern></pattern>
 		</encoder>
-	</appender> -->
+	</appender> 
 	
-	 <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    
+    <appender name="fileJSON"
+        class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>app_json.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>app_json.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
     </appender>
+    
+    <appender name="tcpJSON" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+      <remoteHost>127.0.0.1</remoteHost>
+      <port>9200</port>
+      <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+   </appender>
 	
      <appender name="FILE-QUEUE" class="ch.qos.logback.classic.sift.SiftingAppender">
 		<discriminator>
@@ -50,11 +65,13 @@
 	  <logger name="pl.java.scalatech" level="info" additivity="false">
         <appender-ref ref="FILE-QUEUE" />
         <appender-ref ref="console" />
+        <appender-ref ref="fileJSON"/>
 	   </logger>
     
     <logger name="org.springframework" level="info" />
     <logger name="org.springframework.data" level="info" />
 	<root level="INFO">
 	    <appender-ref ref="console"/>
+	    <appender-ref ref="fileJSON"/>
 	</root>
 </configuration>
