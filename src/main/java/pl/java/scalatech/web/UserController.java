@@ -31,6 +31,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codahale.metrics.Histogram;
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.annotation.Timed;
+
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,16 +48,30 @@ import pl.java.scalatech.repository.UserRepository;
 public class UserController {
     @NonNull
     private final UserRepository userRepository;
+    @NonNull
+    private final Histogram searchResultHistogram;
+    @NonNull
+    private final Meter requestUser;
 
+    @NonNull
+    private final   MetricRegistry metricRegistry;
+    
+    @Timed(name="userInfo")    
     @RequestMapping(method = GET, value = "/users", produces = APPLICATION_JSON_VALUE)
     public List<User> getUsers() {
         log.info("++++Sdd");
-        return userRepository.findAll();
+        List<User> result =userRepository.findAll();
+        searchResultHistogram.update(result.size());
+        requestUser.mark();
+        return result; 
     }
-
+    @Timed(name="userId")    
     @RequestMapping(method = GET, value = "/users/{userId}", produces = APPLICATION_JSON_VALUE)
-    public User getUser(@PathVariable("authorId") Long userId) {
+    public User getUser(@PathVariable("userId") Long userId) {
+        Meter requests = metricRegistry.meter("requestsId");
+        requests.mark();
         return userRepository.findOne(userId);
+        
     }
 
     @RequestMapping(method = POST, value = "/users", consumes = APPLICATION_JSON_VALUE)

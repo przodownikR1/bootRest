@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codahale.metrics.annotation.Timed;
+
 import lombok.extern.slf4j.Slf4j;
 import pl.java.scalatech.domain.VersionInfo;
 
@@ -31,6 +33,7 @@ public class VersionInfoController {
 
     private VersionInfo versionInfo;
 
+    @Timed(name="versionInfo")    
     @RequestMapping(value = "/versionInfo", method = RequestMethod.GET)
     public VersionInfo getGitRepositoryState() throws IOException {
         log.info("++++ ver repo");

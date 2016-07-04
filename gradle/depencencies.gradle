@@ -37,7 +37,7 @@ ext {
 
 dependencyManagement {
     imports {
-        mavenBom 'org.springframework:spring-framework-bom:4.2.4.RELEASE'
+        mavenBom 'org.springframework:spring-framework-bom:4.2.6.RELEASE'
         mavenBom "org.springframework.data:spring-data-releasetrain:${springDataVersion}"
     }
 }
@@ -77,6 +77,32 @@ dependencies {
     compile 'org.projectlombok:lombok:1+'
     compile 'com.google.guava:guava:18.+'
     compile 'net.logstash.logback:logstash-logback-encoder:4.3'
+    
+    //metrics
+    
+   // https://mvnrepository.com/artifact/io.dropwizard.metrics/metrics-core
+    compile group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
+
+    // https://mvnrepository.com/artifact/io.dropwizard.metrics/metrics-jvm
+    compile group: 'io.dropwizard.metrics', name: 'metrics-jvm', version: '3.1.2'
+
+
+// https://mvnrepository.com/artifact/io.dropwizard.metrics/metrics-graphite
+   compile group: 'io.dropwizard.metrics', name: 'metrics-graphite', version: '3.1.2'
+
+
+    // https://mvnrepository.com/artifact/io.dropwizard.metrics/metrics-logback
+   compile group: 'io.dropwizard.metrics', name: 'metrics-logback', version: '3.1.2'
+
+   // https://mvnrepository.com/artifact/io.dropwizard.metrics/metrics-annotation
+   compile group: 'io.dropwizard.metrics', name: 'metrics-annotation', version: '3.1.2'
+   
+    // https://mvnrepository.com/artifact/io.dropwizard.metrics/metrics-servlets
+compile group: 'io.dropwizard.metrics', name: 'metrics-servlets', version: '3.1.2'
+
+    // https://mvnrepository.com/artifact/io.dropwizard.metrics/metrics-servlet
+compile group: 'io.dropwizard.metrics', name: 'metrics-servlet', version: '3.1.2'
+
    
     compile 'javax.validation:validation-api:1+'
     compile 'org.hibernate:hibernate-validator:5+'
@@ -136,7 +162,7 @@ configurations {
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
         if (details.requested.group == 'org.springframework') {
-            details.useVersion '4.2.4.RELEASE'
+            details.useVersion '4.2.6.RELEASE'
         }
         
         if (details.requested.group == 'ch.qos.logback') {
