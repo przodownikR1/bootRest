@@ -1,0 +1,56 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets {
+    intTest
+    generated.java.srcDirs=['src/main/generated']
+    main {
+        java { srcDir 'src/main/java' }
+        groovy { srcDir 'src/main/groovy' }
+        resources { srcDir 'src/main/resources' }
+    }
+    test {
+        java { srcDir 'src/test/java' }
+        groovy { srcDir 'src/test/groovy' }
+        resources { srcDir 'src/test/resources' }
+    }
+}
+
+
+/*compilerArgs =
+ [
+   "-Xlint:-options", // intentionally disabled
+   "-Xlint:-rawtypes",
+   "-Xlint:-unchecked",
+   "-Xlint:serial",
+   "-Xlint:varargs",
+   "-Xlint:cast",
+   "-Xlint:classfile",
+   "-Xlint:dep-ann",
+   "-Xlint:divzero",
+   "-Xlint:empty",
+   "-Xlint:finally",
+   "-Xlint:overrides",
+   "-Xlint:path",
+   "-Xlint:processing",
+   "-Xlint:static",
+   "-Xlint:try",
+   "-Xlint:fallthrough",
+   "-Xlint:deprecation"
+ ]*/
+
+jar {
+    manifest {
+      attributes(
+              'Implementation-Title': "${project.name}",
+              'Implementation-Version': version.toString(),
+              'Created-By': System.getProperty('java.version') + ' (' + System.getProperty('java.vendor') + ')',
+              'Built-With': "gradle-${project.getGradle().getGradleVersion()}, groovy-${GroovySystem.getVersion()}",
+              'Build-Time': "${new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")}",
+              'Built-By': System.getProperty('user.name'),
+              'Built-On': "${InetAddress.localHost.hostName}/${InetAddress.localHost.hostAddress}"
+      )
+    }
+  }

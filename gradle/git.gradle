@@ -1,0 +1,81 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+          }
+    }
+    dependencies {
+        classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.7")
+     //   classpath "gradle.plugin.com.selesse:gradle-git-changelog:0.2.0"
+     //   classpath "gradle.plugin.org.dvaske.gradle:git-build-info:0.2"
+     //   classpath "gradle.plugin.de.timroes.gradle:git-version:0.3.0"
+        classpath 'org.ajoberstar:gradle-git:1.3.2'
+    }
+}
+//apply plugin: "de.timroes.git-version"
+//apply plugin: "com.selesse.git.changelog"
+apply plugin: 'com.gorylenko.gradle-git-properties'
+//apply plugin: 'org.ajoberstar.release-opinion'
+//apply plugin: "org.dvaske.gradle.git-build-info"
+
+gitProperties {
+    gitPropertiesDir = new File("${project.rootDir}/src/main/resources")
+}
+
+import org.ajoberstar.grgit.*
+
+ext {
+    git = org.ajoberstar.grgit.Grgit.open(file('.'))
+}
+
+task buildRelease()  {    
+    onlyIf{
+        return new File(projectDir, '.git').exists()
+    }
+    def id =  git.head().abbreviatedId
+    def name = git.branch.getCurrent().name
+    def workDir = new File(".").absolutePath    
+    println "my version  buildReleaseBuild  -> $version"
+    println "${name} - ${id}  - ${workDir}"
+}
+
+def gitRevision() {
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-list', 'HEAD', '-n', '1'
+            standardOutput = stdout
+        }
+        def commitRevision = stdout.toString().trim()
+        return commitRevision
+    }
+    catch (ignored) {
+        return "(unknown revision)";
+    }
+}
+task gitDev(dependsOn: [clean, build])  {
+    git.add(patterns: ['.'], update: true)
+    git.commit(message: 'Next development version [ci skip]')
+    git.push()
+}
+
+task gitPrepareRelease << {
+    def grgit = org.ajoberstar.grgit.Grgit.open(project.projectDir)
+    grgit.checkout(branch: "test-release", createBranch: true)
+    tasks.replaceVersion.execute();
+}
+
+task tagRelease(dependsOn: incrementVersion) {
+    def tags = git.tag.list()
+    
+    //println tags
+    println  gitRevision() + "  " + tags.size()
+    tags.each { Tag t ->
+       println "&& $t"
+    }
+    
+    def userName = System.properties['user.name']
+    //git.tag.add(name: 1231235, annotate: true, message: "RELEASE 1231235 - by $userName")
+    //git.push(tags: true)
+  }

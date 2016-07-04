@@ -1,3 +1,18 @@
+/*
+ * Copyright 2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package pl.java.scalatech.web;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -16,25 +31,51 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codahale.metrics.Histogram;
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.annotation.ExceptionMetered;
+import com.codahale.metrics.annotation.Metric;
+import com.codahale.metrics.annotation.Timed;
+
+
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import pl.java.scalatech.domain.User;
 import pl.java.scalatech.repository.UserRepository;
 
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired) )
+@Slf4j
 public class UserController {
     @NonNull
     private final UserRepository userRepository;
+    @NonNull
+    private final Histogram searchResultHistogram;
+  
 
+    @NonNull
+    private final   MetricRegistry metricRegistry;
+    
+    @Timed(name="userTimed")    
+    @com.codahale.metrics.annotation.Counted(name="userCounted")
+    @Metric(name="userMetric")
+    @ExceptionMetered(name="exceptionUserMetered")
     @RequestMapping(method = GET, value = "/users", produces = APPLICATION_JSON_VALUE)
     public List<User> getUsers() {
-        return userRepository.findAll();
+        log.info("++++Sdd");
+        List<User> result =userRepository.findAll();
+        searchResultHistogram.update(result.size());
+        return result; 
     }
-
+    @Timed(name="userId")    
     @RequestMapping(method = GET, value = "/users/{userId}", produces = APPLICATION_JSON_VALUE)
-    public User getUser(@PathVariable("authorId") Long userId) {
+    public User getUser(@PathVariable("userId") Long userId) {
+        Meter requests = metricRegistry.meter("requestsId");
+        requests.mark();
         return userRepository.findOne(userId);
+        
     }
 
     @RequestMapping(method = POST, value = "/users", consumes = APPLICATION_JSON_VALUE)
