@@ -3,7 +3,7 @@
    <property scope="context" name="pattern_stdout"
 		
 		
-		value="%.-5level | %date{yyyy-MM-dd HH:mm:ss.SSS} | [%thread] | %logger{70}:%line - %msg%n%rEx" />
+		value="%.-5level %date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %logger{70}:%line - %msg%n%rEx" />
 
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
 		<file>app.log</file>
@@ -36,6 +36,8 @@
       <port>10042</port>
       <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
    </appender>
+   
+   
 	
      <appender name="FILE-QUEUE" class="ch.qos.logback.classic.sift.SiftingAppender">
 		<discriminator>
@@ -72,6 +74,7 @@
     <logger name="org.springframework.data" level="info" />
 	<root level="INFO">
 	    <appender-ref ref="console"/>
-	    <appender-ref ref="fileJSON"/>
+	    <!-- <appender-ref ref="fileJSON"/>  -->
+	     <appender-ref ref="tcpJSON"/>
 	</root>
 </configuration>

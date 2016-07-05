@@ -1,0 +1,13 @@
+INFO 2016-07-05 14:31:10.447 [restartedMain] pl.java.scalatech.BootRest:57 - Started BootRest in 10.697 seconds (JVM running for 11.585)
+INFO 2016-07-05 14:32:37.088 [http-nio-9125-exec-1] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]:180 - Initializing Spring FrameworkServlet 'dispatcherServlet'
+INFO 2016-07-05 14:32:37.088 [http-nio-9125-exec-1] org.springframework.web.servlet.DispatcherServlet:487 - FrameworkServlet 'dispatcherServlet': initialization started
+INFO 2016-07-05 14:32:37.107 [http-nio-9125-exec-1] org.springframework.web.servlet.DispatcherServlet:506 - FrameworkServlet 'dispatcherServlet': initialization completed in 18 ms
+INFO 2016-07-05 14:32:37.163 [http-nio-9125-exec-1] pl.java.scalatech.web.UserController:67 - ++++Sdd
+INFO 2016-07-05 14:32:37.188 [http-nio-9125-exec-1] org.hibernate.hql.internal.QueryTranslatorFactoryInitiator:47 - HHH000397: Using ASTQueryTranslatorFactory
+INFO 2016-07-05 14:32:37.163 [http-nio-9125-exec-1] pl.java.scalatech.web.UserController:67 - ++++Sdd
+INFO 2016-07-05 14:32:37.188 [http-nio-9125-exec-1] org.hibernate.hql.internal.QueryTranslatorFactoryInitiator:47 - HHH000397: Using ASTQueryTranslatorFactory
+INFO 2016-07-05 14:32:37.163 [http-nio-9125-exec-1] pl.java.scalatech.web.UserController:67 - ++++Sdd6
+INFO 2016-07-05 14:32:37.163 [http-nio-9125-exec-1] pl.java.scalatech.web.UserController:67 - ++++Sdd7
+INFO 2016-07-05 14:32:37.163 [http-nio-9125-exec-1] pl.java.scalatech.web.UserController:67 - ++++Sdd9
+INFO 2016-07-05 14:32:37.163 [http-nio-9125-exec-1] pl.java.scalatech.web.UserController:67 - ++++Sdd9
+
