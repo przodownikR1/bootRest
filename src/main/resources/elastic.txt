@@ -1,9 +1,21 @@
-curl -XPUT http://localhost:9200/apache/ -d '{                                                                                                                     16:24
+curl -XPUT http://localhost:9200/apacheLog/ -d '{                                                                                                                     16:24
                                             "settings" : {
-                                            "number_of_shards" : 1,
-                                            "number_of_replicas" : 2
+                                            "number_of_shards" : 3,
+                                            "number_of_replicas" : 1
                                             }
                                             }'
 
                                             
                                             
+                                            curl 'localhost:9200/_cat/indices?v'
+                                            
+                                            curl 'localhost:9200/_cat/indices?v'
+                                            
+                                            
+                                            curl -XGET 'localhost:9200/_stats/?pretty'
+                                            
+                                            
+                                            http://localhost:9200/_cluster/health
+                                            
+                                            
+                                             
