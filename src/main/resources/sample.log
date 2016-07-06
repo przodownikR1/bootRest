@@ -10,3 +10,12 @@ INFO [http-nio-9125-exec-1]
 INFO http-nio-9125-exec-1
 
 
+TRACE 2016-07-06 14:09:31.079 [http-nio-9126-exec-10] [appId] org.springframework.aop.interceptor.CustomizableTraceInterceptor:299 - Entering =>  findOne(1).
+TRACE 2016-07-06 14:09:31.081 [http-nio-9126-exec-10] [appId] org.springframework.aop.interceptor.CustomizableTraceInterceptor:299 - Leaving => findOne(..) with return value User(firstname=przodownik, email=przodownik@tlen.pl, login=przodownik, password=null), took 2ms.
+
+
+ multiline {
+       pattern => "^20"
+       negate => true
+       what => "previous"
+    }
