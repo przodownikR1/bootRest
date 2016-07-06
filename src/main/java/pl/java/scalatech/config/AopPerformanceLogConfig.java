@@ -19,11 +19,14 @@ import org.springframework.aop.Advisor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.interceptor.CustomizableTraceInterceptor;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @Configuration
-//@EnableAspectJAutoProxy config
+@EnableAspectJAutoProxy
+@EnableAutoConfiguration
 public class AopPerformanceLogConfig {
     @Bean
     public CustomizableTraceInterceptor interceptor() {

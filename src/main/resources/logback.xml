@@ -1,80 +1,79 @@
 
 <configuration scan="true" scanperiod="5 seconds">
-   <property scope="context" name="pattern_stdout"	
+	<property scope="context" name="pattern_stdout"
 		value="%.-5level %date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [appId] %logger{70}:%line - %msg%n" />
 
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
 		<file>app.log</file>
 		<encoder>
-			<pattern>%.-5level %date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [appId] %logger{70}:%line - %msg%n</pattern>
+			<pattern>%.-5level %date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [appId]
+				%logger{70}:%line - %msg%n</pattern>
 		</encoder>
 	</appender>
- 	
-  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<charset>utf-8</charset>
 			<pattern>${pattern_stdout}</pattern>
 			<pattern></pattern>
 		</encoder>
-	</appender> 
-	
-    
-    <appender name="fileJSON"
-        class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>app_json.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>app_json.log.%d{yyyy-MM-dd}</fileNamePattern>
-            <maxHistory>10</maxHistory>
-        </rollingPolicy>
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
-    </appender>
-    
-    <appender name="tcpJSON" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-      <remoteHost>127.0.0.1</remoteHost>
-      <port>10042</port>
-      <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
-   </appender>
-   
-   
-	
-     <appender name="FILE-QUEUE" class="ch.qos.logback.classic.sift.SiftingAppender">
+	</appender>
+
+
+	<appender name="fileJSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>app_json.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>app_json.log.%d{yyyy-MM-dd}</fileNamePattern>
+			<maxHistory>10</maxHistory>
+		</rollingPolicy>
+		<encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+	</appender>
+
+	<appender name="tcpJSON" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+		<remoteHost>localhost</remoteHost>
+		<port>10066</port>
+		<encoder class="net.logstash.logback.encoder.LogstashEncoder">		
+		   <includeCallerInfo>true</includeCallerInfo>
+         <!--   <customFields>{"appId":"micro-boot-rest","version":"1.0.0"}</customFields> -->
+		</encoder>
+	</appender>
+
+	<appender name="FILE-QUEUE" class="ch.qos.logback.classic.sift.SiftingAppender">
 		<discriminator>
 			<key>logFileName</key>
 			<defaultValue>in-out</defaultValue>
 		</discriminator>
 		<sift>
-		  <appender name="${logFileName}" class="ch.qos.logback.core.rolling.RollingFileAppender">
-			<file>${logFileName}.log</file>
-			<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-				<Pattern>
-					%.-5level %date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [appId] %logger{70}:%line - %msg%n
-				</Pattern>
-			</encoder>
-			<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-				<FileNamePattern>${logFileName}.%i.log.zip</FileNamePattern>
-				<MinIndex>1</MinIndex>
-				<MaxIndex>10</MaxIndex>
-			</rollingPolicy>
-			<triggeringPolicy  class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-				<MaxFileSize>10MB</MaxFileSize>
-			</triggeringPolicy>
-		  </appender>
+			<appender name="${logFileName}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+				<file>${logFileName}.log</file>
+				<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+					<Pattern>
+						%.-5level %date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [appId]
+						%logger{70}:%line - %msg%n
+					</Pattern>
+				</encoder>
+				<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+					<FileNamePattern>${logFileName}.%i.log.zip</FileNamePattern>
+					<MinIndex>1</MinIndex>
+					<MaxIndex>10</MaxIndex>
+				</rollingPolicy>
+				<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+					<MaxFileSize>10MB</MaxFileSize>
+				</triggeringPolicy>
+			</appender>
 		</sift>
 	</appender>
-	
-	  <logger name="pl.java.scalatech" level="info" additivity="false">
-        <appender-ref ref="FILE" />
-        <appender-ref ref="console" />
-       <!--  <appender-ref ref="fileJSON"/> -->
-        <appender-ref ref="tcpJSON"/> 
-        
-	   </logger>
-    
-    <logger name="org.springframework" level="info" />
-    <logger name="org.springframework.data" level="info" />
-	<root level="INFO">
-	    <appender-ref ref="console"/>
-	     <appender-ref ref="tcpJSON"/> 
-	    
+
+	<logger name="pl.java.scalatech" level="info" additivity="false">
+		<appender-ref ref="FILE" />
+		 <appender-ref ref="tcpJSON" />
+		<appender-ref ref="console" />
+	</logger>
+    <logger name="org.springframework.aop.interceptor" level="trace" />
+	<logger name="org.springframework" level="info" />
+	<logger name="org.springframework.data" level="info" />
+	<root level="INFO">	   
+	   <appender-ref ref="console" />
+	    <appender-ref ref="tcpJSON" />
 	</root>
 </configuration>

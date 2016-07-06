@@ -77,6 +77,15 @@ public class UserController {
         return userRepository.findOne(userId);
         
     }
+    
+    @Timed(name="userName")    
+    @RequestMapping(method = GET, value = "/users/name/{name}", produces = APPLICATION_JSON_VALUE)
+    public User getUser(@PathVariable("name") String name) {
+        Meter requests = metricRegistry.meter("requestName");
+        requests.mark();
+        return userRepository.findByLogin(name).orElseThrow(() -> new IllegalArgumentException("resource not found"));
+        
+    }
 
     @RequestMapping(method = POST, value = "/users", consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> addAuthor(@RequestBody User user) {
