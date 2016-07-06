@@ -19,3 +19,16 @@ TRACE 2016-07-06 14:09:31.081 [http-nio-9126-exec-10] [appId] org.springframewor
        negate => true
        what => "previous"
     }
+    
+    
+    
+    PUT /my/employee/1
+{
+"first_name" : "John",
+"last_name" : "Smith",
+11"age" :
+25,
+"about" :
+"I love to go rock climbing",
+"interests": [ "sports", "music" ]
+}

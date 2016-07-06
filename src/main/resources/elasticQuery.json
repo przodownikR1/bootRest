@@ -1,0 +1,345 @@
+====POST     
+curl -XPOST 'http://localhost:9200/my/employee' -d     
+{
+"first_name" : "John",
+"last_name" : "Smith",
+"age" :25,
+"about" :"I love to go rock climbing",
+"interests": [ "sports", "music" ]
+}
+
+{
+
+    "_index": "my", 
+    "_type": "employee",
+    "_id": "AVXAsoHEJZ2AD2FP2VX5",
+    "_version": 1,
+    "_shards": {
+        "total": 2,
+        "successful": 1,
+        "failed": 0
+    },
+    "created": true
+
+}
+==== PUT
+PUT 2
+
+{
+"first_name" : "Jane",
+"last_name" :
+"Smith",
+"age" :
+32,
+"about" :
+"I like to collect rock albums",
+"interests": [ "music" ]
+}
+                                            
+                                             
+                                             {
+
+    "_index": "my",
+    "_type": "employee",
+    "_id": "2",
+    "_version": 1,
+    "_shards": {
+        "total": 2,
+        "successful": 1,
+        "failed": 0
+    },
+    "created": true
+
+}
+
+PUT 3
+
+{
+"first_name" : "Douglas",
+"last_name" :
+"Fir",
+"age" :
+35,
+"about":
+"I like to build cabinets",
+"interests": [ "forestry" ]
+}
+
+
+{
+
+    "_index": "my",
+    "_type": "employee",
+    "_id": "3",
+    "_version": 1,
+    "_shards": {
+        "total": 2,
+        "successful": 1,
+        "failed": 0
+    },
+    "created": true
+
+}
+=====SEARCH
+
+curl -XGET http://localhost:9200/my/employee/2                                                                                                                          16:49
+{"_index":"my","_type":"employee","_id":"2","_version":1,"found":true,"_source":{
+"first_name" : "Jane",
+"last_name" :
+"Smith",
+"age" :
+32,
+"about" :
+"I like to collect rock albums",
+"interests": [ "music" ]
+}}⏎                                  
+
+
+ curl -XGET http://localhost:9200/my/employee/_search                                                                                                                    16:55
+{"took":1,"timed_out":false,"_shards":{"total":5,"successful":5,"failed":0},"hits":{"total":3,"max_score":1.0,"hits":[{"_index":"my","_type":"employee","_id":"AVXAsoHEJZ2AD2FP2VX5","_score":1.0,"_source":{
+"first_name" : "John",
+"last_name" : "Smith",
+"age" :25,
+"about" :"I love to go rock climbing",
+"interests": [ "sports", "music" ]
+}},{"_index":"my","_type":"employee","_id":"2","_score":1.0,"_source":{
+"first_name" : "Jane",
+"last_name" :
+"Smith",
+"age" :
+32,
+"about" :
+"I like to collect rock albums",
+"interests": [ "music" ]
+}},{"_index":"my","_type":"employee","_id":"3","_score":1.0,"_source":{
+"first_name" : "Douglas",
+"last_name" :
+"Fir",
+"age" :
+35,
+"about":
+"I like to build cabinets",
+"interests": [ "forestry" ]
+}}]}}⏎                                
+
+== Search by name
+
+ curl -XGET 'http://localhost:9200/my/employee/_search?q=last_name:borowiec'             
+                                                                                 16:58
+{"took":1,"timed_out":false,"_shards":{"total":5,"successful":5,"failed":0},"hits":{"total":1,"max_score":0.30685282,"hits":[{"_index":"my","_type":"employee","_id":"1","_score":0.30685282,"_source":{
+"first_name" : "slawek",
+"last_name" :
+"borowiec",
+"age" :
+35,
+"about":
+"I like to build cabinets",
+"interests": [ "forestry","bike" ]
+}}]}}⏎                                
+
+
+
+ curl -XGET 'http://localhost:9200/my/employee/_search?pretty' -d '{"query" : {"match" : {"last_name" : "borowiec"}}}'                                                   17:29
+{
+  "took" : 2,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 1,
+    "max_score" : 0.30685282,
+    "hits" : [ {
+      "_index" : "my",
+      "_type" : "employee",
+      "_id" : "1",
+      "_score" : 0.30685282,
+      "_source" : {
+        "first_name" : "slawek",
+        "last_name" : "borowiec",
+        "age" : 35,
+        "about" : "I like to build cabinets",
+        "interests" : [ "forestry", "bike" ]
+      }
+    } ]
+  }
+}
+
+
+curl -XGET 'http://localhost:9200/my/employee/_search?pretty' -d ' {"query" : {"filtered" : {"filter" : {"range" : {"age" : { "gt" : 30 }}},"query" : {"match" : {"last_name" : "borowiec"}}}}}'
+                                       
+{
+  "took" : 9,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 1,
+    "max_score" : 0.30685282,
+    "hits" : [ {
+      "_index" : "my",
+      "_type" : "employee",
+      "_id" : "1",
+      "_score" : 0.30685282,
+      "_source" : {
+        "first_name" : "slawek",
+        "last_name" : "borowiec",
+        "age" : 35,
+        "about" : "I like to build cabinets",
+        "interests" : [ "forestry", "bike" ]
+      }
+    } ]
+  }
+}
+przodownik ~/b/bootRest (master|✚4…1)$ curl -XGET 'http://localhost:9200/my/employee/_search?pretty' -d ' {"query" : {"filtered" : {"filter" : {"range" : {"age" : { "gt" : 36 }}},"query" : {"match" : {"last_name" : "borowiec"}}}}}'
+                                       
+{
+  "took" : 1,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 0,
+    "max_score" : null,
+    "hits" : [ ]
+  }
+}
+przodownik ~/b/bootRest (master|✚4…1)$  
+
+
+
+Full-Text Search
+curl -XGET 'http://localhost:9200/my/employee/_search?pretty' -d '{"query" : {"match" : {"about" : "to"}}}'                                                             17:31
+{
+  "took" : 1,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 4,
+    "max_score" : 0.22295055,
+    "hits" : [ {
+      "_index" : "my",
+      "_type" : "employee",
+      "_id" : "AVXAsoHEJZ2AD2FP2VX5",
+      "_score" : 0.22295055,
+      "_source" : {
+        "first_name" : "John",
+        "last_name" : "Smith",
+        "age" : 25,
+        "about" : "I love to go rock climbing",
+        "interests" : [ "sports", "music" ]
+      }
+    }, {
+      "_index" : "my",
+      "_type" : "employee",
+      "_id" : "2",
+      "_score" : 0.22295055,
+      "_source" : {
+        "first_name" : "Jane",
+        "last_name" : "Smith",
+        "age" : 32,
+        "about" : "I like to collect rock albums",
+        "interests" : [ "music" ]
+      }
+    }, {
+      "_index" : "my",
+      "_type" : "employee",
+      "_id" : "1",
+      "_score" : 0.13424811,
+      "_source" : {
+        "first_name" : "slawek",
+        "last_name" : "borowiec",
+        "age" : 35,
+        "about" : "I like to build cabinets",
+        "interests" : [ "forestry", "bike" ]
+      }
+    }, {
+      "_index" : "my",
+      "_type" : "employee",
+      "_id" : "3",
+      "_score" : 0.13424811,
+      "_source" : {
+        "first_name" : "pawel",
+        "last_name" : "gilewski",
+        "age" : 35,
+        "about" : "I like to build cabinets",
+        "interests" : [ "forestry", "bike" ]
+      }
+    } ]
+  }
+}
+przodownik ~/b/bootRest (master|✚4…2)$      
+
+
+Full-Search match exact sequences of words or phrases
+curl -XGET 'http://localhost:9200/my/employee/_search?pretty' -d '{"query" : {"match_phrase" : {"about" : "to build"}}}'
+
+
+!! "highlight"
+
+curl -XGET 'http://localhost:9200/my/employee/_search?pretty' -d '{"query" : {"match_phrase" : {"about" : "to build"}},"highlight": {"fields" : {"about" : {}}}}'       17:38
+{
+  "took" : 3,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 2,
+    "max_score" : 0.26849622,
+    "hits" : [ {
+      "_index" : "my",
+      "_type" : "employee",
+      "_id" : "1",
+      "_score" : 0.26849622,
+      "_source" : {
+        "first_name" : "slawek",
+        "last_name" : "borowiec",
+        "age" : 35,
+        "about" : "I like to build cabinets",
+        "interests" : [ "forestry", "bike" ]
+      },
+      "highlight" : {
+        "about" : [ "I like <em>to</em> <em>build</em> cabinets" ]
+      }
+    }, {
+      "_index" : "my",
+      "_type" : "employee",
+      "_id" : "3",
+      "_score" : 0.26849622,
+      "_source" : {
+        "first_name" : "pawel",
+        "last_name" : "gilewski",
+        "age" : 35,
+        "about" : "I like to build cabinets",
+        "interests" : [ "forestry", "bike" ]
+      },
+      "highlight" : {
+        "about" : [ "I like <em>to</em> <em>build</em> cabinets" ]
+      }
+    } ]
+  }
+}
+
+
+== Analytics
+       
+
+curl -XGET 'http://localhost:9200/my/employee/_search{"aggs": {"all_interests": {"terms": { "field": "interests" }}}}
+
+
+  
