@@ -1,12 +1,5 @@
 ====POST     
-curl -XPOST 'http://localhost:9200/my/employee' -d     
-{
-"first_name" : "John",
-"last_name" : "Smith",
-"age" :25,
-"about" :"I love to go rock climbing",
-"interests": [ "sports", "music" ]
-}
+curl -XPOST 'http://localhost:9200/my/employee' -d   '{"first_name" : "John","last_name" : "Smith","age" :25,"about" :"I love to go rock climbing","interests": [ "sports", "music" ]}'
 
 {
 
@@ -23,21 +16,10 @@ curl -XPOST 'http://localhost:9200/my/employee' -d
 
 }
 ==== PUT
-PUT 2
 
+curl -XPOST 'http://localhost:9200/my/employee/2' -d '{"first_name" : "Jane","last_name" :"Smith","age" :32,"about" :"I like to collect rock albums","interests": [ "music" ]}'
+PUT 2                                                                                        
 {
-"first_name" : "Jane",
-"last_name" :
-"Smith",
-"age" :
-32,
-"about" :
-"I like to collect rock albums",
-"interests": [ "music" ]
-}
-                                            
-                                             
-                                             {
 
     "_index": "my",
     "_type": "employee",
@@ -54,20 +36,8 @@ PUT 2
 
 PUT 3
 
+curl -XPUT 'http://localhost:9200/my/employee/3' -d '{"first_name" : "Douglas","last_name" :"Fir","age" :35,"about":"I like to build cabinets","interests": [ "forestry" ]}'
 {
-"first_name" : "Douglas",
-"last_name" :
-"Fir",
-"age" :
-35,
-"about":
-"I like to build cabinets",
-"interests": [ "forestry" ]
-}
-
-
-{
-
     "_index": "my",
     "_type": "employee",
     "_id": "3",
@@ -80,22 +50,26 @@ PUT 3
     "created": true
 
 }
+
+
+curl -XPUT 'http://localhost:9200/my/employee/4' -d '{"first_name" : "Slawomir","last_name" :"Borowiec","age" :36,"about":"I like to build cabinets","interests": [ "bike" ]}'
+
 =====SEARCH
 
-curl -XGET http://localhost:9200/my/employee/2                                                                                                                          16:49
+curl -XGET http://localhost:9200/my/employee/2
+
+
 {"_index":"my","_type":"employee","_id":"2","_version":1,"found":true,"_source":{
 "first_name" : "Jane",
-"last_name" :
-"Smith",
-"age" :
-32,
-"about" :
-"I like to collect rock albums",
+"last_name" :"Smith",
+"age" :32,
+"about" :"I like to collect rock albums",
 "interests": [ "music" ]
 }}⏎                                  
 
 
- curl -XGET http://localhost:9200/my/employee/_search                                                                                                                    16:55
+ curl -XGET 'http://localhost:9200/my/employee/_search?pretty' 
+ 
 {"took":1,"timed_out":false,"_shards":{"total":5,"successful":5,"failed":0},"hits":{"total":3,"max_score":1.0,"hits":[{"_index":"my","_type":"employee","_id":"AVXAsoHEJZ2AD2FP2VX5","_score":1.0,"_source":{
 "first_name" : "John",
 "last_name" : "Smith",
@@ -214,6 +188,9 @@ przodownik ~/b/bootRest (master|✚4…1)$ curl -XGET 'http://localhost:9200/my/
 }
 przodownik ~/b/bootRest (master|✚4…1)$  
 
+
+
+curl -XGET 'http://localhost:9200/my/employee/' -d '{"aggs": {"interests-all": {"terms": { "field": "interests" }}}}'
 
 
 Full-Text Search
@@ -339,7 +316,240 @@ curl -XGET 'http://localhost:9200/my/employee/_search?pretty' -d '{"query" : {"m
 == Analytics
        
 
-curl -XGET 'http://localhost:9200/my/employee/_search{"aggs": {"all_interests": {"terms": { "field": "interests" }}}}
+curl -XGET 'http://localhost:9200/my/employee/_search?pretty' -d '{"aggs": {"all_interests": {"terms": { "field": "interests" }}}}'                                                     07:53
+{
+  "took" : 1,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 4,
+    "max_score" : 1.0,
+    "hits" : [ {
+      "_index" : "my",
+      "_type" : "employee",
+      "_id" : "AVXCDyMDSBJXTKg724w2",
+      "_score" : 1.0,
+      "_source":{"first_name" : "John","last_name" : "Smith","age" :25,"about" :"I love to go rock climbing","interests": [ "sports", "music" ]}
+    }, {
+      "_index" : "my",
+      "_type" : "employee",
+      "_id" : "2",
+      "_score" : 1.0,
+      "_source":{"first_name" : "Douglas","last_name" :"Fir","age" :35,"about":"I like to build cabinets","interests": [ "forestry" ]}
+    }, {
+      "_index" : "my",
+      "_type" : "employee",
+      "_id" : "4",
+      "_score" : 1.0,
+      "_source":{"first_name" : "Slawomir","last_name" :"Borowiec","age" :36,"about":"I like to build cabinets","interests": [ "bike" ]}
+    }, {
+      "_index" : "my",
+      "_type" : "employee",
+      "_id" : "3",
+      "_score" : 1.0,
+      "_source":{"first_name":"Douglas","last_name":"Fir","age":35,"about":"I like to build cabinets","interests":["forestry"],"views":0,"tags":["testing"]}
+    } ]
+  },
+  "aggregations" : {
+    "all_interests" : {
+      "doc_count_error_upper_bound" : 0,
+      "sum_other_doc_count" : 0,
+      "buckets" : [ {
+        "key" : "forestry",
+        "doc_count" : 2
+      }, {
+        "key" : "bike",
+        "doc_count" : 1
+      }, {
+        "key" : "music",
+        "doc_count" : 1
+      }, {
+        "key" : "sports",
+        "doc_count" : 1
+      } ]
+    }
+  }
+}
 
 
+
+przodownik /o/e/bin$ curl -XGET 'http://localhost:9200/_cluster/health?pretty'
+{
+  "cluster_name" : "elasticsearch",
+  "status" : "yellow",
+  "timed_out" : false,
+  "number_of_nodes" : 1,
+  "number_of_data_nodes" : 1,
+  "active_primary_shards" : 31,
+  "active_shards" : 31,
+  "relocating_shards" : 0,
+  "initializing_shards" : 0,
+  "unassigned_shards" : 31,
+  "delayed_unassigned_shards" : 0,
+  "number_of_pending_tasks" : 0,
+  "number_of_in_flight_fetch" : 0,
+  "task_max_waiting_in_queue_millis" : 0,
+  "active_shards_percent_as_number" : 50.0
+}
+
+
+status :
+green All primary and replica shards are active.
+yellow All primary shards are active, but not all replica shards are active.
+red Not all primary shards are active
+
+curl -XPUT 'http://localhost:9200/my1' -d '{"settings" : {"number_of_shards" : 3,"number_of_replicas" : 1}}'
+
+
+
+index =Where the document lives
+----
+An index is like a database in a relational database; it’s the place we store and index
+related data.
+----
+type =The class of object that the document represents
+----
+In applications, we use objects to represent things such as a user, a blog post, a com‐
+ment, or an email. Each object belongs to a class that defines the properties or data
+associated with an object. Objects in the user class may have a name, a gender, an
+age, and an email address.
+In a relational database, we usually store objects of the same class in the same table,
+because they share the same data structure. For the same reason, in Elasticsearch we
+use the same type for documents that represent the same class of thing, because they
+share the same data structure.
+----
+id =The unique identifier for the document
+
+
+curl -XGET 'http://localhost:9200/my/employee/3?pretty'                                                                                                                                 23:44
+{
+  "_index" : "my",
+  "_type" : "employee",
+  "_id" : "3",
+  "_version" : 1,
+  "found" : true,
+  "_source":{"first_name" : "Douglas","last_name" :"Fir","age" :35,"about":"I like to build cabinets","interests": [ "forestry" ]}
+}
+
+
+
+curl -XGET 'http://localhost:9200/my/employee/3?_source=age,last_name&pretty'
+{
+  "_index" : "my",
+  "_type" : "employee",
+  "_id" : "3",
+  "_version" : 1,
+  "found" : true,
+  "_source":{"last_name":"Fir","age":35}
+}
+
+Checking Whether a Document Exists
+przodownik /o/e/bin$ curl -i -XHEAD 'http://localhost:9200/my/employee/1'                                                                                                                                    23:48
+HTTP/1.1 404 Not Found
+Content-Type: text/plain; charset=UTF-8
+Content-Length: 0
+
+przodownik /o/e/bin$ curl -i -XHEAD 'http://localhost:9200/my/employee/4'                                                                                                                                    23:48
+HTTP/1.1 200 OK
+Content-Type: text/plain; charset=UTF-8
+Content-Length: 0
+
+przodownik /o/e/bin$ curl -i -XHEAD 'http://localhost:9200/my/employee/5'                                                                                                                                    23:48
+HTTP/1.1 404 Not Found
+Content-Type: text/plain; charset=UTF-8
+Content-Length: 0
+
+przodownik /o/e/bin$ curl -i -XHEAD 'http://localhost:9200/my/employee/5' 
+
+
+PARTIAL UPDATE 
+
+curl -XPOST 'http://localhost:9200/my/employee/3/_update' -d '{"doc" :{"tags": ["testing"],"views":0}}'                                                                                 
+{"_index":"my","_type":"employee","_id":"3","_version":3,"_shards":{"total":2,"successful":1,"failed":0}}
+
+                                                                                              
+curl -XPOST 'http://localhost:9200/my/employee/3/_update' -d '{"doc" :{"views":0}}'
+
+
+?retry_on_conflict=5 Retry this update five times before failing.
+
+
+curl -XGET 'http://localhost:9200/my/employee/' -d '{"ids" : [ "2", "1" ]}'
+
+  timeout GET /_search?timeout=10ms
   
+  
+/_search Search all types in all indices
+/gb/_search Search all types in the gb index
+/gb,us/_search Search all types in the gb and us indices
+/g*,u*/_search Search all types in any indices beginning with g or beginning with u
+/gb/user/_search Search type user in the gb index
+  
+  
+Paging
+
+GET /_search?size=5
+GET /_search?size=5&from=5
+GET /_search?size=5&from=10
+
+
+
+curl -XPOST 'http://localhost:9200/cars/transactions/_bulk' 
+-d '
+{ "index": {}}
+{ "price" : 10000, "color" : "red", "make" : "honda", "sold" : "2014-10-28" }
+{ "index": {}}
+{ "price" : 20000, "color" : "red", "make" : "honda", "sold" : "2014-11-05" }
+{ "index": {}}
+{ "price" : 30000, "color" : "green", "make" : "ford", "sold" : "2014-05-18" }
+{ "index": {}}
+{ "price" : 15000, "color" : "blue", "make" : "toyota", "sold" : "2014-07-02" }
+{ "index": {}}
+{ "price" : 12000, "color" : "green", "make" : "toyota", "sold" : "2014-08-19" }
+{ "index": {}}
+{ "price" : 20000, "color" : "red", "make" : "honda", "sold" : "2014-11-05" }
+{ "index": {}}
+{ "price" : 80000, "color" : "red", "make" : "bmw", "sold" : "2014-01-01" }
+{ "price" : 25000, "color" : "blue", "make" : "ford", "sold" : "2014-02-12" }
+'  
+
+
+curl -XGET 'http://localhost:9200/cars/transactions/_search?search_type=count' -d '{"aggs" : {"colors" : {"terms" : {"field" : "color"}}}}'
+
+curl -XGET 'http://localhost:9200/cars/transactions/_search?search_type=count&pretty' -d '{"aggs" : {"colors" : {"terms" : {"field" : "color"}}}}'                                      07:58
+{
+  "took" : 4,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 7,
+    "max_score" : 0.0,
+    "hits" : [ ]
+  },
+  "aggregations" : {
+    "colors" : {
+      "doc_count_error_upper_bound" : 0,
+      "sum_other_doc_count" : 0,
+      "buckets" : [ {
+        "key" : "red",
+        "doc_count" : 4
+      }, {
+        "key" : "green",
+        "doc_count" : 2
+      }, {
+        "key" : "blue",
+        "doc_count" : 1
+      } ]
+    }
+  }
+}
+
+curl -XGET 'http://localhost:9200/cars/transactions/_search?search_type=count&pretty' -d '{"aggs": {"colors": {"terms": {"field": "color"},"aggs": {"avg_price": {"avg": {"field": "price"}}}}}}'
