@@ -1,9 +1,7 @@
-package pl.java.scalatech.web;
+package pl.java.scalatech.web.test;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/test")

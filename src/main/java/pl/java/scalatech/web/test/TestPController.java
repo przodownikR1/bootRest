@@ -1,4 +1,4 @@
-package pl.java.scalatech.web;
+package pl.java.scalatech.web.test;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.RequestMapping;

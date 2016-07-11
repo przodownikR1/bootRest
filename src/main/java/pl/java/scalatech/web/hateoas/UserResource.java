@@ -15,18 +15,37 @@
  */
 package pl.java.scalatech.web.hateoas;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import org.springframework.hateoas.ResourceSupport;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonView;
+
+import pl.java.scalatech.domain.User;
+import pl.java.scalatech.web.UserController;
 
 public class UserResource extends ResourceSupport{
-    private final String login;
-   
+    public interface Projection{        }
+    
+    @JsonView(UserResource.Projection.class)
+    User user;
+    
+  //  @JsonFilter("userFilter")
+    public User getUser() {
+        return this.user;
+    }
 
+    
     @JsonCreator
-    public UserResource(@JsonProperty("login") String login) {
-        this.login = login;
+    public UserResource(User user) {
+        this.user = user;
+        this.add(linkTo(methodOn(UserController.class).getUser(user.getId())).withSelfRel());
+        this.add(linkTo(methodOn(UserController.class).getUserByName(user.getLogin())).withRel("byName"));
+        
+        
     }
 
 }

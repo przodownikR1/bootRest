@@ -17,11 +17,14 @@ package pl.java.scalatech.domain;
 
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import pl.java.scalatech.web.hateoas.UserResource;
 @Entity
 @Data
 @AllArgsConstructor
@@ -31,9 +34,13 @@ import lombok.NoArgsConstructor;
 public class User extends AbstractEntity{
 
     private static final long serialVersionUID = -8920961125119379475L;
+    @JsonView(UserResource.Projection.class)
     private  String firstname;
+    @JsonView(UserResource.Projection.class)
     private  String email;
+    @JsonView(UserResource.Projection.class)
     private String login;
+    
     private String password;
     
     

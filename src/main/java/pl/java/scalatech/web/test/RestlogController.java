@@ -1,4 +1,4 @@
-package pl.java.scalatech.web;
+package pl.java.scalatech.web.test;
 
 import java.util.UUID;
 
