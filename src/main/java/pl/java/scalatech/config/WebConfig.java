@@ -71,6 +71,8 @@ public class WebConfig extends WebMvcConfigurationSupport {
         registry.addViewController("/400").setViewName("/error/400");
         registry.addViewController("/404").setViewName("/error/404");
     }
+     
+    
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {  // mapujemy statyczne zasoby
