@@ -22,8 +22,8 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.http.HttpEntity;
@@ -48,8 +48,6 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pl.java.scalatech.domain.User;
 import pl.java.scalatech.repository.UserRepository;
@@ -60,12 +58,17 @@ import pl.java.scalatech.web.hateoas.UserResourceAssembler;
 @Slf4j
 public class UserController extends GenericController<User>{
     
+    
+    private final UserRepository userRepository;
     @Autowired
     public UserController(UserRepository repo,MetricRegistry metricRegistry,Histogram sear) {
         super(repo);
+        this.userRepository = repo;
     }
+    
+    @Autowired
+    protected EntityLinks entityLink;
 
-   
    
     private  Histogram searchResultHistogram;
 

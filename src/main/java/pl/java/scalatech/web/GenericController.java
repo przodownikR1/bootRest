@@ -29,6 +29,8 @@ import pl.java.scalatech.exception.ResourceNotFoundException;
 
 public abstract class GenericController<T extends AbstractEntity> {
 
+    
+    
     private JpaRepository<T, Long> repo;
 
     public GenericController(JpaRepository<T, Long> repo){
