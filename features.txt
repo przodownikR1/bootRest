@@ -1,0 +1,104 @@
+Hipster solution : 
+
+Rate limiting
+
+This is an advanced feature that requires setting up a Cassandra cluster (which is easy to do with the provided Docker Compose configuration).
+
+Gateways provide rate-limiting features, so the number of REST requests can be limited:
+
+    by IP address (for anonymous users)
+    by user login (for logged-in users)
+
+JHipster will then use a Cassandra cluster to store request counts, and will send HTTP 429 (too many requests) errors when the limit is exceeded. The default limit per user is 100,000 API calls per hour.
+
+This is an important feature, to protect a microservice architecture from being flooded by a specific user’s requests.
+
+As the gateway secures the REST endpoints, it has full access to the user’s security information, so it can be easily extended to provide specific rate limits depending on the user’s security roles.
+
+
+o enable rate limiting, open up the application-dev.yml or application-prod.yml file and set enabled to true:
+
+jhipster:
+    gateway:
+        rate-limiting:
+            enabled: true
+
+===
+
+Correlation Token Pattern.
+
+Extra points go to technologies that make it easy to build smart, self-describing hypermedia APIs as Spring Boot does with Spring HATEOAS. 
+
+Services are tiny, ephemeral, and numerous.
+
+You can't fix what you can't measure: how quickly can a service expose application state—metrics (gauges, meters, histograms, and counters), health checks, etc.—and how easy is it to report microservice state in a joined-up view or analysis tool like StatsD, Graphite, Splunk, the ELK (Elastic Search/Logstash/Kibana) stack, or OpenTSDB? 
+
+
+
+ Spring Boot uses a mechanism called auto-configuration that lets developers codify things—identity provider integrations, connection pools, frameworks, auditing infrastructure, literally anything —and have it stood up as part of the Spring Boot application ( if all the conditions stipulated by the auto-configuration are met) just by being on the CLASSPATH! 
+ 
+ Centralized Configuration 
+  Environment variables and -D arguments, externalized .properties , and .yml files—which Dropwizard, Spring Boot, Apache Commons Configuration and others readily support—are a good start, but even this can become tedious as you need to manage more than a few instances of a few types of services.
+  
+  
+  Spring Cloud provides the Spring Cloud Config Server, which stands up a REST API in front of a version controlled repository of configuration files. Spring Cloud also provides support for using Apache Zookeeper and Hashicorp Consul as configuration sources, as well as various clients for all of these so that all properties—whether they come from the Config Server, Consul, a -D argument, or an environment variable—work the same way for a Spring client.
+  
+  
+  Service Registration and Discovery 
+  
+   A service registry is a phonebook, letting clients look up services by their logical names. There are many such service registries out there: some common examples include Netflix's Eureka , Apache Zookeeper , and Hashicorp Consul . Modern platforms like Cloud Foundry don't necessarily need a separate service registry because of course it already knows where services live and how to find them given a logical name. 
+   
+   Client-Side Load Balancing 
+   
+   A big benefit of using a service registry is client-side load balancing. Client-side load balancing lets the client find all the relevant registered instances of a given service—if there are 10 or a thousand, they're all discovered through the registry—and then choose from among the candidate instances which one to route requests to.
+   The client can programmatically decide, based on whatever criteria it likes—capacity, round-robin, cloud-provider availability-zone awareness, multi-tenancy, etc.—to which node a request should be sent. Netflix provides a great client-side load balancer called Ribbon . Spring Cloud readily integrates Ribbon at all layers of the framework, so that whether you're using the RestTemplate, declarative REST clients powered by Netflix Feign, the Zuul microproxy, or anything else, the provided Ribbon load balancer strategy is in play automatically. 
+   
+   
+   
+   Edge Services: Microproxies and API Gateways 
+   
+    A microproxy like Zuul simply forwards all requests at the edge service to the backend microservices as enumerated in a registry. If your application is an HTML5 application, it might be enough to stand up a microproxy, insert HTTP BASIC or OAuth security, use HTTPS, and be done with it.
+    
+    
+    Sometimes the client needs a coarser-grained view of the data coming from the services. This implies API translation. An edge service, stood up using something like Spring Boot, might use Reactive programming technologies like Netflix's RxJava , Typesafe's Akka , RedHat's Vert.x , or Pivotal's Reactor to compose requests and transformations across multiple services into a single response. Indeed, all of these implement a common API called the reactive streams API because this subset of problems is so common. 
+  
+  
+  
+  Clustering Primitives 
+  
+  In complex distributed systems, there are many actors with many roles to play. Cluster coordination and cluster consensus is one of the most difficult problems to solve. How do you handle leadership election, active/passive handoff, or global locks? Thankfully, many technologies provide the primitives required to support this sort of coordination, including Apache Zookeeper, Redis ,and Hazelcast . Spring Cloud's Cluster support provides a clean integration with all of these technologies. 
+  
+  
+  
+  Messaging, CQRS, and Stream Processing 
+  
+  
+  state synchronization becomes more difficult. The reflex of the experienced architect might be to reach for distributed transactions, a la JTA.
+   Ignore this urge at all costs. Transactions are a stop-the-world approach to state synchronization and slow the system 
+   as a whole—the worst possible outcome in a distributed system. 
+   Instead, services today use eventual consistency through messaging to ensure that state eventually reflects the correct system worldview. 
+   REST is a fine technology for reading data but it doesn't provide any guarantees about the propagation and eventual processing of a transaction.
+    Actor systems like Typesafe Akka and message brokers like Apache ActiveMQ , Apache Kafka , RabbitMQ , or even Redis have become the norm. 
+    Akka provides a supervisory system that guarantees a message will be processed at least once.
+     If you're using messaging, there are many APIs that can simplify the chore, including Apache Camel , Spring Integration , 
+     and—at a higher abstraction level and focusing specifically on the aforementioned Kafka, RabbitMQ, and Redis—Spring Cloud Stream.
+      Using messaging for writes and using REST for reads optimizes reads separately from writes.
+The Command Query Responsibility Segregation , or CQRS, design pattern specifically describes this approach. 
+  
+
+Circuit Breakers 
+
+In a microservice system it's critical that services be designed to be fault-tolerant: 
+if something happens, then the services should gracefully degrade.
+ Systems are complex, living things. Failure in one system can trigger a domino effect across other systems if care isn't taken to isolate them. 
+ 
+ One way to prevent failure cascades is to use a circuit-breaker . A circuit-breaker is a stateful component around potentially shaky service-to-service calls that—when something goes wrong—prevents further traffic across 
+ the downed path. The circuit will slowly attempt to let traffic through until the pathway is closed again.
+  Netflix's Hystrix circuit-breaker is a very popular option, complete with a usual dashboard which can aggregate and visualize potentially open circuits in a system.
+   Wildfly Swarm, as of this writing in Q3 2015, has support for using Hystrix in master,
+    and the Play Framework provides support for circuit breakers.
+     Naturally, Spring Cloud also has deep support for Hystrix, and we're investigating a possible integration with JRugged .
+     
+     
+     
+Distributed Tracing  
