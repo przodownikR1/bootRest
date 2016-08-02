@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RateLimiter implements Filter {
 	
-
+  //TODO switch on redis instance
 	
 	private static final int REQ_LIMIT = Integer.MAX_VALUE;
 	private static final int TIME_LIMIT = 600000; 
