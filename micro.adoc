@@ -203,4 +203,53 @@ Start your green field projects with one button click or use the Spring CLI (spr
 
 
 
+== MF
+
+
+=== Componentization via Services
+
+component insertable and updateable
+
+
+=== Organized around Business Capabilities
+
+ UI / SERVER / DBA
+ każdy robi to co potrafi najlepiej i tylko się na tym skupia
+ 
+  
+
+=== Products not Projects
+
+=== Smart endpoints and dumb pipes
+
+=== Decentralized Governance
+
+=== Decentralized Data Management
+
+=== Infrastructure Automation
+
+=== Design for failure
+
+=== Evolutionary Design
+
+
+=== Microservices provide benefits
+
+Strong Module Boundaries
+
+Independent Deployment
+
+Technology Diversity:
+
+=== with costs
+
+Distribution
+
+Eventual Consistency
+
+Operational Complexity: 
+
+
+
+
    
