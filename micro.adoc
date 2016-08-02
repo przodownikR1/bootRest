@@ -168,7 +168,39 @@ if something happens, then the services should gracefully degrade.
     and the Play Framework provides support for circuit breakers.
      Naturally, Spring Cloud also has deep support for Hystrix, and we're investigating a possible integration with JRugged .
      
+Use Circuit breakers in your web calls to avoid breaking systems and fail safely.
+
+
      
 ===  Distributed Tracing     
+
+
+== Other
+
+Have automated scripts check one log stream.  Use tools like ELK (ElasticSearch+Logstash+Kibana) to examine logs.
+
+Move to using smaller, lighterweight Spring Boot Jars and Wars; not giant EAR files.
+
+Use lightweight web containers like Jetty, Tomcat, tcServer, or Undertow.
+
+Use lightweight frameworks, remember YAGNI and KISS.
+
+Break up the apps into smaller, logical components that model real business functionality.
+
+Refactor existing code guided by tests, enhancing and adding more tests as the code evolves.  Remembering to use code coverage tools like Jacoco.
+
+Design clean RESTful APIs guided by SRP (Single Responsibility Principle).
+
+Use smart, modern opinionated frameworks for development like Spring Boot, DropWizard and RatPack.
+
+Install GVM and use it to install SpringBoot, Gradle, Groovy, LazyBones and other great tools.  example:  gvm install springboot
+
+Use Domain Driven Design.
+
+Document your API with Spring REST Docs or Swagger.  There is a great presentation on that here.
+
+Start your green field projects with one button click or use the Spring CLI (spring init -d=web,data-jpa,actuator,data-rest –build=maven newappdir/).
+
+
 
    
