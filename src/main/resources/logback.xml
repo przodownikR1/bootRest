@@ -63,6 +63,33 @@
 			</appender>
 		</sift>
 	</appender>
+	
+	<appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <discriminator class="pl.java.scalatech.filters.ThreadNameBasedDiscriminator"/>
+    <sift>
+        <appender class="ch.qos.logback.core.FileAppender">
+            <file>app-${threadName}.log</file>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%d{HH:mm:ss:SSS} | %-5level | %logger{20} | %msg%n%rEx</pattern>
+            </layout>
+        </appender>
+    </sift>
+</appender>
+
+ <appender name="USER_SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <key>userid</key>
+            <defaultValue>unknown</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="FILE-${userid}" class="ch.qos.logback.core.FileAppender">
+                <file>user-${userid}.log</file>
+                <layout class="ch.qos.logback.classic.PatternLayout">
+                    <pattern>%d{HH:mm:ss:SSS} | %-5level | %thread | %logger{20} | %msg%n%rEx</pattern>
+                </layout>
+            </appender>
+        </sift>
+    </appender>
 
 	<logger name="pl.java.scalatech" level="info" additivity="false">
 		<appender-ref ref="FILE" />
