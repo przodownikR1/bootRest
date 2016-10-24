@@ -70,7 +70,7 @@ public class UserController extends GenericController<User>{
     protected EntityLinks entityLink;
 
    
-    private  Histogram searchResultHistogram;
+   // private  Histogram searchResultHistogram;
 
    
     private  MetricRegistry metricRegistry;
@@ -93,15 +93,15 @@ public class UserController extends GenericController<User>{
         // TODO functional approach better use
         result.stream()
                 .forEach(t -> t.add(new Link(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(t.getUser().getId()).toString())));
-        searchResultHistogram.update(result.size());
+      //  searchResultHistogram.update(result.size());
         return result;
     }
 
     @Timed(name = "userId")
     @RequestMapping(method = GET, value = "/users/{userId}", produces = APPLICATION_JSON_VALUE)
     public User getUser(@PathVariable("userId") Long userId) {
-        Meter requests = metricRegistry.meter("requestsId");
-        requests.mark();
+      /*  Meter requests = metricRegistry.meter("requestsId");
+        requests.mark();*/
         return userRepository.findOne(userId);
 
     }
@@ -109,8 +109,6 @@ public class UserController extends GenericController<User>{
     @Timed(name = "userName")
     @RequestMapping(method = GET, value = "/users/name/{name}", produces = APPLICATION_JSON_VALUE)
     public UserResource getUserByName(@PathVariable("name") String name) {
-        Meter requests = metricRegistry.meter("requestName");
-        requests.mark();
         return userRepository.findByLogin(name).map(t -> new UserResource(t)).orElseThrow(() -> new IllegalArgumentException("resource not found"));
 
     }
@@ -126,8 +124,8 @@ public class UserController extends GenericController<User>{
     @Timed(name = "userName")
     @RequestMapping(method = GET, value = "/users/nameFilter/{name}", produces = APPLICATION_JSON_VALUE, params = "fields")
     public MappingJacksonValue getUserFilter(@PathVariable("name") String name, @RequestParam String fields) {
-        Meter requests = metricRegistry.meter("requestName");
-        requests.mark();
+       /* Meter requests = metricRegistry.meter("requestName");
+        requests.mark();*/
         MappingJacksonValue wrapper = new MappingJacksonValue(
                 userRepository.findByLogin(name).map(t -> new UserResource(t)).orElseThrow(() -> new IllegalArgumentException("resource not found")));
         final FilterProvider filterProvider = new SimpleFilterProvider().addFilter("userFilter", SimpleBeanPropertyFilter.filterOutAllExcept(fields));

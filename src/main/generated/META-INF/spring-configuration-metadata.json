@@ -1,0 +1,71 @@
+{
+  "groups": [{
+    "name": "tomcat.https",
+    "type": "pl.java.scalatech.config.SSLConfig$TomcatSslConnectorProperties",
+    "sourceType": "pl.java.scalatech.config.SSLConfig$TomcatSslConnectorProperties"
+  }],
+  "properties": [
+    {
+      "name": "tomcat.https.allow-trace",
+      "type": "java.lang.Boolean",
+      "sourceType": "pl.java.scalatech.config.SSLConfig$TomcatSslConnectorProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "tomcat.https.enable",
+      "type": "java.lang.Boolean",
+      "sourceType": "pl.java.scalatech.config.SSLConfig$TomcatSslConnectorProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "tomcat.https.http-only",
+      "type": "java.lang.Boolean",
+      "sourceType": "pl.java.scalatech.config.SSLConfig$TomcatSslConnectorProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "tomcat.https.key-alias",
+      "type": "java.lang.String",
+      "sourceType": "pl.java.scalatech.config.SSLConfig$TomcatSslConnectorProperties"
+    },
+    {
+      "name": "tomcat.https.keystore",
+      "type": "java.lang.String",
+      "sourceType": "pl.java.scalatech.config.SSLConfig$TomcatSslConnectorProperties"
+    },
+    {
+      "name": "tomcat.https.keystore-password",
+      "type": "java.lang.String",
+      "sourceType": "pl.java.scalatech.config.SSLConfig$TomcatSslConnectorProperties"
+    },
+    {
+      "name": "tomcat.https.keystore-type",
+      "type": "java.lang.String",
+      "sourceType": "pl.java.scalatech.config.SSLConfig$TomcatSslConnectorProperties"
+    },
+    {
+      "name": "tomcat.https.port",
+      "type": "java.lang.Integer",
+      "sourceType": "pl.java.scalatech.config.SSLConfig$TomcatSslConnectorProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "tomcat.https.scheme",
+      "type": "java.lang.String",
+      "sourceType": "pl.java.scalatech.config.SSLConfig$TomcatSslConnectorProperties"
+    },
+    {
+      "name": "tomcat.https.secure",
+      "type": "java.lang.Boolean",
+      "sourceType": "pl.java.scalatech.config.SSLConfig$TomcatSslConnectorProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "tomcat.https.timeout",
+      "type": "java.lang.Integer",
+      "sourceType": "pl.java.scalatech.config.SSLConfig$TomcatSslConnectorProperties",
+      "defaultValue": 0
+    }
+  ],
+  "hints": []
+}

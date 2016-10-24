@@ -1,25 +1,33 @@
 package pl.java.scalatech.config;
 
 import java.lang.management.ManagementFactory;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.codahale.metrics.ConsoleReporter;
-import com.codahale.metrics.Counter;
 import com.codahale.metrics.Histogram;
 import com.codahale.metrics.JmxReporter;
-import com.codahale.metrics.Meter;
+import com.codahale.metrics.Metric;
 import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.Timer;
+import com.codahale.metrics.MetricSet;
+import com.codahale.metrics.Slf4jReporter;
+import com.codahale.metrics.graphite.Graphite;
+import com.codahale.metrics.graphite.GraphiteReporter;
 import com.codahale.metrics.health.HealthCheck;
 import com.codahale.metrics.health.HealthCheckRegistry;
 import com.codahale.metrics.jvm.BufferPoolMetricSet;
@@ -37,12 +45,13 @@ import lombok.extern.slf4j.Slf4j;
 import pl.java.scalatech.metrics.DatabaseH2HealthCheck;
 import pl.java.scalatech.metrics.DiskCapacityHealthCheck;
 import pl.java.scalatech.metrics.MemoryHealthCheck;
-import pl.java.scalatech.metrics.Ping;
+import pl.java.scalatech.metrics.PingHealthCheck;
+import pl.java.scalatech.metrics.RestResourcesHealthCheck;
 
 @Configuration
 @Slf4j
 @Profile("metrics")
-@EnableMetrics
+@EnableMetrics(proxyTargetClass = true)
 public class MetricsConfig extends MetricsConfigurerAdapter{
 
     private static final String JVM_MEMORY = "jvm.memory";
@@ -55,24 +64,85 @@ public class MetricsConfig extends MetricsConfigurerAdapter{
     private DataSource dataSource;    
    
     
-    @Bean
-    HealthCheckRegistry healthCheckRegistry(){
-        return new HealthCheckRegistry();
+    @Value("${graphitePort}")
+    private int graphitePort;
+    
+    @Autowired
+    private MetricRegistry metricRegistry;
+
+    @PostConstruct
+    public void startGraphiteReporter() throws UnknownHostException {
+        String hostname = InetAddress.getLocalHost().getHostName();
+
+        
+        Graphite graphite = new Graphite(new InetSocketAddress("localhost", graphitePort));
+        GraphiteReporter reporter = GraphiteReporter
+                .forRegistry(metricRegistry)
+                .prefixedWith("services.oauth2." + hostname)
+                .build(graphite);
+        reporter.start(10, TimeUnit.SECONDS);
     }
+    
+    @PostConstruct
+    public void registerJvmMetrics() {
+        registerAll("gc", new GarbageCollectorMetricSet(), metricRegistry);
+        registerAll("memory", new MemoryUsageGaugeSet(), metricRegistry);
+    }
+
+    private void registerAll(String prefix, MetricSet metricSet, MetricRegistry registry) {
+        log.info("+++++ metricsSet : {} , registry {}  , prefix : {}  ", metricSet,registry,prefix);
+        for (Map.Entry<String, Metric> entry : metricSet.getMetrics().entrySet()) {
+            if (entry.getValue() instanceof MetricSet) {
+                registerAll(prefix + "." + entry.getKey(), (MetricSet) entry.getValue(), registry);
+            } else {
+                registry.register(prefix + "." + entry.getKey(), entry.getValue());
+            }
+        }
+    }
+    private final HealthCheckRegistry healthCheckRegistry = new HealthCheckRegistry();
+
+    @Bean
+    @Override
+    public HealthCheckRegistry getHealthCheckRegistry() {
+        return healthCheckRegistry;
+}
+    
+    @PostConstruct
+    public void registerHealthChecks() throws SQLException {
+        final HealthCheck healthCheck = new MemoryHealthCheck();
+        final DatabaseH2HealthCheck h2Check = new DatabaseH2HealthCheck(dataSource);
+        final PingHealthCheck ping= new PingHealthCheck();
+        final DiskCapacityHealthCheck disk = new DiskCapacityHealthCheck();
+        RestResourcesHealthCheck restResourceHealth = new RestResourcesHealthCheck("http://localhost:9126/users");
+        getHealthCheckRegistry().register("mem", healthCheck);
+        getHealthCheckRegistry().register("ping", ping);
+        getHealthCheckRegistry().register("disk", disk);
+        getHealthCheckRegistry().register("h2", h2Check);
+        getHealthCheckRegistry().register("resource",restResourceHealth );
+   
+     }
+   
 
     @Bean
     Histogram searchResultHistogram(MetricRegistry metricRegistry) {
         return metricRegistry.histogram("histogram.search.results");
     }
 
+  
     @Override
     public void configureReporters(MetricRegistry metricRegistry) {
-        ConsoleReporter
-                .forRegistry(metricRegistry)
-                .build()
-                .start(10, TimeUnit.MINUTES);
+        // Console reporter
+        ConsoleReporter.forRegistry(metricRegistry).build().start(5, TimeUnit.MINUTES);
+
+        // SLF4J reporter
+        Slf4jReporter.forRegistry(metricRegistry).outputTo(LoggerFactory.getLogger(getClass().getCanonicalName()))
+                .convertRatesTo(TimeUnit.SECONDS).convertDurationsTo(TimeUnit.MILLISECONDS).build().start(5, TimeUnit.MINUTES);
+
+        // JMX reporter
+        JmxReporter.forRegistry(metricRegistry).build().start();
     }
 
+    
     @Bean
     @Profile("memory-metrics")
     public MemoryUsageGaugeSet memory(MetricRegistry metricRegistry) {
@@ -102,25 +172,9 @@ public class MetricsConfig extends MetricsConfigurerAdapter{
     BufferPoolMetricSet poolMetrics(MetricRegistry metricRegistry){
         return metricRegistry.register(JVM_BUFFERS, new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer()));
     }
-
-   
     
-    @Bean
-    @SneakyThrows(SQLException.class)
-    public HealthCheck healthCheck() {
-        final HealthCheck healthCheck = new MemoryHealthCheck();
-        final DatabaseH2HealthCheck h2Check = new DatabaseH2HealthCheck(dataSource);
-        final Ping ping= new Ping();
-        final DiskCapacityHealthCheck disk = new DiskCapacityHealthCheck();        
-        healthCheckRegistry().register("mem", healthCheck);
-        healthCheckRegistry().register("ping", ping);
-        healthCheckRegistry().register("disk", disk);
-        healthCheckRegistry().register("h2", h2Check);
-        return healthCheck;        
-    }
     
-   
-    
+ 
     @Bean
     @Profile("jmx-metrics")
     public JmxReporter jmxReporter(MetricRegistry metricRegistry) {
@@ -141,7 +195,7 @@ public class MetricsConfig extends MetricsConfigurerAdapter{
     @Bean
     @Autowired
     public ServletRegistrationBean servletHealthRegistryBean() {
-        HealthCheckServlet hc = new HealthCheckServlet(healthCheckRegistry());
+        HealthCheckServlet hc = new HealthCheckServlet(getHealthCheckRegistry());
         ServletRegistrationBean srb = new ServletRegistrationBean(hc, "/health/*");
         srb.setLoadOnStartup(2);
         return srb;

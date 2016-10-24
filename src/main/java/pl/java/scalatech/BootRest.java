@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 import com.google.common.collect.Lists;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.java.scalatech.collaboration.filter.CorrelationIdFilter;
 import pl.java.scalatech.domain.Project;
 import pl.java.scalatech.domain.Skill;
 import pl.java.scalatech.domain.User;
@@ -50,5 +51,9 @@ public class BootRest {
 
     public static void main(String[] args) {
         SpringApplication.run(BootRest.class, args);
+    }
+    @Bean
+    CorrelationIdFilter collerationIdFilter() {
+        return new CorrelationIdFilter();
     }
 }

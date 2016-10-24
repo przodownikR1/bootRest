@@ -20,7 +20,7 @@
 	</appender>
 
 
-	<appender name="fileJSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	<!-- <appender name="fileJSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>app_json.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>app_json.log.%d{yyyy-MM-dd}</fileNamePattern>
@@ -34,9 +34,9 @@
 		<port>10066</port>
 		<encoder class="net.logstash.logback.encoder.LogstashEncoder">		
 		   <includeCallerInfo>true</includeCallerInfo>
-         <!--   <customFields>{"appId":"micro-boot-rest","version":"1.0.0"}</customFields> -->
+           <customFields>{"appId":"micro-boot-rest","version":"1.0.0"}</customFields>
 		</encoder>
-	</appender>
+	</appender> -->
 
 	<appender name="FILE-QUEUE" class="ch.qos.logback.classic.sift.SiftingAppender">
 		<discriminator>
@@ -93,7 +93,7 @@
 
 	<logger name="pl.java.scalatech" level="info" additivity="false">
 		<appender-ref ref="FILE" />
-		 <appender-ref ref="tcpJSON" />
+	    <!-- 	 <appender-ref ref="tcpJSON" /> -->
 		<appender-ref ref="console" />
 	</logger>
     <logger name="org.springframework.aop.interceptor" level="trace" />
@@ -101,6 +101,6 @@
 	<logger name="org.springframework.data" level="info" />
 	<root level="INFO">	   
 	   <appender-ref ref="console" />
-	    <appender-ref ref="tcpJSON" />
+	   <!-- <appender-ref ref="tcpJSON" /> -->
 	</root>
 </configuration>
