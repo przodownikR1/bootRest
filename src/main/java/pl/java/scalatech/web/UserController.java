@@ -12,6 +12,7 @@
  */
 package pl.java.scalatech.web;
 
+import static java.lang.Thread.sleep;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -39,7 +40,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.codahale.metrics.Histogram;
-import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Metric;
@@ -60,20 +60,21 @@ public class UserController extends GenericController<User>{
     
     
     private final UserRepository userRepository;
-    @Autowired
-    public UserController(UserRepository repo,MetricRegistry metricRegistry,Histogram sear) {
+    
+    private final MetricRegistry metricRegistry;
+    
+    public UserController(UserRepository repo,MetricRegistry metricRegistry) {
         super(repo);
         this.userRepository = repo;
+        this.metricRegistry = metricRegistry;
     }
     
     @Autowired
     protected EntityLinks entityLink;
 
-   
-   // private  Histogram searchResultHistogram;
+    @Autowired
+    private  Histogram searchResultHistogram;
 
-   
-    private  MetricRegistry metricRegistry;
 
     private Random random = new Random();
 
@@ -87,20 +88,19 @@ public class UserController extends GenericController<User>{
     // @JsonView(UserResource.Projection.class)
     @RequestMapping(method = GET, value = "/users", produces = APPLICATION_JSON_VALUE)
     public List<UserResource> getUsers() throws InterruptedException {
-        Thread.sleep(random.nextInt(100));
-        log.info("++++Sdd");
+        sleep(random.nextInt(100));
         List<UserResource> result = userRepository.findAll().stream().map(t -> new UserResource(t)).collect(toList());
         // TODO functional approach better use
         result.stream()
                 .forEach(t -> t.add(new Link(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(t.getUser().getId()).toString())));
-      //  searchResultHistogram.update(result.size());
-        return result;
+       searchResultHistogram.update(result.size());
+       return result;
     }
 
     @Timed(name = "userId")
     @RequestMapping(method = GET, value = "/users/{userId}", produces = APPLICATION_JSON_VALUE)
     public User getUser(@PathVariable("userId") Long userId) {
-      /*  Meter requests = metricRegistry.meter("requestsId");
+       /* Meter requests = metricRegistry.meter("requestsId");
         requests.mark();*/
         return userRepository.findOne(userId);
 

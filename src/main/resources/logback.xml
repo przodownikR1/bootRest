@@ -96,6 +96,7 @@
 	    <!-- 	 <appender-ref ref="tcpJSON" /> -->
 		<appender-ref ref="console" />
 	</logger>
+	<logger name="pl.java.scalatech.config.MetricsConfig" additivity="false"/>
     <logger name="org.springframework.aop.interceptor" level="trace" />
 	<logger name="org.springframework" level="info" />
 	<logger name="org.springframework.data" level="info" />
