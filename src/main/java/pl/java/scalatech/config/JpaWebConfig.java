@@ -21,7 +21,6 @@ import org.springframework.boot.autoconfigure.web.DispatcherServletAutoConfigura
 import org.springframework.boot.autoconfigure.web.EmbeddedServletContainerAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.HttpMessageConvertersAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.ServerPropertiesAutoConfiguration;
-import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
@@ -40,7 +39,6 @@ includeFilters= {@ComponentScan.Filter(type=FilterType.ANNOTATION,value= {Contro
 
 @EnableJpaRepositories(basePackages="pl.java.scalatech.repository")
 
-@EntityScan(basePackages="pl.java.scalatech.domain")
 //@EnableAutoConfiguration
 @Import({DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class,
     DispatcherServletAutoConfiguration.class,

@@ -1,4 +1,13 @@
-package pl.java.scalatech.config;
+package pl.java.scalatech.config.constants;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static pl.java.scalatech.config.constants.MetricsConstant.JVM_BUFFERS;
+import static pl.java.scalatech.config.constants.MetricsConstant.JVM_FILES;
+import static pl.java.scalatech.config.constants.MetricsConstant.JVM_GARBAGE;
+import static pl.java.scalatech.config.constants.MetricsConstant.JVM_MEMORY;
+import static pl.java.scalatech.config.constants.MetricsConstant.JVM_THREADS;
 
 import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
@@ -47,78 +56,74 @@ import pl.java.scalatech.metrics.RestResourcesHealthCheck;
 @Configuration
 @Profile("metrics")
 @EnableMetrics(proxyTargetClass = true)
-public class MetricsConfig extends MetricsConfigurerAdapter{
+public class MetricsConfig extends MetricsConfigurerAdapter {
 
-    private static final String JVM_MEMORY = "jvm.memory";
-    private static final String JVM_GARBAGE = "jvm.garbage";
-    private static final String JVM_THREADS = "jvm.threads";
-    private static final String JVM_FILES = "jvm.files";
-    private static final String JVM_BUFFERS = "jvm.buffers";
-    
     @Autowired
-    private DataSource dataSource;    
-  
+    private DataSource dataSource;
+
     @Value("${pingUrl}")
     private String pingUrl;
-    
+
     @Autowired
     private MetricRegistry metricRegistry;
 
     @Configuration
-    @ConditionalOnClass(Graphite.class)   
-    public static class GraphiteConfig{
-        
+    @ConditionalOnClass(Graphite.class)
+    public static class GraphiteConfig {
+
         @Autowired
         private MetricRegistry metricRegistry;
-        
+
         @Value("${graphitePort}")
         private int graphitePort;
-        
+
+        @Value("${graphiteHost}")
+        private String graphiteHost;
+
+        @Value("${graphiteName}")
+        private String graphiteName;
+
         @PostConstruct
         public void startGraphiteReporter() throws UnknownHostException {
             String hostname = InetAddress.getLocalHost().getHostName();
+            metricRegistry.register(JVM_FILES, new FileDescriptorRatioGauge());
+            metricRegistry.register(JVM_MEMORY, new MemoryUsageGaugeSet());
+            metricRegistry.register(JVM_THREADS, new ThreadStatesGaugeSet());
+            metricRegistry.register(JVM_GARBAGE, new GarbageCollectorMetricSet());
 
-            
-            Graphite graphite = new Graphite(new InetSocketAddress("localhost", graphitePort));
-            GraphiteReporter reporter = GraphiteReporter
-                    .forRegistry(metricRegistry)
-                    .prefixedWith("services.oauth2." + hostname)
-                    .build(graphite);
+            Graphite graphite = new Graphite(new InetSocketAddress(graphiteHost, graphitePort));
+            GraphiteReporter reporter = GraphiteReporter.forRegistry(metricRegistry).prefixedWith(graphiteName + "." + hostname).build(graphite);
             reporter.start(10, TimeUnit.SECONDS);
         }
-        
     }
-    
-  
- 
+
     private final HealthCheckRegistry healthCheckRegistry = new HealthCheckRegistry();
 
     @Bean
     @Override
     public HealthCheckRegistry getHealthCheckRegistry() {
         return healthCheckRegistry;
-}
-    
+    }
+
     @PostConstruct
     public void registerHealthChecks() throws SQLException {
         final HealthCheck healthCheck = new MemoryHealthCheck();
         final DatabaseH2HealthCheck h2Check = new DatabaseH2HealthCheck(dataSource);
-        final PingHealthCheck ping= new PingHealthCheck();
+        final PingHealthCheck ping = new PingHealthCheck();
         final DiskCapacityHealthCheck disk = new DiskCapacityHealthCheck();
         RestResourcesHealthCheck restResourceHealth = new RestResourcesHealthCheck(pingUrl);
         getHealthCheckRegistry().register("mem", healthCheck);
         getHealthCheckRegistry().register("ping", ping);
         getHealthCheckRegistry().register("disk", disk);
         getHealthCheckRegistry().register("h2", h2Check);
-        getHealthCheckRegistry().register("resource",restResourceHealth );
-     }
-   
+        getHealthCheckRegistry().register("resource", restResourceHealth);
+    }
 
     @Bean
     Histogram searchResultHistogram(MetricRegistry metricRegistry) {
         return metricRegistry.histogram("histogram.search.results");
     }
-  
+
     @Override
     public void configureReporters(MetricRegistry metricRegistry) {
         consoleReport(metricRegistry);
@@ -131,15 +136,14 @@ public class MetricsConfig extends MetricsConfigurerAdapter{
     }
 
     private void consoleReport(MetricRegistry metricRegistry) {
-        ConsoleReporter.forRegistry(metricRegistry).build().start(5, TimeUnit.MINUTES);
+        ConsoleReporter.forRegistry(metricRegistry).build().start(5, MINUTES);
     }
 
     private void slf4jReport(MetricRegistry metricRegistry) {
-        Slf4jReporter.forRegistry(metricRegistry).outputTo(LoggerFactory.getLogger(getClass().getCanonicalName()))
-                .convertRatesTo(TimeUnit.SECONDS).convertDurationsTo(TimeUnit.MILLISECONDS).build().start(5, TimeUnit.MINUTES);
+        Slf4jReporter.forRegistry(metricRegistry).outputTo(LoggerFactory.getLogger(getClass().getCanonicalName())).convertRatesTo(SECONDS)
+                .convertDurationsTo(MILLISECONDS).build().start(5, MINUTES);
     }
 
-    
     @Bean
     @Profile("memory-metrics")
     public MemoryUsageGaugeSet memory(MetricRegistry metricRegistry) {
@@ -163,22 +167,21 @@ public class MetricsConfig extends MetricsConfigurerAdapter{
     GarbageCollectorMetricSet gcMetrics(MetricRegistry metricRegistry) {
         return metricRegistry.register(JVM_GARBAGE, new GarbageCollectorMetricSet());
     }
-    
+
     @Bean
     @Profile("buffer-metrics")
-    BufferPoolMetricSet poolMetrics(MetricRegistry metricRegistry){
+    BufferPoolMetricSet poolMetrics(MetricRegistry metricRegistry) {
         return metricRegistry.register(JVM_BUFFERS, new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer()));
     }
-    
+
     @Profile("jmx-metrics")
-    @Bean(destroyMethod="stop")
+    @Bean(destroyMethod = "stop")
     JmxReporter jmxReporter(MetricRegistry metricRegistry) {
-        final JmxReporter reporter = JmxReporter.forRegistry(metricRegistry).build();                
+        final JmxReporter reporter = JmxReporter.forRegistry(metricRegistry).build();
         reporter.start();
         return reporter;
     }
-       
-    
+
     @Bean
     @Autowired
     public ServletRegistrationBean servletRegistrationBean(MetricRegistry metricRegistry) {
@@ -188,6 +191,7 @@ public class MetricsConfig extends MetricsConfigurerAdapter{
         return srb;
 
     }
+
     @Bean
     @Autowired
     public ServletRegistrationBean servletHealthRegistryBean() {
@@ -198,19 +202,20 @@ public class MetricsConfig extends MetricsConfigurerAdapter{
     }
 }
 
-/*  @PostConstruct
-public void registerJvmMetrics() {
-    registerAll("gc", new GarbageCollectorMetricSet(), metricRegistry);
-    registerAll("memory", new MemoryUsageGaugeSet(), metricRegistry);
-}
-
-private void registerAll(String prefix, MetricSet metricSet, MetricRegistry registry) {
-    log.info("+++++ metricsSet : {} , registry {}  , prefix : {}  ", metricSet,registry,prefix);
-    for (Map.Entry<String, Metric> entry : metricSet.getMetrics().entrySet()) {
-        if (entry.getValue() instanceof MetricSet) {
-            registerAll(prefix + "." + entry.getKey(), (MetricSet) entry.getValue(), registry);
-        } else {
-            registry.register(prefix + "." + entry.getKey(), entry.getValue());
-        }
-    }
-}*/
+/*
+ * @PostConstruct
+ * public void registerJvmMetrics() {
+ * registerAll("gc", new GarbageCollectorMetricSet(), metricRegistry);
+ * registerAll("memory", new MemoryUsageGaugeSet(), metricRegistry);
+ * }
+ * private void registerAll(String prefix, MetricSet metricSet, MetricRegistry registry) {
+ * log.info("+++++ metricsSet : {} , registry {}  , prefix : {}  ", metricSet,registry,prefix);
+ * for (Map.Entry<String, Metric> entry : metricSet.getMetrics().entrySet()) {
+ * if (entry.getValue() instanceof MetricSet) {
+ * registerAll(prefix + "." + entry.getKey(), (MetricSet) entry.getValue(), registry);
+ * } else {
+ * registry.register(prefix + "." + entry.getKey(), entry.getValue());
+ * }
+ * }
+ * }
+ */

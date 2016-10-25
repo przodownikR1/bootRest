@@ -111,6 +111,11 @@ dependencies {
     compile("org.springframework:spring-jms:4.3.3.RELEASE")
     compile("org.apache.activemq:activemq-broker:5.14.1")
 
+   
+    compile group: 'org.apache.camel', name: 'camel-spring-boot', version: '2.18.0'
+    compile group: 'org.apache.camel', name: 'camel-core', version: '2.18.0'
+    compile group: 'org.apache.camel', name: 'camel-spring-boot-starter', version: '2.18.0'
+
    //jpametamodel ('org.hibernate:hibernate-jpamodelgen:5.0.6.Final')
     compile 'javax.money:money-api:1.0'
     compile 'org.javamoney:moneta:1.0'

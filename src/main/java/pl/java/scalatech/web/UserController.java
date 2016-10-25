@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.codahale.metrics.Histogram;
+import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Metric;
@@ -100,8 +101,8 @@ public class UserController extends GenericController<User>{
     @Timed(name = "userId")
     @RequestMapping(method = GET, value = "/users/{userId}", produces = APPLICATION_JSON_VALUE)
     public User getUser(@PathVariable("userId") Long userId) {
-       /* Meter requests = metricRegistry.meter("requestsId");
-        requests.mark();*/
+        Meter requests = metricRegistry.meter("requestsId");
+        requests.mark();
         return userRepository.findOne(userId);
 
     }
@@ -124,8 +125,8 @@ public class UserController extends GenericController<User>{
     @Timed(name = "userName")
     @RequestMapping(method = GET, value = "/users/nameFilter/{name}", produces = APPLICATION_JSON_VALUE, params = "fields")
     public MappingJacksonValue getUserFilter(@PathVariable("name") String name, @RequestParam String fields) {
-       /* Meter requests = metricRegistry.meter("requestName");
-        requests.mark();*/
+        Meter requests = metricRegistry.meter("requestName");
+        requests.mark();
         MappingJacksonValue wrapper = new MappingJacksonValue(
                 userRepository.findByLogin(name).map(t -> new UserResource(t)).orElseThrow(() -> new IllegalArgumentException("resource not found")));
         final FilterProvider filterProvider = new SimpleFilterProvider().addFilter("userFilter", SimpleBeanPropertyFilter.filterOutAllExcept(fields));

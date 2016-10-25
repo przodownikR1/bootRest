@@ -102,22 +102,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
 
     }
 
-    @Bean
-    public FilterRegistrationBean filterRegistrationBeanEncoding() {
-        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
-        characterEncodingFilter.setEncoding("UTF-8");
-        characterEncodingFilter.setForceEncoding(true);
-        registrationBean.setFilter(characterEncodingFilter);
-        return registrationBean;
-    }
 
-    @Bean
-    public FilterRegistrationBean filterRegistrationBeanHidden() {
-        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        registrationBean.setFilter(new HiddenHttpMethodFilter());
-        return registrationBean;
-    }
     
     @Bean
     public CommonsRequestLoggingFilter requestLoggingFilter() {
