@@ -1,10 +1,33 @@
 {
-  "groups": [{
-    "name": "tomcat.https",
-    "type": "pl.java.scalatech.config.SSLConfig$TomcatSslConnectorProperties",
-    "sourceType": "pl.java.scalatech.config.SSLConfig$TomcatSslConnectorProperties"
-  }],
+  "groups": [
+    {
+      "name": "graphite",
+      "type": "pl.java.scalatech.config.constants.GraphiteProperties",
+      "sourceType": "pl.java.scalatech.config.constants.GraphiteProperties"
+    },
+    {
+      "name": "tomcat.https",
+      "type": "pl.java.scalatech.config.SSLConfig$TomcatSslConnectorProperties",
+      "sourceType": "pl.java.scalatech.config.SSLConfig$TomcatSslConnectorProperties"
+    }
+  ],
   "properties": [
+    {
+      "name": "graphite.host",
+      "type": "java.lang.String",
+      "sourceType": "pl.java.scalatech.config.constants.GraphiteProperties"
+    },
+    {
+      "name": "graphite.name",
+      "type": "java.lang.String",
+      "sourceType": "pl.java.scalatech.config.constants.GraphiteProperties"
+    },
+    {
+      "name": "graphite.port",
+      "type": "java.lang.Integer",
+      "sourceType": "pl.java.scalatech.config.constants.GraphiteProperties",
+      "defaultValue": 0
+    },
     {
       "name": "tomcat.https.allow-trace",
       "type": "java.lang.Boolean",

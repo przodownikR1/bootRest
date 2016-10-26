@@ -18,13 +18,16 @@ package pl.java.scalatech.config;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 
+import org.apache.activemq.broker.Broker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.actuate.health.Status;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnClass(Broker.class)
 public class ActiveMQHealth implements HealthIndicator {
     private ConnectionFactory factory;
 

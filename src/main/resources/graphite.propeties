@@ -1,0 +1,3 @@
+graphite.port=2003
+graphite.host=localhost
+graphite.name=micro

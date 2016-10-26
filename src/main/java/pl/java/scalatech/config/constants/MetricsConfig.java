@@ -58,30 +58,27 @@ import pl.java.scalatech.metrics.RestResourcesHealthCheck;
 @EnableMetrics(proxyTargetClass = true)
 public class MetricsConfig extends MetricsConfigurerAdapter {
 
-    @Autowired
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     @Value("${pingUrl}")
     private String pingUrl;
 
-    @Autowired
-    private MetricRegistry metricRegistry;
+    public MetricsConfig(DataSource dataSource) {       
+        this.dataSource = dataSource;
+    }
 
     @Configuration
     @ConditionalOnClass(Graphite.class)
     public static class GraphiteConfig {
 
-        @Autowired
-        private MetricRegistry metricRegistry;
+        private final MetricRegistry metricRegistry;
 
-        @Value("${graphitePort}")
-        private int graphitePort;
+        private final GraphiteProperties graphiteProps;
 
-        @Value("${graphiteHost}")
-        private String graphiteHost;
-
-        @Value("${graphiteName}")
-        private String graphiteName;
+        public GraphiteConfig(MetricRegistry metricRegistry, GraphiteProperties graphiteProps) {
+            this.metricRegistry = metricRegistry;
+            this.graphiteProps = graphiteProps;
+        }
 
         @PostConstruct
         public void startGraphiteReporter() throws UnknownHostException {
@@ -91,8 +88,8 @@ public class MetricsConfig extends MetricsConfigurerAdapter {
             metricRegistry.register(JVM_THREADS, new ThreadStatesGaugeSet());
             metricRegistry.register(JVM_GARBAGE, new GarbageCollectorMetricSet());
 
-            Graphite graphite = new Graphite(new InetSocketAddress(graphiteHost, graphitePort));
-            GraphiteReporter reporter = GraphiteReporter.forRegistry(metricRegistry).prefixedWith(graphiteName + "." + hostname).build(graphite);
+            Graphite graphite = new Graphite(new InetSocketAddress(graphiteProps.getHost(), graphiteProps.getPort()));
+            GraphiteReporter reporter = GraphiteReporter.forRegistry(metricRegistry).prefixedWith(graphiteProps.getName() + "." + hostname).build(graphite);
             reporter.start(10, TimeUnit.SECONDS);
         }
     }
