@@ -51,10 +51,10 @@ public abstract class GenericController<T extends AbstractEntity> {
                 ()->new ResourceNotFoundException(getDomainClass().getSimpleName(),id));
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+   /* @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<Page<T>> getAllResource(Pageable pageable) {
     return ResponseEntity.ok(repo.findAll(pageable));
-    }
+    }*/
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/", method = RequestMethod.POST)

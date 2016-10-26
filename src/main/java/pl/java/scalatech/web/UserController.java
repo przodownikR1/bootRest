@@ -15,7 +15,6 @@ package pl.java.scalatech.web;
 import static java.lang.Thread.sleep;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 import java.util.List;
 import java.util.Random;
@@ -31,9 +30,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +41,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.annotation.Counted;
 import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Metric;
 import com.codahale.metrics.annotation.Timed;
@@ -57,6 +57,7 @@ import pl.java.scalatech.web.hateoas.UserResourceAssembler;
 
 @RestController
 @Slf4j
+@RequestMapping("/users/")
 public class UserController extends GenericController<User>{
     
     
@@ -83,11 +84,11 @@ public class UserController extends GenericController<User>{
     private UserResourceAssembler userResourceAssembler;
 
     @Timed(name = "userTimed")
-    @com.codahale.metrics.annotation.Counted(name = "userCounted")
+    @Counted(name = "userCounted")
     @Metric(name = "userMetric")
     @ExceptionMetered(name = "exceptionUserMetered")
     // @JsonView(UserResource.Projection.class)
-    @RequestMapping(method = GET, value = "/users", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
     public List<UserResource> getUsers() throws InterruptedException {
         sleep(random.nextInt(100));
         List<UserResource> result = userRepository.findAll().stream().map(t -> new UserResource(t)).collect(toList());
@@ -99,7 +100,7 @@ public class UserController extends GenericController<User>{
     }
 
     @Timed(name = "userId")
-    @RequestMapping(method = GET, value = "/users/{userId}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{userId}", produces = APPLICATION_JSON_VALUE)
     public User getUser(@PathVariable("userId") Long userId) {
         Meter requests = metricRegistry.meter("requestsId");
         requests.mark();
@@ -108,13 +109,13 @@ public class UserController extends GenericController<User>{
     }
 
     @Timed(name = "userName")
-    @RequestMapping(method = GET, value = "/users/name/{name}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/name/{name}", produces = APPLICATION_JSON_VALUE)
     public UserResource getUserByName(@PathVariable("name") String name) {
         return userRepository.findByLogin(name).map(t -> new UserResource(t)).orElseThrow(() -> new IllegalArgumentException("resource not found"));
 
     }
 
-    @RequestMapping(value = "/pagingUser", method = RequestMethod.GET, produces = "application/json")
+    @GetMapping(value = "/pagingUser", produces = "application/json")
     @ResponseBody
     public HttpEntity<PagedResources<User>> getRestaurants(Pageable pageable, PagedResourcesAssembler pagedResourcesAssembler) {
         Page<User> userPage = userRepository.findAll(pageable);
@@ -123,7 +124,7 @@ public class UserController extends GenericController<User>{
     }
 
     @Timed(name = "userName")
-    @RequestMapping(method = GET, value = "/users/nameFilter/{name}", produces = APPLICATION_JSON_VALUE, params = "fields")
+    @GetMapping(value = "/nameFilter/{name}", produces = APPLICATION_JSON_VALUE, params = "fields")
     public MappingJacksonValue getUserFilter(@PathVariable("name") String name, @RequestParam String fields) {
         Meter requests = metricRegistry.meter("requestName");
         requests.mark();

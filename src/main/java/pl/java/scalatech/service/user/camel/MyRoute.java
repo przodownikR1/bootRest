@@ -22,7 +22,7 @@ public class MyRoute extends RouteBuilder {
     public void configure() throws Exception {
         from("timer://foo?fixedRate=true&period=6000").process(exchange ->
         {           
-            HttpResponse response = Request.Get("http://localhost:9126/users").execute().returnResponse();
+            HttpResponse response = Request.Get("http://localhost:9126/users/").execute().returnResponse();
             InputStream is = response.getEntity().getContent();
             String result = CharStreams.toString(new InputStreamReader(is, Charsets.UTF_8));            
            // log.info("++++ : {} :  {}",exchange.getIn().getHeaders(), result);
