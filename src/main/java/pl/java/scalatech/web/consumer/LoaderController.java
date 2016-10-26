@@ -15,24 +15,25 @@
  */
 package pl.java.scalatech.web.consumer;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class LoaderController {
-    @RequestMapping("/loaded")
+    @GetMapping("/loaded")
     public String test(){
         System.err.println("test2s");
         return "pl";
     }
-    @RequestMapping("/loaded2")
+    @GetMapping("/loaded2")
     public String test2 (){
         sdasdasdasdasdf();
         sadasd();
         return "dupaff";
     }
     
-    @RequestMapping("/loaded3")
+    @GetMapping("/loaded3")
     public String test4 (){
         sdasdasdasdasdf();
         sadasd();

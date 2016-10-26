@@ -18,6 +18,7 @@ package pl.java.scalatech.web.test;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +35,7 @@ public class VersionInfoController {
     private VersionInfo versionInfo;
 
     @Timed(name="versionInfo")    
-    @RequestMapping(value = "/versionInfo", method = RequestMethod.GET)
+    @GetMapping(value = "/versionInfo")
     public VersionInfo getGitRepositoryState() throws IOException {
         log.info("++++ ver repo");
         if (versionInfo == null) {

@@ -3,7 +3,7 @@ package pl.java.scalatech.web.test;
 import java.util.UUID;
 
 import org.slf4j.MDC;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,7 +19,7 @@ private static final String REQUEST_ID = "requestID";
     
     private static final ObjectMapper jsonMapper = new ObjectMapper();
     
-    @RequestMapping("/logTest")
+    @GetMapping("/logTest")
     public String logging() {
         MDC.put(REQUEST_ID, UUID.randomUUID().toString());
         log.trace("this is a trace message");
@@ -31,7 +31,7 @@ private static final String REQUEST_ID = "requestID";
         return "trace/info/debug/warn/error logs";
     }
     
-    @RequestMapping("/logSkill")
+    @GetMapping("/logSkill")
     public String logPerson() throws JsonProcessingException  {
         
         MDC.put(REQUEST_ID, UUID.randomUUID().toString());

@@ -9,7 +9,7 @@ import pl.java.scalatech.domain.Skill;
 import pl.java.scalatech.repository.SkillRepository;
 
 @RestController
-@RequestMapping("/skils")
+@RequestMapping("/skills")
 @Slf4j
 public class SkillController extends GenericController<Skill> {
     @Autowired
