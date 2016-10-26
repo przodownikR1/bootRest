@@ -6,12 +6,14 @@ import java.io.InputStreamReader;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 
 @Component
+@Profile("simpleRoute")
 public class MyRoute extends RouteBuilder {
  
     

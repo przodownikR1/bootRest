@@ -10,7 +10,7 @@ import pl.java.scalatech.collaboration.filter.CorrelationIdFilter;
 public class MicroServiceConfig {
 
     @Bean
-    @Profile("collecationId")
+    @Profile("micro")
     CorrelationIdFilter collerationIdFilter() {
         return new CorrelationIdFilter();
     }

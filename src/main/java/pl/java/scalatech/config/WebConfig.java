@@ -66,8 +66,8 @@ public class WebConfig extends WebMvcConfigurationSupport {
 
      @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("welcome");
-        registry.addViewController("/welcome").setViewName("welcome");
+       // registry.addViewController("/").setViewName("welcome");
+       // registry.addViewController("/welcome").setViewName("welcome");
         registry.addViewController("/400").setViewName("/error/400");
         registry.addViewController("/404").setViewName("/error/404");
     }

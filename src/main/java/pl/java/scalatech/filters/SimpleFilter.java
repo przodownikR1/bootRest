@@ -14,11 +14,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
+@Profile("micro")
 public class SimpleFilter implements Filter{
     public static final String REQUEST_ID_KEY = "request_id";
     private  Random random = new Random(); 
