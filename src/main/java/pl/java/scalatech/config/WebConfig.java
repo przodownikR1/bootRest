@@ -81,8 +81,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/images/**").addResourceLocations("classpath:/resources/images/").setCachePeriod(3000);
         //registry.addResourceHandler("/favicon.ico").addResourceLocations("classpath:/static/favicon.ico").setCachePeriod(3000);
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/js/").setCachePeriod(3000);
-
+        //registry.addResourceHandler("/js/**").addResourceLocations("classpath:/js/").setCachePeriod(3000);
     }
 
     @Override
@@ -99,11 +98,8 @@ public class WebConfig extends WebMvcConfigurationSupport {
     @Override
     public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
         // xceptionResolvers.add(new MyExceptionHandlerResolver());
-
     }
 
-
-    
     @Bean
     public CommonsRequestLoggingFilter requestLoggingFilter() {
         CommonsRequestLoggingFilter crlf = new CommonsRequestLoggingFilter();
