@@ -31,6 +31,10 @@ ext {
      gatlingVersion = "2.1.4"     
 }
 
+configurations {
+    providedRuntime
+    jpametamodel
+}
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-actuator')
@@ -47,6 +51,8 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-thymeleaf')
     compile('org.springframework.boot:spring-boot-starter-validation')
     compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    
     
     compile 'redis.clients:jedis:2.1.0'
     
@@ -62,7 +68,7 @@ dependencies {
     compile 'com.google.guava:guava:21.+'
     compile 'net.logstash.logback:logstash-logback-encoder:4.3'
     
-     
+    compile group: 'com.ryantenney.metrics', name: 'metrics-spring', version: '3.1.3'
     compile group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'  
     compile group: 'io.dropwizard.metrics', name: 'metrics-jvm', version: '3.1.2'
     compile group: 'io.dropwizard.metrics', name: 'metrics-graphite', version: '3.1.2'
@@ -95,8 +101,8 @@ dependencies {
     compile("org.apache.xbean:xbean-spring:4+") {
         exclude module: "org.springframework:spring"
     }
-    compile("org.springframework:spring-jms:4+.RELEASE")
-    compile("org.apache.activemq:activemq-broker:5+")
+   // compile("org.springframework:spring-jms:4+.RELEASE")
+  //  compile("org.apache.activemq:activemq-broker:5+")
     
   //  jpametamodel ('org.hibernate:hibernate-jpamodelgen:5.0.6.Final')
     

@@ -12,9 +12,6 @@
  */
 package pl.java.scalatech;
 
-import javax.jms.ConnectionFactory;
-
-import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -32,16 +29,13 @@ import pl.java.scalatech.repository.UserRepository;
 
 @SpringBootApplication
 @Slf4j
+//@EnableJms
 public class BootRest {
-
-    private static final String JMS_BROKER_URL = "vm://embedded?broker.persistent=false,useShutdownHook=false";
-
-    @Bean
-    ConnectionFactory connectionFactory() {
-        return new ActiveMQConnectionFactory(JMS_BROKER_URL);
-
-    }
-
+  /*  @Bean
+    public Queue queue() {
+        return new ActiveMQQueue("sample.queue");
+}*/
+  
     @Bean
     CommandLineRunner init(UserRepository userRepository, SkillRepository skillRepository, ProjectRepository projectRepository) {
         return (evt) -> Lists.newArrayList("przodownik", "kowalski", "nowak", "plank", "tyson", "holyfield", "jones", "obama").forEach(a -> {

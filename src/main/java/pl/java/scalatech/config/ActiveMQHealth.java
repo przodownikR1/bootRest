@@ -15,18 +15,9 @@
  */
 package pl.java.scalatech.config;
 
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.boot.actuate.health.Status;
-import org.springframework.stereotype.Component;
-
-@Component
- class ActiveMQHealth implements HealthIndicator {
-    private ConnectionFactory factory;
+//@Component
+ class ActiveMQHealth {} /*implements HealthIndicator {
+   private ConnectionFactory factory;
 
     @Autowired
     public ActiveMQHealth(ConnectionFactory factory) {
@@ -41,5 +32,4 @@ import org.springframework.stereotype.Component;
             return new Health.Builder().down(e).build();
         }
         return new Health.Builder().status(Status.UP + ": Successfully connected to the broker").build();
-    }
-}
+    }*/
