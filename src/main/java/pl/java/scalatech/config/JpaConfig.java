@@ -26,10 +26,7 @@ import net.sf.log4jdbc.tools.LoggingType;
 
 @EnableJpaRepositories(basePackages = "pl.java.scalatech.repository")
 @EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
-public class JpaConfig {
-
-    
-    
+public class JpaConfig {     
     @Bean
     @Profile("dev")
        Log4JdbcCustomFormatter logFormater() {
