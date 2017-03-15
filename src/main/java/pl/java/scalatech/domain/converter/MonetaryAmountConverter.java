@@ -16,7 +16,6 @@
 package pl.java.scalatech.domain.converter;
 
 import javax.money.MonetaryAmount;
-import javax.money.MonetaryAmountFactory;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
