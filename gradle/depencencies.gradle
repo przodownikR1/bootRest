@@ -16,6 +16,8 @@ buildscript {
     }
 }
 
+
+
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
@@ -29,12 +31,22 @@ ext {
      cucumberVersion = "1.2.2"
      apacheHttpVersion = "4.5"
      gatlingVersion = "2.1.4"     
+     ext['spring-restdocs.version'] = '1.1.2.RELEASE'
+     snippetsDir = file('build/generated-snippets')
 }
 
 configurations {
     providedRuntime
     jpametamodel
 }
+
+
+asciidoctor {
+	attributes 'snippets': snippetsDir
+	inputs.dir snippetsDir
+	dependsOn test
+}
+
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-actuator')
@@ -98,6 +110,7 @@ dependencies {
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
     testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7+'
+    asciidoctor "org.springframework.restdocs:spring-restdocs-asciidoctor:${project.ext['spring-restdocs.version']}"
     compile group: 'org.springframework.restdocs', name: 'spring-restdocs-mockmvc', version: '1.1.2.RELEASE'
        
 }

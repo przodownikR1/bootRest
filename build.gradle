@@ -15,7 +15,9 @@ buildscript {
 }
 plugins {
     id "org.sonarqube" version "2.0.1"
+	id "org.asciidoctor.convert" version "1.5.3"
 }
+
 
 
 apply plugin: 'java'
