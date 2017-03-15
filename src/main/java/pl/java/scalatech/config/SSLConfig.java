@@ -41,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @EnableConfigurationProperties(SSLConfig.TomcatSslConnectorProperties.class)
 @Profile("prodSSL")
-public class SSLConfig {
+class SSLConfig {
 
     @Bean
     public EmbeddedServletContainerFactory servletContainer(TomcatSslConnectorProperties properties) {

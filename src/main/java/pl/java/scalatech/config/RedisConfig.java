@@ -18,7 +18,7 @@ package pl.java.scalatech.config;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RedisConfig {
+class RedisConfig {
     //@Bean
    /* JedisConnectionFactory connectionFactory() {
         JedisConnectionFactory factory = new JedisConnectionFactory();

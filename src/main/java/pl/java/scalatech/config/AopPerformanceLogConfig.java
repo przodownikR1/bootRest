@@ -27,7 +27,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @Configuration
 @EnableAspectJAutoProxy
 @EnableAutoConfiguration
-public class AopPerformanceLogConfig {
+class AopPerformanceLogConfig {
     @Bean
     public CustomizableTraceInterceptor interceptor() {
         CustomizableTraceInterceptor interceptor = new CustomizableTraceInterceptor();

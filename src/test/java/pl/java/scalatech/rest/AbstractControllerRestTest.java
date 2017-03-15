@@ -18,23 +18,27 @@ package pl.java.scalatech.rest;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.TestRestTemplate;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import pl.java.scalatech.config.JpaWebConfig;
 
+@RunWith(SpringRunner.class)
+@SpringBootApplication
+@WebMvcTest
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT,classes=JpaWebConfig.class)
 
-@SpringApplicationConfiguration(classes = JpaWebConfig.class)
-@WebAppConfiguration
-@IntegrationTest("server.port:9090")
 public abstract class AbstractControllerRestTest {
-    RestTemplate template = new TestRestTemplate();
+    @Autowired
+    private TestRestTemplate restTemplate;
 
     @Autowired
     protected WebApplicationContext webApplicationContext; //without this not mapping controllers

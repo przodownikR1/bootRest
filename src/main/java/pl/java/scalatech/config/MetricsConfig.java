@@ -4,22 +4,18 @@ import java.lang.management.ManagementFactory;
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.embedded.ServletRegistrationBean;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.codahale.metrics.ConsoleReporter;
-import com.codahale.metrics.Counter;
 import com.codahale.metrics.Histogram;
 import com.codahale.metrics.JmxReporter;
-import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.Timer;
 import com.codahale.metrics.health.HealthCheck;
 import com.codahale.metrics.health.HealthCheckRegistry;
 import com.codahale.metrics.jvm.BufferPoolMetricSet;
@@ -43,7 +39,7 @@ import pl.java.scalatech.metrics.Ping;
 @Slf4j
 @Profile("metrics")
 @EnableMetrics
-public class MetricsConfig extends MetricsConfigurerAdapter{
+class MetricsConfig extends MetricsConfigurerAdapter{
 
     private static final String JVM_MEMORY = "jvm.memory";
     private static final String JVM_GARBAGE = "jvm.garbage";
@@ -123,24 +119,22 @@ public class MetricsConfig extends MetricsConfigurerAdapter{
     
     @Bean
     @Profile("jmx-metrics")
-    public JmxReporter jmxReporter(MetricRegistry metricRegistry) {
+    JmxReporter jmxReporter(MetricRegistry metricRegistry) {
         final JmxReporter reporter = JmxReporter.forRegistry(metricRegistry).build();                
         reporter.start();
         return reporter;
     }
     
-    @Bean
-    @Autowired
-    public ServletRegistrationBean servletRegistrationBean(MetricRegistry metricRegistry) {
+    @Bean   
+    ServletRegistrationBean servletRegistrationBean(MetricRegistry metricRegistry) {
         MetricsServlet ms = new MetricsServlet(metricRegistry);
         ServletRegistrationBean srb = new ServletRegistrationBean(ms, "/metrics/*");
         srb.setLoadOnStartup(1);
         return srb;
 
     }
-    @Bean
-    @Autowired
-    public ServletRegistrationBean servletHealthRegistryBean() {
+    @Bean    
+    ServletRegistrationBean servletHealthRegistryBean() {
         HealthCheckServlet hc = new HealthCheckServlet(healthCheckRegistry());
         ServletRegistrationBean srb = new ServletRegistrationBean(hc, "/health/*");
         srb.setLoadOnStartup(2);

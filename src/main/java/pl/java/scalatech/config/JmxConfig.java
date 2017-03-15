@@ -15,12 +15,13 @@
  */
 package pl.java.scalatech.config;
 
+import static com.google.common.collect.ImmutableMap.of;
+
 import javax.persistence.EntityManagerFactory;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.jpa.HibernateEntityManagerFactory;
 import org.hibernate.stat.Statistics;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.ExportMetricWriter;
 import org.springframework.boot.actuate.metrics.jmx.JmxMetricWriter;
 import org.springframework.boot.actuate.metrics.writer.MetricWriter;
@@ -31,11 +32,9 @@ import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jmx.export.MBeanExporter;
 
-import com.google.common.collect.ImmutableMap;
-
 @Configuration
 @EnableMBeanExport
-public class JmxConfig {
+class JmxConfig {
 
    
     @Bean
@@ -43,7 +42,7 @@ public class JmxConfig {
     @Profile("dev")
     public MBeanExporter jmxService(Statistics statistics) {
         MBeanExporter exporter = new MBeanExporter();
-        exporter.setBeans(ImmutableMap.of("Hibernate:application=Statistics", (Object) statistics));
+        exporter.setBeans(of("Hibernate:application=Statistics", (Object) statistics));
         return exporter;
     }
     

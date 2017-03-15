@@ -23,10 +23,10 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 @Configuration
 @Profile("mail")
-public class ThymeleafConfig extends ThymeleafAutoConfiguration {
+class ThymeleafConfig extends ThymeleafAutoConfiguration {
 	
 	@Bean
-    public ClassLoaderTemplateResolver emailTemplateResolver(){
+    ClassLoaderTemplateResolver emailTemplateResolver(){
         ClassLoaderTemplateResolver emailTemplateResolver = new ClassLoaderTemplateResolver();
         emailTemplateResolver.setPrefix("mails/");
         emailTemplateResolver.setSuffix(".html");

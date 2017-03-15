@@ -25,7 +25,7 @@ import org.springframework.boot.actuate.health.Status;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ActiveMQHealth implements HealthIndicator {
+ class ActiveMQHealth implements HealthIndicator {
     private ConnectionFactory factory;
 
     @Autowired
