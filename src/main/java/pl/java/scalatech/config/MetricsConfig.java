@@ -37,7 +37,7 @@ import pl.java.scalatech.metrics.Ping;
 
 @Configuration
 @Slf4j
-@Profile("metrics")
+@Profile("metrics_dropwizard")
 @EnableMetrics
 class MetricsConfig extends MetricsConfigurerAdapter{
 

@@ -15,6 +15,10 @@
  */
 package pl.java.scalatech.web.example;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,9 +29,13 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @Slf4j
 @CrossOrigin
+@Profile("example")
 public class SampleRestController {
 
 
+    @Autowired
+    @Lazy
+    private BuildProperties buildProperties;
 
     @RequestMapping(value="/restSample",method=RequestMethod.GET)
     @CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
@@ -36,6 +44,11 @@ public class SampleRestController {
         return new Payload("test");
     }
 
+    @RequestMapping("/buildInfo")
+    public BuildProperties getBuildInfo(){
+        return buildProperties;
+    }
+    
 
 
 }

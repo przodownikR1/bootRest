@@ -39,7 +39,7 @@ class JmxConfig {
    
     @Bean
     @DependsOn("statisticsService")
-    @Profile("dev")
+    @Profile("metrics")
     public MBeanExporter jmxService(Statistics statistics) {
         MBeanExporter exporter = new MBeanExporter();
         exporter.setBeans(of("Hibernate:application=Statistics", (Object) statistics));
@@ -48,7 +48,7 @@ class JmxConfig {
     
     @Bean
     @ExportMetricWriter
-    @Profile("dev")
+    @Profile("metrics")
     MetricWriter jmxMetric(Statistics statistics){
         return new JmxMetricWriter(jmxService(statistics));
     }
@@ -63,7 +63,7 @@ class JmxConfig {
 
     @Bean
     @DependsOn("entityManagerFactory")
-    @Profile("dev")
+    @Profile("metrics")
     public Statistics statisticsService(EntityManagerFactory entityManagerFactory) {
         SessionFactory sf = ((HibernateEntityManagerFactory) entityManagerFactory).getSessionFactory();
         return sf.getStatistics();
