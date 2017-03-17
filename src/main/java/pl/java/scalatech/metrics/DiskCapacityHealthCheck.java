@@ -1,9 +1,10 @@
 package pl.java.scalatech.metrics;
 
+import static java.nio.file.Files.getFileStore;
+
 import java.nio.file.FileStore;
 import java.nio.file.FileSystemException;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 
@@ -21,7 +22,7 @@ public class DiskCapacityHealthCheck extends HealthCheck {
     protected Result check() throws Exception {
         for (Path root : FileSystems.getDefault().getRootDirectories()) {
             try {
-                FileStore store = Files.getFileStore(root);
+                FileStore store = getFileStore(root);
                 if (store.getUsableSpace() / G >= 1) { 
                     return HealthCheck.Result.healthy("disk resources : " + "available="
                         + readableFileSize(store.getUsableSpace()) + ", total=" + readableFileSize(store.getTotalSpace())); 
