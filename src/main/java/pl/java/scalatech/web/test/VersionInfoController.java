@@ -18,6 +18,7 @@ package pl.java.scalatech.web.test;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +30,7 @@ import pl.java.scalatech.domain.VersionInfo;
 
 @RestController
 @Slf4j
+@Profile("test")
 public class VersionInfoController {
 
     private VersionInfo versionInfo;

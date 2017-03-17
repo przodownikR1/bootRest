@@ -3,6 +3,7 @@ package pl.java.scalatech.web.test;
 import java.util.UUID;
 
 import org.slf4j.MDC;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,6 +15,7 @@ import pl.java.scalatech.domain.KnownleageLevel;
 import pl.java.scalatech.domain.Skill;
 @RestController
 @Slf4j
+@Profile("test")
 public class RestlogController {
 private static final String REQUEST_ID = "requestID";
     

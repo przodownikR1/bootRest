@@ -28,7 +28,7 @@ import net.sf.log4jdbc.tools.LoggingType;
 @EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
 public class JpaConfig {     
     @Bean
-    @Profile("dev")
+    @Profile("metrics")
        Log4JdbcCustomFormatter logFormater() {
         Log4JdbcCustomFormatter formatter = new Log4JdbcCustomFormatter();
         formatter.setLoggingType(LoggingType.SINGLE_LINE);
